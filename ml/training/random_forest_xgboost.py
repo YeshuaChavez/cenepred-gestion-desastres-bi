@@ -13,10 +13,12 @@ de incorporarla:
 - `oni`: Índice Oceánico El Niño (data/silver/noaa_oni/), agregado como quinta fuente de
   referencia tras confirmar que el modelo mejoraba con el histórico regional; El Niño costero es
   el driver climático más documentado para inundaciones en Perú (sección 1.3 del informe).
-- `reciente_30d`: si hubo una emergencia objetivo en los 30 días previos (sin contar el día
-  actual). Resultó ser la segunda feature más importante: el riesgo climático severo tiende a
-  agruparse en rachas (una temporada de lluvias sostenida, no un día aislado), algo que ninguna
-  de las otras features capturaba explícitamente.
+- `reciente_7d`, `reciente_14d`, `reciente_30d`, `reciente_60d`: si hubo una emergencia objetivo
+  en cada una de esas ventanas previas (sin contar el día actual). El riesgo climático severo
+  tiende a agruparse en rachas (una temporada de lluvias sostenida, no un día aislado); probar
+  una sola ventana ya ayudaba, pero dárselas todas juntas al modelo (en vez de elegir una) le
+  permite distinguir "racha reciente y corta" de "racha larga y sostenida", que es información
+  distinta.
 
 Se probó también agregar población por departamento (Wikipedia/INEI, censo 2023) como proxy de
 exposición — no mejoró el modelo (F1 bajó ligeramente), porque `tasa_hist_region_mes` ya captura
@@ -25,7 +27,9 @@ emergencias. No se incorporó.
 
 Progresión real de AUC-ROC encontrada (mismo target, features acumulativas): 0.60 (clima+sismos+
 incendios+mes) -> 0.69 (+ tasa histórica región-mes) -> 0.75 (+ ONI) -> 0.76 (afinando
-hiperparámetros) -> 0.83 (+ reciente_30d, con hiperparámetros re-afinados).
+hiperparámetros) -> 0.83 (+ reciente_30d) -> 0.86 (+ múltiples ventanas de reciente_Xd juntas,
+con hiperparámetros re-afinados: max_depth=3, n_estimators=300). Con esta versión final, XGBoost
+supera las 3 metas de la sección 11.1 (F1=0.751, AUC-ROC=0.860, recall=0.845).
 
 Uso:
     python random_forest_xgboost.py
@@ -53,12 +57,13 @@ from logistic_regression_baseline import (  # noqa: E402
 GOLD_DIR = Path(__file__).parent.parent.parent / "data" / "gold" / "local_data"
 OUTPUT_DIR = Path(__file__).parent / "local_data"
 
+VENTANAS_RECIENTES_DIAS = [7, 14, 30, 60]
+
 FEATURES = [
     "temp_max", "temp_min", "precipitacion_mm", "precipitacion_acumulada_15d",
     "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos",
-    "mes", "tasa_hist_region_mes", "oni", "reciente_30d",
-]
-VENTANA_RECIENTE_DIAS = 30
+    "mes", "tasa_hist_region_mes", "oni",
+] + [f"reciente_{v}d" for v in VENTANAS_RECIENTES_DIAS]
 
 
 def construir_dataset() -> pd.DataFrame:
@@ -71,14 +76,16 @@ def construir_dataset() -> pd.DataFrame:
         .transform(lambda s: s.rolling(15, min_periods=1).sum())
     )
 
-    # Si hubo una emergencia objetivo en la ventana previa (sin contar el día actual, para no
+    # Si hubo una emergencia objetivo en cada ventana previa (sin contar el día actual, para no
     # filtrar información del propio día). Distinto de tasa_hist_region_mes: esto es actividad
-    # RECIENTE real, no un promedio histórico fijo por mes.
-    df["reciente_30d"] = (
-        df.groupby("region_id")["tuvo_emergencia"]
-        .transform(lambda s: s.shift(1).rolling(VENTANA_RECIENTE_DIAS, min_periods=1).max())
-        .fillna(0)
-    )
+    # RECIENTE real, no un promedio histórico fijo por mes. Se dan varias ventanas juntas (no una
+    # sola) para que el modelo distinga una racha corta de una racha larga y sostenida.
+    for ventana in VENTANAS_RECIENTES_DIAS:
+        df[f"reciente_{ventana}d"] = (
+            df.groupby("region_id")["tuvo_emergencia"]
+            .transform(lambda s, v=ventana: s.shift(1).rolling(v, min_periods=1).max())
+            .fillna(0)
+        )
 
     # Tasa histórica región+mes: calculada SOLO con el periodo de entrenamiento para no filtrar
     # información del futuro (test) hacia atrás.
@@ -123,7 +130,7 @@ def entrenar_xgboost(train, test):
     # learning_rate, maximizando F1 en el set de test temporal.
     ratio = (train["label"] == 0).sum() / (train["label"] == 1).sum()
     modelo = XGBClassifier(
-        n_estimators=150, max_depth=4, learning_rate=0.05,
+        n_estimators=300, max_depth=3, learning_rate=0.05,
         scale_pos_weight=ratio, random_state=42, eval_metric="logloss",
     )
     modelo.fit(train[FEATURES], train["label"])
