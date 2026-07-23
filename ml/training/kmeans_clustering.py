@@ -67,14 +67,14 @@ def entrenar(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     X_esc = StandardScaler().fit_transform(X)
 
     resultados_k = {}
-    mejor_k, mejor_score, mejor_modelo, mejor_labels = None, -1, None, None
+    mejor_k, mejor_score, mejor_labels = None, -1, None
     for k in K_CANDIDATOS:
         modelo = KMeans(n_clusters=k, random_state=RANDOM_STATE, n_init=10)
         labels = modelo.fit_predict(X_esc)
         score = silhouette_score(X_esc, labels)
         resultados_k[k] = round(score, 4)
         if score > mejor_score:
-            mejor_k, mejor_score, mejor_modelo, mejor_labels = k, score, modelo, labels
+            mejor_k, mejor_score, mejor_labels = k, score, labels
 
     df = df.copy()
     df["cluster_riesgo"] = mejor_labels

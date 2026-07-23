@@ -17,7 +17,6 @@ Uso:
 from __future__ import annotations
 
 import json
-import re
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path

@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 import pandera.pandas as pa
-from pandera.typing import Series
+from pandera.typing import DateTime, Series
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "ingestion" / "open_meteo"))
 from regiones_peru import REGIONES_CAPITALES  # noqa: E402
@@ -28,7 +28,7 @@ REGIONES_VALIDAS = [r for r, _ in REGIONES_CAPITALES]
 
 class IndeciSchema(pa.DataFrameModel):
     emergencia_id: Series[str]
-    fecha: Series["datetime64[ns]"]
+    fecha: Series[DateTime]
     ubigeo: Series[str] = pa.Field(str_matches=r"^\d{6}$")
     departamento: Series[str] = pa.Field(isin=REGIONES_VALIDAS)
     tipo_fenomeno: Series[str]
@@ -48,7 +48,7 @@ class IndeciSchema(pa.DataFrameModel):
 
 class OpenMeteoSchema(pa.DataFrameModel):
     departamento: Series[str] = pa.Field(isin=REGIONES_VALIDAS)
-    fecha: Series["datetime64[ns]"]
+    fecha: Series[DateTime]
     temp_max: Series[float] = pa.Field(ge=-10, le=45)
     temp_min: Series[float] = pa.Field(ge=-15, le=35)
     precipitacion_mm: Series[float] = pa.Field(ge=0)
@@ -70,7 +70,7 @@ class UsgsSchema(pa.DataFrameModel):
 
 
 class NasaFirmsSchema(pa.DataFrameModel):
-    fecha: Series["datetime64[ns]"]
+    fecha: Series[DateTime]
     departamento: Series[str] = pa.Field(isin=REGIONES_VALIDAS)
     latitud: Series[float]
     longitud: Series[float]
