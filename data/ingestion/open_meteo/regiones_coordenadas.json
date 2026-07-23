@@ -1,0 +1,177 @@
+[
+  {
+    "region": "AMAZONAS",
+    "capital": "Chachapoyas",
+    "latitud": -6.23169,
+    "longitud": -77.86903,
+    "admin1_geocoding": "Amazonas"
+  },
+  {
+    "region": "ANCASH",
+    "capital": "Huaraz",
+    "latitud": -9.52614,
+    "longitud": -77.52869,
+    "admin1_geocoding": "Ancash"
+  },
+  {
+    "region": "APURIMAC",
+    "capital": "Abancay",
+    "latitud": -13.63426,
+    "longitud": -72.8838,
+    "admin1_geocoding": "Apurímac Department"
+  },
+  {
+    "region": "AREQUIPA",
+    "capital": "Arequipa",
+    "latitud": -16.39899,
+    "longitud": -71.53747,
+    "admin1_geocoding": "Arequipa"
+  },
+  {
+    "region": "AYACUCHO",
+    "capital": "Ayacucho",
+    "latitud": -13.1638,
+    "longitud": -74.22345,
+    "admin1_geocoding": "Ayacucho"
+  },
+  {
+    "region": "CAJAMARCA",
+    "capital": "Cajamarca",
+    "latitud": -7.16378,
+    "longitud": -78.50027,
+    "admin1_geocoding": "Cajamarca Department"
+  },
+  {
+    "region": "CALLAO",
+    "capital": "Callao",
+    "latitud": -12.05162,
+    "longitud": -77.13452,
+    "admin1_geocoding": "Provincia Constitucional del Callao"
+  },
+  {
+    "region": "CUSCO",
+    "capital": "Cusco",
+    "latitud": -13.53188,
+    "longitud": -71.96701,
+    "admin1_geocoding": "Cuzco Department"
+  },
+  {
+    "region": "HUANCAVELICA",
+    "capital": "Huancavelica",
+    "latitud": -12.78691,
+    "longitud": -74.97298,
+    "admin1_geocoding": "Huancavelica"
+  },
+  {
+    "region": "HUANUCO",
+    "capital": "Huánuco",
+    "latitud": -9.92882,
+    "longitud": -76.23989,
+    "admin1_geocoding": "Huánuco Department"
+  },
+  {
+    "region": "ICA",
+    "capital": "Ica",
+    "latitud": -14.07538,
+    "longitud": -75.73422,
+    "admin1_geocoding": "Ica"
+  },
+  {
+    "region": "JUNIN",
+    "capital": "Huancayo",
+    "latitud": -12.06866,
+    "longitud": -75.21027,
+    "admin1_geocoding": "Junin"
+  },
+  {
+    "region": "LA LIBERTAD",
+    "capital": "Trujillo",
+    "latitud": -8.11599,
+    "longitud": -79.02998,
+    "admin1_geocoding": "La Libertad"
+  },
+  {
+    "region": "LAMBAYEQUE",
+    "capital": "Chiclayo",
+    "latitud": -6.77008,
+    "longitud": -79.85495,
+    "admin1_geocoding": "Lambayeque"
+  },
+  {
+    "region": "LIMA",
+    "capital": "Lima",
+    "latitud": -12.04318,
+    "longitud": -77.02824,
+    "admin1_geocoding": "Lima Province"
+  },
+  {
+    "region": "LORETO",
+    "capital": "Iquitos",
+    "latitud": -3.74814,
+    "longitud": -73.2529,
+    "admin1_geocoding": "Loreto"
+  },
+  {
+    "region": "MADRE DE DIOS",
+    "capital": "Puerto Maldonado",
+    "latitud": -12.58946,
+    "longitud": -69.19948,
+    "admin1_geocoding": "Madre de Dios"
+  },
+  {
+    "region": "MOQUEGUA",
+    "capital": "Moquegua",
+    "latitud": -17.19747,
+    "longitud": -70.93587,
+    "admin1_geocoding": "Moquegua Department"
+  },
+  {
+    "region": "PASCO",
+    "capital": "Cerro de Pasco",
+    "latitud": -10.66577,
+    "longitud": -76.25309,
+    "admin1_geocoding": "Pasco"
+  },
+  {
+    "region": "PIURA",
+    "capital": "Piura",
+    "latitud": -5.18192,
+    "longitud": -80.65715,
+    "admin1_geocoding": "Piura"
+  },
+  {
+    "region": "PUNO",
+    "capital": "Puno",
+    "latitud": -15.84003,
+    "longitud": -70.02198,
+    "admin1_geocoding": "Puno"
+  },
+  {
+    "region": "SAN MARTIN",
+    "capital": "Moyobamba",
+    "latitud": -6.03441,
+    "longitud": -76.97423,
+    "admin1_geocoding": "San Martín Department"
+  },
+  {
+    "region": "TACNA",
+    "capital": "Tacna",
+    "latitud": -18.01465,
+    "longitud": -70.25362,
+    "admin1_geocoding": "Tacna"
+  },
+  {
+    "region": "TUMBES",
+    "capital": "Tumbes",
+    "latitud": -3.55592,
+    "longitud": -80.44258,
+    "admin1_geocoding": "Tumbes"
+  },
+  {
+    "region": "UCAYALI",
+    "capital": "Pucallpa",
+    "latitud": -8.37915,
+    "longitud": -74.55387,
+    "admin1_geocoding": "Ucayali"
+  }
+]
