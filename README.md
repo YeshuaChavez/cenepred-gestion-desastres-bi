@@ -78,7 +78,6 @@ Cinco dashboards, cada uno con un propósito analítico distinto:
 ## Componente predictivo (Machine Learning)
 
 - **Clasificación de riesgo:** Regresión Logística (baseline), Random Forest / XGBoost (principal).
-- **Forecasting:** Prophet / SARIMA.
 - **Deep Learning:** LSTM, como comparación metodológica frente a los modelos clásicos.
 - **No supervisado:** K-Means (segmentación de regiones), Isolation Forest (detección de
   anomalías).
