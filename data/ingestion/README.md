@@ -1,7 +1,9 @@
 # Ingesta de datos (Azure Functions)
 
 Scripts Python que consultan cada fuente externa y escriben el resultado crudo en `/bronze` de
-ADLS Gen2, orquestados por Azure Data Factory (ver sección 4.5 y 5.2 del informe).
+ADLS Gen2, orquestados por Azure Data Factory (ver sección 4.5 y 5.2 del informe). Esta carpeta
+contiene solo el código; el dato crudo descargado en sí vive en `data/bronze/{fuente}/local_data/`
+(ver `data/bronze/README.md`), no aquí.
 
 | Carpeta | Fuente | Frecuencia real |
 |---|---|---|

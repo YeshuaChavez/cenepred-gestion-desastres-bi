@@ -8,10 +8,11 @@ necesita paginar ni filtrar por magnitud mínima.
 Uso local (antes de tener Azure Functions desplegado):
     python fetch_usgs.py [--start 2012-01-01] [--end 2023-12-31]
 
-Escribe la respuesta cruda (GeoJSON) en ./local_data/ (ignorado por git), junto con un
-manifiesto de metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la
-función `download_sismos` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/sismos en
-vez de disco local.
+Escribe la respuesta cruda (GeoJSON) en ../../bronze/usgs/local_data/ (ignorado por git,
+representa localmente el contenedor /bronze/sismos de ADLS Gen2), junto con un manifiesto de
+metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la función
+`download_sismos` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/sismos en vez de
+disco local.
 """
 
 from __future__ import annotations
@@ -41,7 +42,7 @@ MAX_RESULTS_PER_REQUEST = 20_000
 DEFAULT_START = "2012-01-01"
 DEFAULT_END = "2023-12-31"
 
-OUTPUT_DIR = Path(__file__).parent / "local_data"
+OUTPUT_DIR = Path(__file__).parent.parent.parent / "bronze" / "usgs" / "local_data"
 
 
 def count_eventos(start_date: str, end_date: str) -> int:

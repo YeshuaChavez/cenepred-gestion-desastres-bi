@@ -1,10 +1,12 @@
 """Registra y cataloga en Bronze lo que las Functions de data/ingestion/ ya escribieron crudo.
 
-No transforma el contenido original (esa es tarea de Silver): valida que cada archivo listado
-en un manifiesto de ingesta realmente exista, calcula su tamaño y checksum, y produce un
-catálogo consolidado de metadatos de ingesta (fecha, fuente, versión/checksum) para
-trazabilidad — ver sección 4.3 del informe ("Bronze: ... Registro de metadatos de ingesta
-(fecha, fuente, versión); sin transformación").
+Los archivos crudos en sí viven en data/bronze/{fuente}/local_data/ (representa localmente los
+contenedores /bronze/indeci, /bronze/clima, /bronze/sismos, /bronze/incendios de ADLS Gen2);
+data/ingestion/ contiene solo el código que los produce. Este script no transforma el contenido
+original (esa es tarea de Silver): valida que cada archivo listado en un manifiesto de ingesta
+realmente exista, calcula su tamaño y checksum, y produce un catálogo consolidado de metadatos
+de ingesta (fecha, fuente, versión/checksum) para trazabilidad — ver sección 4.3 del informe
+("Bronze: ... Registro de metadatos de ingesta (fecha, fuente, versión); sin transformación").
 
 En producción, sobre Azure Databricks, este paso es el que registraría cada archivo como una
 tabla Delta en /bronze y lo catalogaría en Microsoft Purview. Localmente, antes de tener esa
@@ -21,8 +23,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-INGESTION_ROOT = Path(__file__).parent.parent / "ingestion"
-OUTPUT_DIR = Path(__file__).parent / "local_data"
+BRONZE_ROOT = Path(__file__).parent
+OUTPUT_DIR = BRONZE_ROOT / "local_data"
 
 
 def _sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -34,7 +36,7 @@ def _sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
 
 
 def _find_manifiestos() -> list[Path]:
-    return sorted(INGESTION_ROOT.glob("*/local_data/*.manifest.json"))
+    return sorted(BRONZE_ROOT.glob("*/local_data/*.manifest.json"))
 
 
 def registrar() -> list[dict]:

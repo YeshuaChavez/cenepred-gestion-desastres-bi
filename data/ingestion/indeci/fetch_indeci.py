@@ -13,10 +13,11 @@ CKAN (package_show) para obtener la URL real de cada año en vez de construirla 
 Uso local (antes de tener Azure Functions desplegado):
     python fetch_indeci.py
 
-Escribe cada archivo crudo descargado en ./local_data/ (ignorado por git), junto con un
-manifiesto de metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la
-función `download_resource` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/indeci
-en vez de disco local.
+Escribe cada archivo crudo descargado en ../../bronze/indeci/local_data/ (ignorado por git,
+representa localmente el contenedor /bronze/indeci de ADLS Gen2), junto con un manifiesto de
+metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la función
+`download_resource` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/indeci en vez de
+disco local.
 """
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ REQUEST_HEADERS = {
 # Ventana de datos definida en la sección 2.4 del informe.
 YEAR_RANGE = range(2012, 2024)  # 2012-2023 inclusive
 
-OUTPUT_DIR = Path(__file__).parent / "local_data"
+OUTPUT_DIR = Path(__file__).parent.parent.parent / "bronze" / "indeci" / "local_data"
 
 
 @dataclass

@@ -8,10 +8,10 @@ resueltos previamente en regiones_coordenadas.json (ver geocode_regiones.py).
 Uso local (antes de tener Azure Functions desplegado):
     python fetch_open_meteo.py [--start 2012-01-01] [--end 2023-12-31]
 
-Escribe la respuesta cruda en ./local_data/ (ignorado por git), junto con un manifiesto de
-metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la función
-`download_clima` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/clima en vez de
-disco local.
+Escribe la respuesta cruda en ../../bronze/open_meteo/local_data/ (ignorado por git, representa
+localmente el contenedor /bronze/clima de ADLS Gen2), junto con un manifiesto de metadatos de
+ingesta. Cuando exista la infraestructura de Azure (infra/), la función `download_clima` es el
+punto de reemplazo para escribir a ADLS Gen2 /bronze/clima en vez de disco local.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ DAILY_VARIABLES = "temperature_2m_max,temperature_2m_min,precipitation_sum"
 TIMEZONE = "America/Lima"
 
 COORDENADAS_PATH = Path(__file__).parent / "regiones_coordenadas.json"
-OUTPUT_DIR = Path(__file__).parent / "local_data"
+OUTPUT_DIR = Path(__file__).parent.parent.parent / "bronze" / "open_meteo" / "local_data"
 
 # Ventana de datos definida en la sección 2.4 del informe (misma que INDECI, para poder cruzar).
 DEFAULT_START = "2012-01-01"

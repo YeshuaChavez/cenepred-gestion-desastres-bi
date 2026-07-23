@@ -13,8 +13,9 @@ Uso local (antes de tener Azure Functions desplegado):
     python fetch_nasa_firms.py [--start 2012-01-20] [--end 2023-12-31]
 
 Requiere la variable de entorno NASA_FIRMS_MAP_KEY (ver .env.example). Escribe la respuesta
-cruda (CSV concatenado) en ./local_data/ (ignorado por git), junto con un manifiesto de
-metadatos de ingesta. Cuando exista la infraestructura de Azure (infra/), la función
+cruda (CSV concatenado) en ../../bronze/nasa_firms/local_data/ (ignorado por git, representa
+localmente el contenedor /bronze/incendios de ADLS Gen2), junto con un manifiesto de metadatos
+de ingesta. Cuando exista la infraestructura de Azure (infra/), la función
 `download_focos_calor` es el punto de reemplazo para escribir a ADLS Gen2 /bronze/incendios en
 vez de disco local.
 """
@@ -51,7 +52,7 @@ SOURCE_HISTORICO = "VIIRS_SNPP_SP"  # cobertura real: 2012-01-20 en adelante
 DEFAULT_START = "2012-01-20"
 DEFAULT_END = "2023-12-31"
 
-OUTPUT_DIR = Path(__file__).parent / "local_data"
+OUTPUT_DIR = Path(__file__).parent.parent.parent / "bronze" / "nasa_firms" / "local_data"
 
 
 def _iter_chunks(start_date: date, end_date: date, day_range: int = MAX_DAY_RANGE):
