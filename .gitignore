@@ -37,3 +37,6 @@ Thumbs.db
 
 # Word lock files
 ~$*.docx
+
+# Documentos locales de referencia (no se publican en el repo)
+/docs/
