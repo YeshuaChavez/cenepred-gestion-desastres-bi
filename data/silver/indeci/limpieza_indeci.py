@@ -68,6 +68,35 @@ CORRECCION_DEPARTAMENTO = {
     r"^SAN MART.N$": "SAN MARTIN",
 }
 
+# Mismo problema de bytes corruptos que en CORRECCION_DEPARTAMENTO, pero en tipo_fenomeno (73
+# valores distintos encontrados, varios de ellos la misma categoría partida en dos por el
+# carácter dañado, ej. "DEFORESTACION" y "DEFORESTACI.N" contados por separado). Se unifica sin
+# tilde (consistente con el resto de campos de texto, que tampoco llevan tilde tras el .upper()).
+CORRECCION_TIPO_FENOMENO = {
+    r"^SEQU.AS$": "SEQUIAS",
+    r"^D.FICIT H.DRICO$": "DEFICIT HIDRICO",
+    r"^INUNDACI.N POR DESBORDE DE RIO$": "INUNDACION POR DESBORDE DE RIO",
+    r"^TORMENTAS EL.CTRICAS$": "TORMENTAS ELECTRICAS",
+    r"^INUNDACI.N POR DESBORDE DE CANALES$": "INUNDACION POR DESBORDE DE CANALES",
+    r"^REPTACI.N$": "REPTACION",
+    r"^TEMPESTADES EL.CTRICAS$": "TEMPESTADES ELECTRICAS",
+    r"^OTROS PELIGROS ANTR.PICOS$": "OTROS PELIGROS ANTROPICOS",
+    r"^OTROS PELIGROS HIDROMETEOROL.GICOS Y OCEANOGR.FICOS$": (
+        "OTROS PELIGROS HIDROMETEOROLOGICOS Y OCEANOGRAFICOS"
+    ),
+    r"^DESERTIFICACI.N$": "DESERTIFICACION",
+    r"^INUNDACI.N POR DESBORDE LAGO O LAGUNA$": "INUNDACION POR DESBORDE LAGO O LAGUNA",
+    r"^INUNDACI.N POR DESBORDE EN LA RUPTURA DE DIQUES$": (
+        "INUNDACION POR DESBORDE EN LA RUPTURA DE DIQUES"
+    ),
+    r"^DEGLACIACI.N$": "DEGLACIACION",
+    r"^ACCI\. DE TRANSPORTE MEDIO A.REO$": "ACCI. DE TRANSPORTE MEDIO AEREO",
+    r"^ACCI\. DE TRANSPORTE MEDIO ACUATICO MAR.TIMO$": (
+        "ACCI. DE TRANSPORTE MEDIO ACUATICO MARITIMO"
+    ),
+    r"^DEFORESTACI.N$": "DEFORESTACION",
+}
+
 
 def _leer_shapefile_de_zip(zip_path: Path) -> gpd.GeoDataFrame:
     with TemporaryDirectory() as tmp:
@@ -119,8 +148,9 @@ def limpiar(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     for col in ["departamento", "provincia", "distrito", "region_natural", "tipo_fenomeno"]:
         gdf[col] = gdf[col].astype(str).str.strip().str.upper()
 
-    # Corregir nombres de departamento con la letra acentuada corrupta (ver CORRECCION_DEPARTAMENTO).
+    # Corregir nombres con la letra acentuada corrupta (ver CORRECCION_DEPARTAMENTO/TIPO_FENOMENO).
     gdf["departamento"] = gdf["departamento"].replace(CORRECCION_DEPARTAMENTO, regex=True)
+    gdf["tipo_fenomeno"] = gdf["tipo_fenomeno"].replace(CORRECCION_TIPO_FENOMENO, regex=True)
 
     # Separar filas sin id oficial de SINPAD (emergencia_id nulo). Verificado empíricamente:
     # en 2018/2022/2023 estas filas vienen completamente vacías (fecha, ubigeo, fenómeno y
