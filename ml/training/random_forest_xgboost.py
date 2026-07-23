@@ -51,7 +51,6 @@ from logistic_regression_baseline import (  # noqa: E402
 )
 
 GOLD_DIR = Path(__file__).parent.parent.parent / "data" / "gold" / "local_data"
-ONI_SILVER = Path(__file__).parent.parent.parent / "data" / "silver" / "noaa_oni" / "local_data" / "oni_2012_2023.parquet"
 OUTPUT_DIR = Path(__file__).parent / "local_data"
 
 FEATURES = [
@@ -65,14 +64,12 @@ VENTANA_RECIENTE_DIAS = 30
 def construir_dataset() -> pd.DataFrame:
     df = construir_dataset_base()
 
+    # `oni` ya viene incluido en FACT_MONITOREO_DIARIO (data/gold/fact_monitoreo_diario.py), no
+    # hace falta volver a unirlo desde Silver aquí.
     df["precipitacion_acumulada_15d"] = (
         df.groupby("region_id")["precipitacion_mm"]
         .transform(lambda s: s.rolling(15, min_periods=1).sum())
     )
-
-    df["anio"] = df["fecha"].dt.year
-    oni = pd.read_parquet(ONI_SILVER)
-    df = df.merge(oni, on=["anio", "mes"], how="left")
 
     # Si hubo una emergencia objetivo en la ventana previa (sin contar el día actual, para no
     # filtrar información del propio día). Distinto de tasa_hist_region_mes: esto es actividad

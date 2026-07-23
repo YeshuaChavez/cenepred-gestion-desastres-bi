@@ -8,6 +8,12 @@ Combina las 3 fuentes de monitoreo activo al grano común región-fecha (secció
 - NASA FIRMS: se agregan los focos de calor a un conteo por región-día (mismo día, no ventana
   móvil — el informe define num_focos_calor_activos como el conteo del día).
 
+Incluye también `oni` (Índice Oceánico El Niño, data/silver/noaa_oni/): a diferencia de las 3
+fuentes anteriores, es un solo valor mensual para todo el Pacífico ecuatorial, no específico por
+región — se repite igual para las 25 regiones en un mismo mes. Se agrega aquí (no solo en
+ml/training/) porque es un dato de fuente real, no una feature derivada del modelo, así que le
+corresponde vivir en Gold para que cualquier consumidor (dashboards, ML) lo use por igual.
+
 Requiere haber corrido antes dim_tiempo.py y dim_region.py.
 
 Uso:
@@ -33,6 +39,9 @@ USGS_SILVER = (
 NASA_FIRMS_SILVER = (
     Path(__file__).parent.parent / "silver" / "nasa_firms" / "local_data"
     / "nasa_firms_focos_calor_2012_2023.parquet"
+)
+ONI_SILVER = (
+    Path(__file__).parent.parent / "silver" / "noaa_oni" / "local_data" / "oni_2012_2023.parquet"
 )
 
 VENTANA_SISMOS_DIAS = 7
@@ -89,6 +98,15 @@ def agregar_focos_calor(base: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def agregar_oni(base: pd.DataFrame) -> pd.DataFrame:
+    oni = pd.read_parquet(ONI_SILVER)
+    df = base.copy()
+    df["anio"] = df["fecha"].dt.year
+    df["mes"] = df["fecha"].dt.month
+    df = df.merge(oni, on=["anio", "mes"], how="left")
+    return df.drop(columns=["anio", "mes"])
+
+
 def construir() -> pd.DataFrame:
     dim_tiempo = pd.read_parquet(GOLD_DIR / "dim_tiempo.parquet")
     dim_region = pd.read_parquet(GOLD_DIR / "dim_region.parquet")
@@ -97,10 +115,11 @@ def construir() -> pd.DataFrame:
     base = agregar_clima(base)
     base = agregar_sismos(base)
     base = agregar_focos_calor(base)
+    base = agregar_oni(base)
 
     columnas = [
         "region_id", "fecha_id", "temp_max", "temp_min", "precipitacion_mm",
-        "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos",
+        "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos", "oni",
     ]
     return base[columnas]
 
@@ -108,7 +127,7 @@ def construir() -> pd.DataFrame:
 def validar_calidad(df: pd.DataFrame) -> dict:
     resultado = {"total_filas": len(df), "reglas": []}
 
-    for campo in ["region_id", "fecha_id", "temp_max", "temp_min", "precipitacion_mm"]:
+    for campo in ["region_id", "fecha_id", "temp_max", "temp_min", "precipitacion_mm", "oni"]:
         completitud = df[campo].notna().mean()
         resultado["reglas"].append(
             {
