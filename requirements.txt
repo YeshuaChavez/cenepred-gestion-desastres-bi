@@ -5,6 +5,7 @@ geopandas
 great-expectations
 scikit-learn
 xgboost
+torch
 shap
 mlflow
 azure-storage-blob
