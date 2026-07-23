@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-syntax:
+    name: Lint y sintaxis (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar ruff
+        run: pip install ruff==0.15.12
+
+      - name: Verificar que todos los .py compilan
+        run: |
+          find . -name "*.py" \
+            -not -path "./.git/*" \
+            -not -path "*/local_data/*" \
+            -print0 | xargs -0 -n1 python -m py_compile
+
+      - name: "Lint (errores reales: sintaxis, nombres indefinidos, imports/variables sin usar)"
+        run: ruff check . --select F,E9
+
+  dependencias:
+    name: Instalación de dependencias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar requirements.txt
+        run: pip install -r requirements.txt
+
+      - name: Smoke test de imports de librerías clave
+        run: |
+          python -c "
+          import pandas, geopandas, pandera, sklearn, xgboost, torch, shap, mlflow
+          import azure.storage.blob, azure.identity
+          print('Todas las dependencias importan correctamente')
+          "
+
+  terraform-validate:
+    name: Terraform validate (condicional)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar módulos Terraform
+        id: buscar
+        run: |
+          if find infra -name "*.tf" | grep -q .; then
+            echo "existe=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "existe=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: hashicorp/setup-terraform@v3
+        if: steps.buscar.outputs.existe == 'true'
+
+      - name: terraform fmt -check y validate por módulo
+        if: steps.buscar.outputs.existe == 'true'
+        run: |
+          for dir in $(find infra -name "*.tf" -printf '%h\n' | sort -u); do
+            echo "== $dir =="
+            terraform -chdir="$dir" init -backend=false
+            terraform -chdir="$dir" fmt -check -recursive
+            terraform -chdir="$dir" validate
+          done
+
+      - name: Sin archivos .tf todavía
+        if: steps.buscar.outputs.existe == 'false'
+        run: echo "infra/ aún no tiene módulos Terraform (ver infra/README.md). Job en espera, no falla."
