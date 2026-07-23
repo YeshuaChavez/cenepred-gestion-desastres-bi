@@ -21,7 +21,7 @@ venv/
 *.env.local
 
 # Data (no versionar datasets crudos ni resultados locales)
-/data/**/local_data/
+**/local_data/
 *.csv
 *.parquet
 !**/sample_data/*.csv
