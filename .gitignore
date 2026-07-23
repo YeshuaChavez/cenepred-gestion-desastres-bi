@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+
+# Databricks / Jupyter
+.ipynb_checkpoints/
+
+# Secrets / environment
+.env
+*.env.local
+
+# Data (no versionar datasets crudos ni resultados locales)
+/data/**/local_data/
+*.csv
+*.parquet
+!**/sample_data/*.csv
+
+# Power BI
+*.pbix.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Word lock files
+~$*.docx

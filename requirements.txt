@@ -1,0 +1,12 @@
+requests
+pandas
+geopandas
+great-expectations
+scikit-learn
+xgboost
+prophet
+statsmodels
+shap
+mlflow
+azure-storage-blob
+azure-identity
