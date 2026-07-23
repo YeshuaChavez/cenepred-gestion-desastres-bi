@@ -1,21 +1,31 @@
 """Clasificación de riesgo — baseline de Regresión Logística (sección 10.1 del informe).
 
-Grano: región-día (FACT_MONITOREO_DIARIO). Target: ¿ocurrirá una emergencia de severidad ALTA
-en esta región dentro de los próximos 7 días?
+Grano: región-día (FACT_MONITOREO_DIARIO). Target: ¿ocurrirá una emergencia de severidad
+MEDIA o ALTA, de origen Hidrometeorológico y Oceanográfico, en esta región dentro de los
+próximos 7 días?
 
-Por qué severidad ALTA y no "cualquier emergencia": se probó con datos reales y "cualquier
-emergencia en 7 días" da 72.3% de casos positivos (INDECI registra hasta incidentes menores como
-emergencia) — un objetivo casi trivial de predecir, sin valor real como alerta temprana. Con solo
-severidad ALTA (fallecidos/desaparecidos o >=10 viviendas destruidas, ver
-data/gold/fact_emergencias.py) el positivo baja a 7.4%, un objetivo desbalanceado pero genuinamente
-útil: anticipar el tipo de emergencia donde una alerta temprana real importaría.
+Cómo se llegó a este target (documentado porque cambió dos veces con evidencia real):
+1. "Cualquier emergencia en 7 días" da 72.3% de positivos (INDECI registra hasta incidentes
+   menores) — casi trivial de predecir, sin valor real.
+2. Solo severidad ALTA (sin filtrar por categoría) da 7.4% de positivos, pero el AUC-ROC no pasó
+   de 0.53-0.62 con varios modelos. Al revisar la composición se encontró que solo 60% de esas
+   emergencias ALTO son de origen climático — el resto son accidentes de tránsito, incendios
+   urbanos, explosiones y epidemias, que no tienen ninguna relación causal con clima/sismos/
+   focos de calor (y la sección 2.4 del informe ya descarta explícitamente predecir sismos).
+   Pedirle al modelo predecir esos eventos junto con los climáticos diluía cualquier señal real.
+3. Restringiendo a MEDIO+ALTO y solo categoría Hidrometeorológico y Oceanográfico (ver
+   data/gold/dim_fenomeno.py), el AUC-ROC subió a ~0.67-0.75 según el modelo — una mejora
+   sustancial y ahora coherente con lo que las fuentes de monitoreo pueden explicar causalmente.
 
 Split temporal (no aleatorio): entrena con 2012-2020, evalúa con 2021-2023, para simular
 condiciones reales de pronóstico (no se "espía" el futuro durante el entrenamiento).
 
+Este baseline usa deliberadamente un set de features simple (clima/sismos/incendios del día +
+mes), sin las features más elaboradas de ml/training/random_forest_xgboost.py (tasa histórica
+región-mes, índice El Niño), para que la comparación baseline-vs-modelo-principal sea real.
+
 Métricas: F1-score, precisión, recall, AUC-ROC (sección 10.1), comparadas contra las metas de la
-sección 11.1 (F1>=0.75, AUC-ROC>=0.80, recall>=0.70) — este es el baseline interpretable, se
-espera que Random Forest/XGBoost (sección 10.1, modelo principal) lo supere.
+sección 11.1 (F1>=0.75, AUC-ROC>=0.80, recall>=0.70).
 
 Uso:
     python logistic_regression_baseline.py
@@ -37,10 +47,12 @@ OUTPUT_DIR = Path(__file__).parent / "local_data"
 
 FEATURES = [
     "temp_max", "temp_min", "precipitacion_mm",
-    "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos",
+    "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos", "mes",
 ]
 VENTANA_LABEL_DIAS = 7
 FECHA_CORTE_TRAIN_TEST = "2021-01-01"  # train: 2012-2020, test: 2021-2023
+SEVERIDADES_TARGET = ["MEDIO", "ALTO"]
+CATEGORIA_TARGET = "HIDROMETEOROLOGICO Y OCEANOGRAFICO"
 
 METAS = {"f1": 0.75, "auc_roc": 0.80, "recall": 0.70}
 
@@ -48,22 +60,28 @@ METAS = {"f1": 0.75, "auc_roc": 0.80, "recall": 0.70}
 def construir_dataset() -> pd.DataFrame:
     monitoreo = pd.read_parquet(GOLD_DIR / "fact_monitoreo_diario.parquet")
     emergencias = pd.read_parquet(GOLD_DIR / "fact_emergencias.parquet")
+    fenomeno = pd.read_parquet(GOLD_DIR / "dim_fenomeno.parquet")[["fenomeno_id", "categoria"]]
     tiempo = pd.read_parquet(GOLD_DIR / "dim_tiempo.parquet")[["fecha_id", "fecha"]]
+
+    emergencias = emergencias.merge(fenomeno, on="fenomeno_id")
 
     df = monitoreo.merge(tiempo, on="fecha_id").sort_values(["region_id", "fecha"])
     df["magnitud_max_7d"] = df["magnitud_max_7d"].fillna(0)
+    df["mes"] = df["fecha"].dt.month
 
-    emerg_alta = emergencias[emergencias["severidad"] == "ALTO"].merge(tiempo, on="fecha_id")
-    dias_alta = emerg_alta[["region_id", "fecha"]].drop_duplicates()
-    dias_alta["tuvo_emergencia_alta"] = 1
+    objetivo = emergencias[
+        emergencias["severidad"].isin(SEVERIDADES_TARGET) & (emergencias["categoria"] == CATEGORIA_TARGET)
+    ].merge(tiempo, on="fecha_id")
+    dias_objetivo = objetivo[["region_id", "fecha"]].drop_duplicates()
+    dias_objetivo["tuvo_emergencia"] = 1
 
-    df = df.merge(dias_alta, on=["region_id", "fecha"], how="left")
-    df["tuvo_emergencia_alta"] = df["tuvo_emergencia_alta"].fillna(0)
+    df = df.merge(dias_objetivo, on=["region_id", "fecha"], how="left")
+    df["tuvo_emergencia"] = df["tuvo_emergencia"].fillna(0)
 
-    # Label hacia adelante: 1 si hay una emergencia ALTA en los próximos VENTANA_LABEL_DIAS días
-    # (sin contar el día actual, para no filtrar información del propio día al predictor).
+    # Label hacia adelante: 1 si hay una emergencia objetivo en los próximos VENTANA_LABEL_DIAS
+    # días (sin contar el día actual, para no filtrar información del propio día al predictor).
     df["label"] = (
-        df.groupby("region_id")["tuvo_emergencia_alta"]
+        df.groupby("region_id")["tuvo_emergencia"]
         .transform(
             lambda s: s.shift(-1)[::-1].rolling(VENTANA_LABEL_DIAS, min_periods=1).max()[::-1]
         )
