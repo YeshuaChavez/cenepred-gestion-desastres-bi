@@ -36,6 +36,13 @@ datos reales, ver commits de este archivo):
   - Ensemble naive+SARIMA (no mejoró sobre el naive solo)
   - Extender el histórico de entrenamiento de 40 a 76 trimestres (mejora real pero insuficiente:
     SARIMA pasó de MAE=33.64 a 32.3, naive sigue en 29.05)
+  - Granularidad mensual en vez de trimestral (240 meses en vez de 80 trimestres, agregando 3
+    meses pronosticados a un total trimestral): empeoró (MAE=37.38)
+  - Pronóstico REAL de ENSO (no el ONI ya ocurrido/hindsight, sino la probabilidad El Niño/La
+    Niña emitida por IRI/CPC antes de cada trimestre de 2022, extraída de
+    iri.columbia.edu/.../enso/2022-{mes}-quick-look/): empeoró levemente (32.3 -> 33.81). Tiene
+    sentido: si el ONI con conocimiento perfecto del pasado (hindsight) apenas ayudaba, una
+    versión con la incertidumbre propia de un pronóstico no iba a ayudar más.
 
 Con series cortas y ruidosas (emergencias por trimestre, con picos extremos irregulares como el
 Niño costero 2017: 991 emergencias en Lima ese trimestre vs. un promedio de ~130), el baseline
