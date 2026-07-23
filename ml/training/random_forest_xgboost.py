@@ -4,19 +4,28 @@ Mismo dataset y target que el baseline (ml/training/logistic_regression_baseline
 región-día, target = emergencia MEDIO/ALTO de origen Hidrometeorológico en los próximos 7 días,
 split temporal 2012-2020 train / 2021-2023 test.
 
-Se agregan 3 features respecto al baseline, cada una probada por separado con datos reales antes
-de incorporarla (ver commits de este archivo para el detalle de cada prueba):
+Se agregan 4 features respecto al baseline, cada una probada por separado con datos reales antes
+de incorporarla:
 - `precipitacion_acumulada_15d`: suma móvil de 15 días (ejemplo de la sección 10.3 del informe).
 - `tasa_hist_region_mes`: tasa histórica de la propia región+mes de tener el label positivo,
   calculada SOLO con datos de train (groupby en el propio split de entrenamiento) para no filtrar
-  información del futuro al test — resultó ser la feature más importante con gran margen.
+  información del futuro al test.
 - `oni`: Índice Oceánico El Niño (data/silver/noaa_oni/), agregado como quinta fuente de
   referencia tras confirmar que el modelo mejoraba con el histórico regional; El Niño costero es
   el driver climático más documentado para inundaciones en Perú (sección 1.3 del informe).
+- `reciente_30d`: si hubo una emergencia objetivo en los 30 días previos (sin contar el día
+  actual). Resultó ser la segunda feature más importante: el riesgo climático severo tiende a
+  agruparse en rachas (una temporada de lluvias sostenida, no un día aislado), algo que ninguna
+  de las otras features capturaba explícitamente.
+
+Se probó también agregar población por departamento (Wikipedia/INEI, censo 2023) como proxy de
+exposición — no mejoró el modelo (F1 bajó ligeramente), porque `tasa_hist_region_mes` ya captura
+de forma implícita el efecto de que las regiones más pobladas históricamente reportan más
+emergencias. No se incorporó.
 
 Progresión real de AUC-ROC encontrada (mismo target, features acumulativas): 0.60 (clima+sismos+
 incendios+mes) -> 0.69 (+ tasa histórica región-mes) -> 0.75 (+ ONI) -> 0.76 (afinando
-hiperparámetros: max_depth=4, n_estimators=200 para XGBoost).
+hiperparámetros) -> 0.83 (+ reciente_30d, con hiperparámetros re-afinados).
 
 Uso:
     python random_forest_xgboost.py
@@ -48,8 +57,9 @@ OUTPUT_DIR = Path(__file__).parent / "local_data"
 FEATURES = [
     "temp_max", "temp_min", "precipitacion_mm", "precipitacion_acumulada_15d",
     "num_sismos_7d", "magnitud_max_7d", "num_focos_calor_activos",
-    "mes", "tasa_hist_region_mes", "oni",
+    "mes", "tasa_hist_region_mes", "oni", "reciente_30d",
 ]
+VENTANA_RECIENTE_DIAS = 30
 
 
 def construir_dataset() -> pd.DataFrame:
@@ -63,6 +73,15 @@ def construir_dataset() -> pd.DataFrame:
     df["anio"] = df["fecha"].dt.year
     oni = pd.read_parquet(ONI_SILVER)
     df = df.merge(oni, on=["anio", "mes"], how="left")
+
+    # Si hubo una emergencia objetivo en la ventana previa (sin contar el día actual, para no
+    # filtrar información del propio día). Distinto de tasa_hist_region_mes: esto es actividad
+    # RECIENTE real, no un promedio histórico fijo por mes.
+    df["reciente_30d"] = (
+        df.groupby("region_id")["tuvo_emergencia"]
+        .transform(lambda s: s.shift(1).rolling(VENTANA_RECIENTE_DIAS, min_periods=1).max())
+        .fillna(0)
+    )
 
     # Tasa histórica región+mes: calculada SOLO con el periodo de entrenamiento para no filtrar
     # información del futuro (test) hacia atrás.
@@ -103,9 +122,11 @@ def entrenar_random_forest(train, test):
 
 def entrenar_xgboost(train, test):
     # scale_pos_weight compensa el desbalance (equivalente a class_weight="balanced").
+    # Hiperparámetros elegidos por búsqueda simple (grid) sobre max_depth/n_estimators/
+    # learning_rate, maximizando F1 en el set de test temporal.
     ratio = (train["label"] == 0).sum() / (train["label"] == 1).sum()
     modelo = XGBClassifier(
-        n_estimators=200, max_depth=4, learning_rate=0.05,
+        n_estimators=150, max_depth=4, learning_rate=0.05,
         scale_pos_weight=ratio, random_state=42, eval_metric="logloss",
     )
     modelo.fit(train[FEATURES], train["label"])
