@@ -18,6 +18,7 @@ for sub in [
     "data/silver/usgs",
     "data/silver/nasa_firms",
     "data/silver/noaa_oni",
+    "data/silver/mef_pp0068",
     "data/gold",
 ]:
     sys.path.insert(0, str(ROOT / sub))
