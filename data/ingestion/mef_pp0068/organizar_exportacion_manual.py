@@ -63,7 +63,7 @@ def _validar_contenido(xls_path: Path) -> None:
 def organizar() -> list[dict]:
     archivos = sorted(ORIGEN_MANUAL.glob("*.xls"))
     if not archivos:
-        raise FileNotFoundError(f"No hay archivos .xls en {ORIGEN_MANUAL}")
+        return []
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     resultado = []
@@ -103,15 +103,27 @@ def organizar() -> list[dict]:
     return resultado
 
 
+def _anios_ya_organizados() -> list[int]:
+    """Escanea Bronze (no solo lo procesado en esta corrida) para saber la cobertura real total,
+    ya que este script se corre una vez por año a medida que se van exportando manualmente."""
+    return sorted(
+        json.loads(m.read_text(encoding="utf-8"))["anio"]
+        for m in OUTPUT_DIR.glob("mef_pp0068_*.manifest.json")
+    )
+
+
 def main() -> None:
     resultado = organizar()
-    anios_procesados = sorted(r["anio"] for r in resultado)
-    anios_faltantes = sorted(set(VENTANA_ANIOS) - set(anios_procesados))
+    print(f"Organizados {len(resultado)} archivos nuevos en {OUTPUT_DIR}")
 
-    print(f"Organizados {len(resultado)} archivos en {OUTPUT_DIR}")
-    print(f"Años cubiertos: {anios_procesados}")
+    anios_totales = _anios_ya_organizados()
+    anios_faltantes = sorted(set(VENTANA_ANIOS) - set(anios_totales))
+
+    print(f"Años cubiertos en total: {anios_totales}")
     if anios_faltantes:
         print(f"Años FALTANTES en la ventana 2012-2023: {anios_faltantes}")
+    else:
+        print("Ventana 2012-2023 completa.")
 
 
 if __name__ == "__main__":
