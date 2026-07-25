@@ -12,3 +12,5 @@ contiene solo el código; el dato crudo descargado en sí vive en `data/bronze/{
 | `usgs/` | Earthquake Catalog API | Continua / tiempo real |
 | `nasa_firms/` | Focos de calor (FIRMS/LANCE) | ~cada 3 horas |
 | `inei_limites/` | Polígonos de región (INEI) — referencia geoespacial, no una de las 4 fuentes analíticas del núcleo | Prácticamente estática, sin ventana de fechas |
+| `noaa_oni/` | Índice Oceánico El Niño (ONI, NOAA PSL) | Mensual |
+| `mef_pp0068/` | Ejecución de gasto del PP0068 PREVAED por departamento (MEF, Consulta Amigable) — enriquecimiento del dashboard de Impacto Socioeconómico, no alimenta el modelo ML | Anual, **exportación manual** (sin API ni dataset abierto filtrable por programa presupuestal — ver docstring de `organizar_exportacion_manual.py`) |
