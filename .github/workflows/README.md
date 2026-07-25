@@ -6,7 +6,10 @@
    (errores de sintaxis, nombres indefinidos, imports/variables sin usar).
 2. **Dependencias** — instala `requirements.txt` y hace un smoke test de import de las librerías
    clave (pandas, geopandas, pandera, scikit-learn, xgboost, torch, shap, mlflow, azure-*).
-3. **Terraform validate (condicional)** — si `infra/` ya tiene módulos `.tf`, corre
+3. **Tests unitarios** — `pytest tests/` sobre las funciones puras de limpieza (Silver) y modelo
+   dimensional (Gold), con fixtures sintéticas (no necesita los datos reales, que están
+   gitignored). Ver `tests/README.md`.
+4. **Terraform validate (condicional)** — si `infra/` ya tiene módulos `.tf`, corre
    `fmt -check` + `validate` por módulo; si todavía no existen (estado actual), el job lo reporta
    y termina sin fallar.
 
@@ -14,12 +17,12 @@
 
 Descrito en la sección 7.3 del informe, pero no se puede ejecutar de verdad sin credenciales:
 
-4. **Deploy de infraestructura** — `terraform apply` al entorno correspondiente (Dev automático,
+5. **Deploy de infraestructura** — `terraform apply` al entorno correspondiente (Dev automático,
    Test/Prod manual/aprobado — trunk-based, sección 7.4). Falta: módulos Terraform en `infra/` y
    backend remoto de state.
-5. **Deploy de notebooks/pipelines** — publicación a Databricks y Data Factory. Falta: workspaces
+6. **Deploy de notebooks/pipelines** — publicación a Databricks y Data Factory. Falta: workspaces
    provisionados.
-6. **Registro y promoción de modelos** — MLflow Model Registry; promoción de staging a producción
+7. **Registro y promoción de modelos** — MLflow Model Registry; promoción de staging a producción
    solo si F1-score ≥ 0.75 y AUC-ROC ≥ 0.80, con mejora de al menos 2 puntos porcentuales de F1
    sobre el modelo en producción (sección 11.1). Falta: MLflow tracking server accesible desde CI.
 
