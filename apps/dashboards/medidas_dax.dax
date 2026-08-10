@@ -1,0 +1,196 @@
+// =================================================================================
+// REPOSITORIO DE MEDIDAS DAX - SISTEMA DE ALERTA TEMPRANA CENEPRED (BI + ML)
+// =================================================================================
+// Este archivo contiene todas las medidas DAX organizadas por carpeta para el
+// modelo dimensional Gold en Power BI (conectado a Azure Databricks Serverless SQL Pool).
+// =================================================================================
+
+// ---------------------------------------------------------------------------------
+// CARPETA 01: EMERGENCIAS E IMPACTO HISTÓRICO (FACT_EMERGENCIAS)
+// ---------------------------------------------------------------------------------
+
+Total Emergencias = 
+COUNTROWS(FACT_EMERGENCIAS)
+
+Total Afectados = 
+SUM(FACT_EMERGENCIAS[cantidad_afectados])
+
+Total Damnificados = 
+SUM(FACT_EMERGENCIAS[cantidad_damnificados])
+
+Total Fallecidos = 
+SUM(FACT_EMERGENCIAS[cantidad_fallecidos])
+
+Total Lesionados = 
+SUM(FACT_EMERGENCIAS[cantidad_lesionados])
+
+Total Desaparecidos = 
+SUM(FACT_EMERGENCIAS[cantidad_desaparecidos])
+
+Total Viviendas Afectadas = 
+SUM(FACT_EMERGENCIAS[viviendas_afectadas])
+
+Total Viviendas Destruidas = 
+SUM(FACT_EMERGENCIAS[viviendas_destruidas])
+
+Total Personas Impactadas = 
+[Total Afectados] + [Total Damnificados]
+
+Total Viviendas Impactadas = 
+[Total Viviendas Afectadas] + [Total Viviendas Destruidas]
+
+Indice Severidad Promedio = 
+AVERAGE(FACT_EMERGENCIAS[severidad])
+
+Severidad Ponderada Regional = 
+DIVIDE(
+    ([Total Damnificados] * 3) + ([Total Fallecidos] * 10) + ([Total Viviendas Destruidas] * 5) + [Total Afectados],
+    1000,
+    0
+)
+
+
+// ---------------------------------------------------------------------------------
+// CARPETA 02: INTELIGENCIA DE TIEMPO (TIME INTELLIGENCE)
+// ---------------------------------------------------------------------------------
+
+Emergencias Año Anterior (PY) = 
+CALCULATE(
+    [Total Emergencias],
+    SAMEPERIODLASTYEAR(DIM_TIEMPO[fecha])
+)
+
+Variacion YoY Emergencias (%) = 
+DIVIDE(
+    [Total Emergencias] - [Emergencias Año Anterior (PY)],
+    [Emergencias Año Anterior (PY)],
+    0
+)
+
+Afectados Año Anterior (PY) = 
+CALCULATE(
+    [Total Afectados],
+    SAMEPERIODLASTYEAR(DIM_TIEMPO[fecha])
+)
+
+Variacion YoY Afectados (%) = 
+DIVIDE(
+    [Total Afectados] - [Afectados Año Anterior (PY)],
+    [Afectados Año Anterior (PY)],
+    0
+)
+
+Emergencias Acumulado Anual (YTD) = 
+TOTALYTD(
+    [Total Emergencias],
+    DIM_TIEMPO[fecha]
+)
+
+Afectados Acumulado Anual (YTD) = 
+TOTALYTD(
+    [Total Afectados],
+    DIM_TIEMPO[fecha]
+)
+
+
+// ---------------------------------------------------------------------------------
+// CARPETA 03: MONITOREO DIARIO ACTIVO (FACT_MONITOREO_DIARIO)
+// ---------------------------------------------------------------------------------
+
+Temp Maxima Promedio (°C) = 
+AVERAGE(FACT_MONITOREO_DIARIO[temp_max])
+
+Temp Minima Promedio (°C) = 
+AVERAGE(FACT_MONITOREO_DIARIO[temp_min])
+
+Precipitacion Acumulada (mm) = 
+SUM(FACT_MONITOREO_DIARIO[precipitacion_mm])
+
+Precipitacion Diaria Promedio (mm) = 
+AVERAGE(FACT_MONITOREO_DIARIO[precipitacion_mm])
+
+Total Sismos 7d = 
+SUM(FACT_MONITOREO_DIARIO[num_sismos_7d])
+
+Magnitud Sismica Maxima = 
+MAX(FACT_MONITOREO_DIARIO[magnitud_max_7d])
+
+Total Focos Calor Activos = 
+SUM(FACT_MONITOREO_DIARIO[num_focos_calor_activos])
+
+Dias Alerta Critica Clima = 
+CALCULATE(
+    COUNTROWS(FACT_MONITOREO_DIARIO),
+    FACT_MONITOREO_DIARIO[precipitacion_mm] > 50 || FACT_MONITOREO_DIARIO[num_focos_calor_activos] > 20
+)
+
+
+// ---------------------------------------------------------------------------------
+// CARPETA 04: PREDICCIONES Y EXPLICABILIDAD ML (FACT_PREDICCIONES)
+// ---------------------------------------------------------------------------------
+
+Probabilidad Riesgo Promedio (%) = 
+AVERAGE(FACT_PREDICCIONES[probabilidad_riesgo]) * 100
+
+Probabilidad Riesgo Maxima (%) = 
+MAX(FACT_PREDICCIONES[probabilidad_riesgo]) * 100
+
+Regiones Alto Riesgo Count = 
+CALCULATE(
+    DISTINCTCOUNT(FACT_PREDICCIONES[region_id]),
+    FACT_PREDICCIONES[probabilidad_riesgo] >= 0.70
+)
+
+Regiones Riesgo Moderado Count = 
+CALCULATE(
+    DISTINCTCOUNT(FACT_PREDICCIONES[region_id]),
+    FACT_PREDICCIONES[probabilidad_riesgo] >= 0.40 && FACT_PREDICCIONES[probabilidad_riesgo] < 0.70
+)
+
+Regiones Riesgo Bajo Count = 
+CALCULATE(
+    DISTINCTCOUNT(FACT_PREDICCIONES[region_id]),
+    FACT_PREDICCIONES[probabilidad_riesgo] < 0.40
+)
+
+Etiqueta Categoria Riesgo = 
+VAR prob = [Probabilidad Riesgo Promedio (%)] / 100
+RETURN
+    SWITCH(
+        TRUE(),
+        prob >= 0.70, "ALTO RIESGO (🔴)",
+        prob >= 0.40, "RIESGO MODERADO (🟡)",
+        "RIESGO BAJO (🟢)"
+    )
+
+
+// ---------------------------------------------------------------------------------
+// CARPETA 05: GASTO PRESUPUESTAL MEF PREVAED (FACT_GASTO_PREVAED)
+// ---------------------------------------------------------------------------------
+
+Presupuesto PIM Total (S/.) = 
+SUM(FACT_GASTO_PREVAED[monto_pim])
+
+Presupuesto Devengado Total (S/.) = 
+SUM(FACT_GASTO_PREVAED[monto_devengado])
+
+Porcentaje Ejecucion Presupuestal (%) = 
+DIVIDE(
+    [Presupuesto Devengado Total (S/.)],
+    [Presupuesto PIM Total (S/.)],
+    0
+) * 100
+
+Costo Presupuestal por Afectado (S/.) = 
+DIVIDE(
+    [Presupuesto Devengado Total (S/.)],
+    [Total Afectados],
+    0
+)
+
+Costo Presupuestal por Emergencia (S/.) = 
+DIVIDE(
+    [Presupuesto Devengado Total (S/.)],
+    [Total Emergencias],
+    0
+)
