@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 export default function RiesgoPredictivoView() {
-  const [precipSlider, setPrecipSlider] = useState(25);
-  const [humedadSlider, setHumedadSlider] = useState(10);
-  const [simulatedImpact, setSimulatedImpact] = useState(65);
+  const [precipSlider, setPrecipSlider] = useState<number>(25);
+  const [humedadSlider, setHumedadSlider] = useState<number>(10);
+  const [simulatedImpact, setSimulatedImpact] = useState<number>(65);
 
   const handleSimulate = () => {
     const calculated = Math.min(99, Math.round(40 + precipSlider * 0.7 + humedadSlider * 0.5));
@@ -12,7 +12,6 @@ export default function RiesgoPredictivoView() {
 
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2">
         <div className="flex flex-col space-y-1">
           <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo & SHAP</h2>
@@ -30,7 +29,6 @@ export default function RiesgoPredictivoView() {
         </div>
       </div>
 
-      {/* Model Performance KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl p-5 shadow-sm flex flex-col space-y-1 border border-outline-variant/30">
           <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Accuracy (AUC-ROC)</span>
@@ -73,9 +71,7 @@ export default function RiesgoPredictivoView() {
         </div>
       </div>
 
-      {/* Main Analysis Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: SHAP Plot */}
         <div className="lg:col-span-2 flex flex-col space-y-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col min-h-[450px]">
             <div className="flex justify-between items-center mb-6">
@@ -87,7 +83,6 @@ export default function RiesgoPredictivoView() {
             </div>
 
             <div className="flex-1 relative flex">
-              {/* Y-axis Labels */}
               <div className="w-48 flex flex-col justify-between py-4 pr-4 border-r border-slate-200 font-body-md text-xs text-slate-600 font-medium">
                 <div className="flex items-center justify-end h-8">Precipitación Acumulada</div>
                 <div className="flex items-center justify-end h-8">Pendiente del Terreno</div>
@@ -97,7 +92,6 @@ export default function RiesgoPredictivoView() {
                 <div className="flex items-center justify-end h-8">Focos de Calor Activos</div>
               </div>
 
-              {/* Plot Area Beeswarm Mockup */}
               <div className="flex-1 relative pl-6 py-4 flex flex-col justify-between">
                 <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-slate-300 border-l border-dashed border-slate-300"></div>
 
@@ -124,7 +118,6 @@ export default function RiesgoPredictivoView() {
           </div>
         </div>
 
-        {/* Right Column: What-If Simulator */}
         <div className="flex flex-col space-y-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30">
             <h3 className="font-title-md text-base font-bold text-slate-900 mb-4 flex items-center gap-2">

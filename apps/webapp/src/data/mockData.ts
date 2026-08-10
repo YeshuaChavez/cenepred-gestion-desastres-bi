@@ -1,7 +1,9 @@
+import { RegionData, MefDepartment, PliegoEjecutor } from '../types';
+
 export const LOGO_CENEPRED = "https://lh3.googleusercontent.com/aida-public/AB6AXuDVmjmpjymZJ7JDI7MSb12X3KHSUHwg4tvVHBLw8D5EBio7RAakaXl2sTKfwatTWyZ_t84mdN2mbixH91NAVKoVVGKvzl7bkxQBqAwcGi77pUZQ4gmoQV_C80RZYoWjydnS2F6eW7gb6qUGUuNupE5gdwLsro9w2-GYbYvX_M-b5QRHa3HtX09GxorFrGuUu_zziZm-G6jx5FczvkUbMfz9nTPtwe2vm7piPrkP59EfihE4Ia2W-T_Ang";
 export const PROFILE_AVATAR = "https://lh3.googleusercontent.com/aida-public/AB6AXuD8jz68D6Jdn2vrp2B1EXhtnnZetQZ-L18u9Z-kSluvQ4urv9dJ4x6m-21X1df2W8MLcQDAzH4Jy3v96OXlIVXUpDIuJMwoJD72UuQ9OXxgsvOR6zXTH-YuXlLDTKtulsA5__uk6ow2_PTbxPk-Z3EJ_G7rc4F-VyV0XxQ2T9yBuCmOhA7OtLcMZOJmqmCh-lTXg1cHt2wqAVvp60TxJbXeTXNzM7UjTPix1BrE_Ob8TCnjkolocvJnIA";
 
-export const PERU_DEPARTAMENTOS = {
+export const PERU_DEPARTAMENTOS: Record<string, RegionData> = {
   "piura": {
     name: "Piura",
     prob: 78,
@@ -95,7 +97,7 @@ export const PERU_DEPARTAMENTOS = {
   }
 };
 
-export const TABLAS_MEF_DEPARTAMENTO = [
+export const TABLAS_MEF_DEPARTAMENTO: MefDepartment[] = [
   { depto: "Piura", pim: "245.3", ejec: "22.4%", pct: 22.4, riesgo: "Muy Alto", estado: "warning", alertMsg: "Alerta: Baja ejecución vs Alto Riesgo" },
   { depto: "Lambayeque", pim: "180.1", ejec: "35.2%", pct: 35.2, riesgo: "Muy Alto", estado: "priority_high", alertMsg: "Riesgo extremo con ejecución baja" },
   { depto: "Tumbes", pim: "95.4", ejec: "18.5%", pct: 18.5, riesgo: "Alto", estado: "warning", alertMsg: "Baja ejecución presupuestal" },
@@ -103,7 +105,7 @@ export const TABLAS_MEF_DEPARTAMENTO = [
   { depto: "Lima Provincias", pim: "155.2", ejec: "52.4%", pct: 52.4, riesgo: "Medio", estado: "info", alertMsg: "Ejecución media" }
 ];
 
-export const PLIEGOS_EJECUTORES = [
+export const PLIEGOS_EJECUTORES: PliegoEjecutor[] = [
   { nombre: "MINDEF - Ejército", monto: "S/ 450M (82%)", pct: 82, color: "bg-emerald-500" },
   { nombre: "MINSA - DIGESA", monto: "S/ 210M (75%)", pct: 75, color: "bg-emerald-500" },
   { nombre: "MTC - Provias", monto: "S/ 680M (68%)", pct: 68, color: "bg-secondary" },

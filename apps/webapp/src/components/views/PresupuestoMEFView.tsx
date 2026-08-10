@@ -4,7 +4,6 @@ import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES } from '../../data/mockData
 export default function PresupuestoMEFView() {
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      {/* Header Area */}
       <div className="flex flex-col gap-2">
         <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto MEF PP 0068 (PREVAED)</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
@@ -12,7 +11,6 @@ export default function PresupuestoMEFView() {
         </p>
       </div>
 
-      {/* KPI Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
           <div className="flex justify-between items-start">
@@ -64,9 +62,7 @@ export default function PresupuestoMEFView() {
         </div>
       </div>
 
-      {/* Main Split Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Table Column */}
         <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
           <div className="flex justify-between items-center">
             <h3 className="font-title-md text-base font-bold text-slate-900">Ejecución vs Riesgo por Departamento</h3>
@@ -114,7 +110,6 @@ export default function PresupuestoMEFView() {
             </table>
           </div>
 
-          {/* Critical Alert Callout */}
           <div className="mt-2 p-4 bg-red-50 text-red-900 rounded-xl flex gap-3 items-start border border-red-200 shadow-sm">
             <span className="material-symbols-outlined text-red-600 mt-0.5">notification_important</span>
             <div>
@@ -126,7 +121,6 @@ export default function PresupuestoMEFView() {
           </div>
         </div>
 
-        {/* Top Executing Pliegos */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
           <h3 className="font-title-md text-base font-bold text-slate-900">Top Ejecutores (Pliego)</h3>
           <div className="flex flex-col gap-4">

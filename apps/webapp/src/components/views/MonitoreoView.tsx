@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { PERU_DEPARTAMENTOS } from '../../data/mockData';
 
 export default function MonitoreoView() {
-  const [selectedDeptoKey, setSelectedDeptoKey] = useState('piura');
+  const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>('piura');
   const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS['piura'];
 
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      {/* Header Area */}
       <div className="flex items-end justify-between w-full mb-2">
         <div>
           <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
@@ -27,9 +26,7 @@ export default function MonitoreoView() {
         </div>
       </div>
 
-      {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full">
-        {/* KPI 1: Alto Riesgo */}
         <div className="bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow shadow-sm">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
@@ -49,7 +46,6 @@ export default function MonitoreoView() {
           </div>
         </div>
 
-        {/* KPI 2: Precipitación */}
         <div className="bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow shadow-sm">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
@@ -68,7 +64,6 @@ export default function MonitoreoView() {
           </div>
         </div>
 
-        {/* KPI 3: Focos Calor */}
         <div className="bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow shadow-sm">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
@@ -87,7 +82,6 @@ export default function MonitoreoView() {
           </div>
         </div>
 
-        {/* KPI 4: Presupuesto */}
         <div className="bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow shadow-sm">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
@@ -105,9 +99,7 @@ export default function MonitoreoView() {
         </div>
       </div>
 
-      {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full mt-2">
-        {/* Region Analysis Panel */}
         <div className="lg:col-span-4 flex flex-col gap-6 h-full">
           <div className="bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-6 shadow-sm flex-1 relative z-10 flex flex-col">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-outline-variant/10">
@@ -130,7 +122,6 @@ export default function MonitoreoView() {
               </div>
             </div>
 
-            {/* Gauge Meter */}
             <div className="flex flex-col items-center justify-center py-4">
               <div className="relative w-48 h-24 overflow-hidden mb-2">
                 <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-surface-container-low"></div>
@@ -143,7 +134,6 @@ export default function MonitoreoView() {
               </div>
             </div>
 
-            {/* SHAP Values Breakdown */}
             <div className="mt-auto pt-6 border-t border-outline-variant/10">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-label-sm text-xs text-slate-700 uppercase font-bold tracking-wider">SHAP Value Explainability</h4>
@@ -166,7 +156,6 @@ export default function MonitoreoView() {
           </div>
         </div>
 
-        {/* Operational Geospatial Dashboard */}
         <div className="lg:col-span-8 bg-white/80 backdrop-blur border border-white/40 rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col min-h-[500px]">
           <div className="flex justify-between items-start mb-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
             <div>
@@ -195,7 +184,6 @@ export default function MonitoreoView() {
               </div>
             </div>
 
-            {/* Map Risk Legend Overlay */}
             <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-md border border-outline-variant/20 text-left">
               <h4 className="font-label-sm text-xs font-bold text-slate-900 mb-2">Leyenda de Riesgo</h4>
               <div className="flex flex-col gap-1.5 text-xs">

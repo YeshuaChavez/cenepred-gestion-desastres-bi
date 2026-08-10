@@ -1,7 +1,19 @@
 import React from 'react';
 import { LOGO_CENEPRED, PROFILE_AVATAR } from '../data/mockData';
+import { ActivePath } from '../types';
 
-const NAV_ITEMS = [
+interface SidebarProps {
+  activePath: ActivePath;
+  setActivePath: (path: ActivePath) => void;
+}
+
+interface NavItem {
+  path: ActivePath;
+  icon: string;
+  label: string;
+}
+
+const NAV_ITEMS: NavItem[] = [
   { path: 'home', icon: 'home', label: 'Home' },
   { path: 'monitoreo-diario', icon: 'wb_sunny', label: 'Monitoreo Diario' },
   { path: 'historico-tendencias', icon: 'trending_up', label: 'Histórico & Tendencias' },
@@ -10,10 +22,9 @@ const NAV_ITEMS = [
   { path: 'presupuesto-mef', icon: 'payments', label: 'Presupuesto MEF PP 0068' }
 ];
 
-export default function Sidebar({ activePath, setActivePath }) {
+export default function Sidebar({ activePath, setActivePath }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-0 h-full w-72 bg-white/80 backdrop-blur border-r border-outline-variant/20 z-50 flex flex-col shadow-sm">
-      {/* Brand Header */}
       <div className="p-6 mb-8 flex flex-col gap-2">
         <div className="flex items-center gap-3">
           <img
@@ -35,7 +46,6 @@ export default function Sidebar({ activePath, setActivePath }) {
         </div>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 px-4 flex flex-col gap-2">
         {NAV_ITEMS.map((item) => {
           const isActive = activePath === item.path;
@@ -58,7 +68,6 @@ export default function Sidebar({ activePath, setActivePath }) {
         })}
       </nav>
 
-      {/* Profile Footer */}
       <div className="p-6 border-t border-outline-variant/20">
         <div className="flex items-center gap-3 p-3 bg-white/80 border border-outline-variant/20 rounded-2xl shadow-sm">
           <img

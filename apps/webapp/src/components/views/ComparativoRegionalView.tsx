@@ -1,7 +1,23 @@
 import React from 'react';
 
+interface RegionMatrixRow {
+  depto: string;
+  ene: number;
+  feb: number;
+  mar: number;
+  abr: number;
+  may: number;
+  jun: number;
+  jul: number;
+  ago: number;
+  sep: number;
+  oct: number;
+  nov: number;
+  dic: number;
+}
+
 export default function ComparativoRegionalView() {
-  const REGIONES_MATRIX = [
+  const REGIONES_MATRIX: RegionMatrixRow[] = [
     { depto: "Piura", ene: 8, feb: 9, mar: 10, abr: 7, may: 4, jun: 2, jul: 1, ago: 2, sep: 3, oct: 5, nov: 6, dic: 8 },
     { depto: "Tumbes", ene: 9, feb: 10, mar: 9, abr: 6, may: 3, jun: 1, jul: 1, ago: 1, sep: 2, oct: 4, nov: 5, dic: 7 },
     { depto: "Lambayeque", ene: 7, feb: 8, mar: 9, abr: 6, may: 3, jun: 2, jul: 1, ago: 1, sep: 2, oct: 4, nov: 5, dic: 6 },
@@ -10,7 +26,7 @@ export default function ComparativoRegionalView() {
     { depto: "Lima", ene: 6, feb: 7, mar: 8, abr: 5, may: 3, jun: 2, jul: 2, ago: 2, sep: 3, oct: 4, nov: 4, dic: 5 }
   ];
 
-  const getColorClass = (val) => {
+  const getColorClass = (val: number): string => {
     if (val >= 8) return 'bg-red-500 text-white font-bold';
     if (val >= 5) return 'bg-amber-400 text-slate-900 font-semibold';
     return 'bg-slate-100 text-slate-600';

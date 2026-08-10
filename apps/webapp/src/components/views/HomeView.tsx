@@ -1,29 +1,30 @@
 import React from 'react';
+import { ActivePath } from '../../types';
 
-export default function HomeView({ setActivePath }) {
+interface HomeViewProps {
+  setActivePath: (path: ActivePath) => void;
+}
+
+export default function HomeView({ setActivePath }: HomeViewProps) {
   return (
     <div className="flex flex-col w-full relative h-full">
-      {/* Soft Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] mix-blend-multiply opacity-70 animate-pulse"></div>
         <div className="absolute top-[40%] -left-20 w-[500px] h-[500px] bg-tertiary-fixed/30 rounded-full blur-[120px] mix-blend-multiply opacity-50"></div>
       </div>
 
       <div className="relative z-10 flex flex-col gap-6 px-16 pb-16 max-w-[1600px] mx-auto w-full">
-        {/* Hero / Welcome Section */}
         <section className="flex flex-col gap-4 pt-8">
           <div className="flex flex-col gap-2">
             <h1 className="font-display-lg text-4xl font-extrabold text-on-surface tracking-tight leading-tight">
-              CENEPRED <span class="font-light text-primary">Inteligencia para la Prevención</span>
+              CENEPRED <span className="font-light text-primary">Inteligencia para la Prevención</span>
             </h1>
             <p className="font-title-md text-on-surface-variant max-w-3xl opacity-90 text-slate-600">
               Bienvenido, Director Ejecutivo. El Sistema de Alerta Temprana presenta un panorama nacional estable con focos de atención moderada en la región norte.
             </p>
           </div>
 
-          {/* Key Metrics Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-            {/* National Risk Index Gauge */}
             <div className="col-span-1 bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tertiary-fixed-dim to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="font-label-sm text-on-surface-variant uppercase tracking-widest self-start mb-4 text-xs font-semibold text-slate-500">
@@ -41,7 +42,6 @@ export default function HomeView({ setActivePath }) {
               </div>
             </div>
 
-            {/* Quick Stats */}
             <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
                 <div className="flex justify-between items-start">
@@ -73,7 +73,6 @@ export default function HomeView({ setActivePath }) {
           </div>
         </section>
 
-        {/* Executive Modules Grid */}
         <section className="mt-6">
           <div className="flex justify-between items-end mb-6">
             <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Módulos Ejecutivos</h2>
@@ -83,7 +82,6 @@ export default function HomeView({ setActivePath }) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Module 1: Monitoreo */}
             <div className="bg-surface-container-lowest/80 backdrop-blur-xl rounded-2xl overflow-hidden shadow-md shadow-primary/5 border border-white/50 flex flex-col h-full group">
               <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-sky-900 to-slate-900 opacity-90"></div>
@@ -105,7 +103,6 @@ export default function HomeView({ setActivePath }) {
               </div>
             </div>
 
-            {/* Module 2: SHAP */}
             <div className="bg-surface-container-lowest/80 backdrop-blur-xl rounded-2xl overflow-hidden shadow-md shadow-primary/5 border border-white/50 flex flex-col h-full group">
               <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-900 to-slate-900 opacity-90"></div>
@@ -127,7 +124,6 @@ export default function HomeView({ setActivePath }) {
               </div>
             </div>
 
-            {/* Module 3: Presupuesto */}
             <div className="bg-surface-container-lowest/80 backdrop-blur-xl rounded-2xl overflow-hidden shadow-md shadow-primary/5 border border-white/50 flex flex-col h-full group">
               <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 to-slate-900 opacity-90"></div>
@@ -144,7 +140,7 @@ export default function HomeView({ setActivePath }) {
                   onClick={() => setActivePath('presupuesto-mef')}
                   className="w-full py-3 px-4 bg-white/80 border border-slate-200 text-on-surface font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-sm flex items-center justify-center gap-2 font-semibold"
                 >
-                  Ver Ejecución MEF <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+                  Ver Ejecución MEF <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span>
                 </button>
               </div>
             </div>

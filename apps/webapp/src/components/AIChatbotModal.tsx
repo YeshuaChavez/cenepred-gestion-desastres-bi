@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ChatMessage } from '../types';
 
 export default function AIChatbotModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [input, setInput] = useState<string>('');
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
       text: 'Hola, soy el asistente analítico del SAT CENEPRED. ¿Qué información regional, predictiva o presupuestal necesitas consultar hoy?'
     }
   ]);
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -29,7 +30,7 @@ export default function AIChatbotModal() {
     }, 500);
   };
 
-  const generateAIResponse = (query) => {
+  const generateAIResponse = (query: string): string => {
     const q = query.toLowerCase();
     if (q.includes('piura') || q.includes('lluvias')) {
       return 'Piura - Riesgo Crítico (78%). Las lluvias de los últimos 7 días acumulan +24.5mm sobre lo normal según Open-Meteo. La ejecución del PP 0068 está al 22.4%, dejando una brecha crítica de atención en la cuenca del Río Chira.';
@@ -44,10 +45,8 @@ export default function AIChatbotModal() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Chat Window */}
       {isOpen && (
         <div className="w-85 sm:w-96 h-[460px] mb-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl border border-outline-variant/30 flex flex-col overflow-hidden transition-all duration-300">
-          {/* Header */}
           <div className="bg-surface-container-low p-4 flex items-center justify-between border-b border-outline-variant/20">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
@@ -66,7 +65,6 @@ export default function AIChatbotModal() {
             </button>
           </div>
 
-          {/* Messages Body */}
           <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 font-body-md text-xs leading-relaxed bg-slate-50/50">
             {messages.map((msg, idx) => (
               <div
@@ -83,7 +81,6 @@ export default function AIChatbotModal() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Box */}
           <div className="p-3 bg-white border-t border-outline-variant/20">
             <div className="relative flex items-center">
               <input
@@ -105,7 +102,6 @@ export default function AIChatbotModal() {
         </div>
       )}
 
-      {/* Floating Action Button (FAB) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-14 h-14 bg-primary text-white rounded-full shadow-[0_4px_14px_rgba(0,102,138,0.4)] hover:shadow-[0_6px_20px_rgba(0,102,138,0.6)] flex items-center justify-center hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden"

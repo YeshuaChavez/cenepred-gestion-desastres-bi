@@ -7,9 +7,10 @@ import RiesgoPredictivoView from './components/views/RiesgoPredictivoView';
 import PresupuestoMEFView from './components/views/PresupuestoMEFView';
 import ComparativoRegionalView from './components/views/ComparativoRegionalView';
 import AIChatbotModal from './components/AIChatbotModal';
+import { ActivePath } from './types';
 
 export default function App() {
-  const [activePath, setActivePath] = useState('monitoreo-diario');
+  const [activePath, setActivePath] = useState<ActivePath>('monitoreo-diario');
 
   const renderActiveView = () => {
     switch (activePath) {
@@ -31,10 +32,8 @@ export default function App() {
 
   return (
     <div className="bg-background font-sans text-on-surface min-h-screen flex">
-      {/* Sidebar Navigation */}
       <Sidebar activePath={activePath} setActivePath={setActivePath} />
 
-      {/* Main Content Area */}
       <div className="pl-72 w-full flex-1">
         <Header />
         <main className="relative pt-20 min-h-screen bg-background">
@@ -42,7 +41,6 @@ export default function App() {
         </main>
       </div>
 
-      {/* Floating RAG AI Assistant */}
       <AIChatbotModal />
     </div>
   );
