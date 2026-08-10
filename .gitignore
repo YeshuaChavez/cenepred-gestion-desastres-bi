@@ -1,11 +1,40 @@
-# Python
+# ==========================================
+# CENEPRED SAT - Enterprise .gitignore
+# ==========================================
+
+# ------------------------------------------
+# Node.js / React / Vite Webapp
+# ------------------------------------------
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+
+# ------------------------------------------
+# Python & Testing
+# ------------------------------------------
 __pycache__/
 *.py[cod]
+*$py.class
 *.egg-info/
 .venv/
 venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
-# Terraform
+# ------------------------------------------
+# Terraform & Infrastructure
+# ------------------------------------------
 **/.terraform/
 *.tfstate
 *.tfstate.backup
@@ -13,30 +42,43 @@ venv/
 !*.tfvars.example
 .terraform.lock.hcl
 
-# Databricks / Jupyter
+# ------------------------------------------
+# Databricks & Jupyter Notebooks
+# ------------------------------------------
 .ipynb_checkpoints/
 
-# Secrets / environment
+# ------------------------------------------
+# Secrets & Environment Variables
+# ------------------------------------------
 .env
-*.env.local
+.env.*
+*.pem
+*.key
 
-# Data (no versionar datasets crudos ni resultados locales)
+# ------------------------------------------
+# Data Files (Excluir datasets voluminosos locales)
+# ------------------------------------------
 **/local_data/
-*.csv
 *.parquet
+*.csv
 !**/sample_data/*.csv
+!**/data/sample/*.csv
 
-# Power BI
+# ------------------------------------------
+# Power BI & Office Locks
+# ------------------------------------------
 *.pbix.bak
+~$*.docx
+~$*.xlsx
+~$*.pptx
+*.docx
 
-# OS / editor
+# ------------------------------------------
+# OS & IDEs
+# ------------------------------------------
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-
-# Word lock files
-~$*.docx
-
-# Documentos locales de referencia (no se publican en el repo)
-/docs/
+*.swp
+*.swo
