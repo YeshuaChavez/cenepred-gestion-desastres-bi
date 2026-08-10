@@ -2,81 +2,34 @@ import React from 'react';
 
 export default function Header() {
   return (
-    <header style={{
-      background: 'rgba(15, 23, 42, 0.85)',
-      backdropFilter: 'blur(16px)',
-      borderBottom: '1px solid var(--border-glass)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      padding: '0.85rem 2rem'
-    }}>
-      <div style={{
-        maxWidth: '1440px',
-        margin: '0 auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          <div style={{
-            width: '42px',
-            height: '42px',
-            background: 'linear-gradient(135deg, var(--risk-high), #B91C1C)',
-            borderRadius: 'var(--radius-sm)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 800,
-            fontSize: '1.3rem',
-            color: '#FFF',
-            boxShadow: '0 0 15px var(--risk-high-glow)'
-          }}>
-            C
-          </div>
-          <div>
-            <h1 style={{
-              fontSize: '1.2rem',
-              fontWeight: 700,
-              letterSpacing: '-0.02em',
-              background: 'linear-gradient(to right, #FFFFFF, var(--text-muted))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              CENEPRED — SAT Riesgo Dinámico
-            </h1>
-            <div style={{
-              fontSize: '0.75rem',
-              color: 'var(--primary)',
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
-            }}>
-              Lakehouse Architecture (Medallion) • Azure Databricks
-            </div>
-          </div>
+    <header className="fixed top-0 left-72 right-0 h-20 bg-white/70 backdrop-blur-md z-40 flex items-center justify-between px-16 border-b border-outline-variant/20 shadow-sm">
+      <div className="flex flex-col">
+        <h1 className="font-title-md text-title-md text-slate-900 tracking-tight leading-tight font-semibold">
+          CENEPRED — SAT Riesgo Dinámico
+        </h1>
+        <p className="text-[11px] text-slate-500 uppercase tracking-widest font-medium">
+          Executive Decision Intelligence Platform
+        </p>
+      </div>
+
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-outline-variant/20 shadow-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="text-[11px] font-label-sm text-slate-600 font-medium">
+            Databricks SQL Serverless Connected
+          </span>
         </div>
 
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          background: 'rgba(16, 185, 129, 0.1)',
-          border: '1px solid rgba(16, 185, 129, 0.3)',
-          padding: '0.4rem 0.9rem',
-          borderRadius: '999px',
-          fontSize: '0.8rem',
-          color: 'var(--risk-low)',
-          fontWeight: 500
-        }}>
-          <span className="animate-pulse-dot" style={{
-            width: '8px',
-            height: '8px',
-            backgroundColor: 'var(--risk-low)',
-            borderRadius: '50%',
-            boxShadow: '0 0 8px var(--risk-low)'
-          }} />
-          <span>Databricks SQL Serverless Connected</span>
+        <div className="flex items-center gap-4">
+          <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-slate-500">
+            <span className="material-symbols-outlined">notifications</span>
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-slate-500">
+            <span className="material-symbols-outlined">search</span>
+          </button>
         </div>
       </div>
     </header>

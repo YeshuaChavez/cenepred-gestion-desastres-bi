@@ -1,45 +1,48 @@
 import React, { useState } from 'react';
+import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import TabsNav from './components/TabsNav';
-import KPICards from './components/KPICards';
-import RegionPanel from './components/RegionPanel';
-import PowerBIEmbed from './components/PowerBIEmbed';
+import HomeView from './components/views/HomeView';
+import MonitoreoView from './components/views/MonitoreoView';
+import RiesgoPredictivoView from './components/views/RiesgoPredictivoView';
+import PresupuestoMEFView from './components/views/PresupuestoMEFView';
+import ComparativoRegionalView from './components/views/ComparativoRegionalView';
 import AIChatbotModal from './components/AIChatbotModal';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('monitoreo');
-  const [selectedRegion, setSelectedRegion] = useState('PIURA');
+  const [activePath, setActivePath] = useState('monitoreo-diario');
+
+  const renderActiveView = () => {
+    switch (activePath) {
+      case 'home':
+        return <HomeView setActivePath={setActivePath} />;
+      case 'monitoreo-diario':
+        return <MonitoreoView />;
+      case 'riesgo-predictivo':
+        return <RiesgoPredictivoView />;
+      case 'presupuesto-mef':
+        return <PresupuestoMEFView />;
+      case 'comparativo-regional':
+      case 'historico-tendencias':
+        return <ComparativoRegionalView />;
+      default:
+        return <MonitoreoView />;
+    }
+  };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
-      <TabsNav activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="bg-background font-sans text-on-surface min-h-screen flex">
+      {/* Sidebar Navigation */}
+      <Sidebar activePath={activePath} setActivePath={setActivePath} />
 
-      <main style={{
-        maxWidth: '1440px',
-        margin: '1.5rem auto',
-        padding: '0 1.5rem',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem',
-        flex: 1
-      }}>
-        <KPICards />
+      {/* Main Content Area */}
+      <div className="pl-72 w-full flex-1">
+        <Header />
+        <main className="relative pt-20 min-h-screen bg-background">
+          {renderActiveView()}
+        </main>
+      </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '340px 1fr',
-          gap: '1.5rem'
-        }}>
-          <RegionPanel
-            selectedRegion={selectedRegion}
-            setSelectedRegion={setSelectedRegion}
-          />
-          <PowerBIEmbed activeTab={activeTab} />
-        </div>
-      </main>
-
+      {/* Floating RAG AI Assistant */}
       <AIChatbotModal />
     </div>
   );

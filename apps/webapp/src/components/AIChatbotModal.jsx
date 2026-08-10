@@ -6,7 +6,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: '¡Hola! Soy el asistente virtual de CENEPRED. Puedo responder preguntas en lenguaje natural sobre las predicciones de riesgo de emergencias, los datos climáticos de Open-Meteo y la explicabilidad SHAP por región. ¿En qué te puedo ayudar hoy?'
+      text: 'Hola, soy el asistente analítico del SAT CENEPRED. ¿Qué información regional, predictiva o presupuestal necesitas consultar hoy?'
     }
   ]);
 
@@ -26,114 +26,56 @@ export default function AIChatbotModal() {
     setTimeout(() => {
       const botResponse = generateAIResponse(userText);
       setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
-    }, 600);
+    }, 500);
   };
 
   const generateAIResponse = (query) => {
     const q = query.toLowerCase();
     if (q.includes('piura') || q.includes('lluvias')) {
-      return 'Para Piura, el modelo XGBoost estima una probabilidad de riesgo del 94% (Alto Riesgo). La explicación SHAP indica que el 45% del riesgo se debe a la precipitación acumulada de 7d (Open-Meteo) y el 30% a la anomalía climática.';
+      return 'Piura - Riesgo Crítico (78%). Las lluvias de los últimos 7 días acumulan +24.5mm sobre lo normal según Open-Meteo. La ejecución del PP 0068 está al 22.4%, dejando una brecha crítica de atención en la cuenca del Río Chira.';
     } else if (q.includes('apurimac') || q.includes('focos')) {
-      return 'Apurímac presenta una probabilidad de riesgo del 88%. Los factores SHAP determinantes son el historial de emergencias SINPAD (40%) y la concentración reciente de focos de calor detectados por satélite NASA FIRMS (35%).';
+      return 'Apurímac presenta un riesgo predictivo del 88% (Alto). La causa principal en el desglose SHAP son los focos de calor activos detectados por el satélite VIIRS de NASA FIRMS (+32.4) y el historial de friajes.';
     } else if (q.includes('presupuesto') || q.includes('mef')) {
-      return 'En el Programa Presupuestal PP 0068 (PREVAED), el presupuesto ejecutado nacional asciende al 84.5% del PIM total asignado. Las regiones con mayor severidad histórica muestran un costo promedio de S/. 450 por persona afectada.';
+      return 'El Programa Presupuestal PP 0068 registra una ejecución acumulada nacional de S/ 1.1B (45.8% del PIM total). Los pliegos con mayor ejecución son MINDEF (82%) y MINSA (75%).';
     } else {
-      return `Analizando la capa Gold del Lakehouse: la consulta sobre '${query}' muestra que el sistema actualiza diariamente los datos de Open-Meteo, sismos de USGS y focos de calor satelitales. ¿Deseas detalles sobre una región en particular?`;
+      return `Conectado al Lakehouse Azure Databricks: analizando '${query}'. El modelo XGBoost actualiza diariamente la inferencia con datos de Open-Meteo, USGS y NASA FIRMS. ¿Deseas consultar el riesgo o brecha MEF de alguna región específica?`;
     }
   };
 
   return (
-    <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        style={{
-          position: 'fixed',
-          bottom: '2rem',
-          right: '2rem',
-          width: '58px',
-          height: '58px',
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, var(--primary), var(--accent))',
-          color: '#FFF',
-          border: 'none',
-          cursor: 'pointer',
-          boxShadow: '0 10px 25px rgba(56, 189, 248, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '1.5rem',
-          zIndex: 200,
-          transition: 'var(--transition)'
-        }}
-        title="Consultar Asistente AI CENEPRED"
-      >
-        💬
-      </button>
-
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+      {/* Chat Window */}
       {isOpen && (
-        <div style={{
-          position: 'fixed',
-          bottom: '6rem',
-          right: '2rem',
-          width: '380px',
-          height: '520px',
-          background: 'rgba(15, 23, 42, 0.95)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid var(--border-glow)',
-          borderRadius: 'var(--radius-lg)',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)',
-          zIndex: 200,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            padding: '1rem 1.25rem',
-            background: 'rgba(30, 41, 59, 0.8)',
-            borderBottom: '1px solid var(--border-glass)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>🤖</span>
+        <div className="w-85 sm:w-96 h-[460px] mb-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl border border-outline-variant/30 flex flex-col overflow-hidden transition-all duration-300">
+          {/* Header */}
+          <div className="bg-surface-container-low p-4 flex items-center justify-between border-b border-outline-variant/20">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                <span className="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
+              </div>
               <div>
-                <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Asistente RAG CENEPRED</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--risk-low)' }}>Azure OpenAI Service</div>
+                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">CENEPRED Assistant</h4>
+                <span className="font-label-sm text-[10px] text-primary font-semibold">Powered by Azure OpenAI</span>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.1rem' }}
+              className="text-slate-500 hover:text-slate-800 transition-colors"
             >
-              ✕
+              <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
 
-          <div style={{
-            flex: 1,
-            padding: '1rem',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem'
-          }}>
+          {/* Messages Body */}
+          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 font-body-md text-xs leading-relaxed bg-slate-50/50">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                style={{
-                  maxWidth: '85%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '12px',
-                  fontSize: '0.88rem',
-                  lineHeight: 1.45,
-                  alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                  background: msg.sender === 'user' ? 'var(--primary)' : 'rgba(255, 255, 255, 0.08)',
-                  color: msg.sender === 'user' ? '#0F172A' : 'var(--text-main)',
-                  fontWeight: msg.sender === 'user' ? 500 : 400,
-                  borderBottomRightRadius: msg.sender === 'user' ? '2px' : '12px',
-                  borderBottomLeftRadius: msg.sender === 'bot' ? '2px' : '12px'
-                }}
+                className={`max-w-[85%] p-3 rounded-xl shadow-sm ${
+                  msg.sender === 'user'
+                    ? 'bg-primary text-white self-end rounded-tr-none font-medium'
+                    : 'bg-white text-slate-800 border border-outline-variant/20 self-start rounded-tl-none'
+                }`}
               >
                 {msg.text}
               </div>
@@ -141,46 +83,36 @@ export default function AIChatbotModal() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div style={{
-            padding: '0.85rem',
-            borderTop: '1px solid var(--border-glass)',
-            display: 'flex',
-            gap: '0.5rem'
-          }}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Pregunta sobre riesgo en Piura..."
-              style={{
-                flex: 1,
-                background: 'rgba(9, 13, 22, 0.8)',
-                border: '1px solid var(--border-glass)',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-main)',
-                padding: '0.6rem 0.85rem',
-                fontSize: '0.85rem',
-                outline: 'none'
-              }}
-            />
-            <button
-              onClick={handleSend}
-              style={{
-                background: 'var(--primary)',
-                color: '#0F172A',
-                border: 'none',
-                padding: '0 1rem',
-                borderRadius: 'var(--radius-sm)',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              Enviar
-            </button>
+          {/* Input Box */}
+          <div className="p-3 bg-white border-t border-outline-variant/20">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Consultar RAG..."
+                className="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-4 pr-10 text-slate-800 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 font-medium"
+              />
+              <button
+                onClick={handleSend}
+                className="absolute right-1.5 w-7 h-7 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[14px]">send</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
-    </>
+
+      {/* Floating Action Button (FAB) */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-14 h-14 bg-primary text-white rounded-full shadow-[0_4px_14px_rgba(0,102,138,0.4)] hover:shadow-[0_6px_20px_rgba(0,102,138,0.6)] flex items-center justify-center hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden"
+        title="CENEPRED Assistant"
+      >
+        <span className="material-symbols-outlined text-[26px]">smart_toy</span>
+      </button>
+    </div>
   );
 }
