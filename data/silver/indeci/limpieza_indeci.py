@@ -141,11 +141,14 @@ def limpiar(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     gdf["fecha"] = pd.to_datetime(gdf["fecha"], format="%d/%m/%Y", errors="coerce")
 
     # Ubigeo: estandarizar a string de 6 dígitos con cero a la izquierda (regla de la sección 4.4).
-    gdf["ubigeo"] = gdf["ubigeo"].astype(str).str.strip().str.zfill(6)
+    ubigeo_series = gdf["ubigeo"].astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
+    ubigeo_series = ubigeo_series.replace(["None", "nan", "NaN", "<NA>", ""], None)
+    gdf["ubigeo"] = ubigeo_series.apply(lambda x: str(x).zfill(6) if pd.notna(x) and x is not None else None)
 
     # Texto: mayúsculas y sin espacios extremos, consistente entre años.
     for col in ["departamento", "provincia", "distrito", "region_natural", "tipo_fenomeno"]:
-        gdf[col] = gdf[col].astype(str).str.strip().str.upper()
+        col_series = gdf[col].astype(str).str.strip().str.upper()
+        gdf[col] = col_series.replace(["NONE", "NAN", "<NA>", ""], None)
 
     # Corregir nombres con la letra acentuada corrupta (ver CORRECCION_DEPARTAMENTO/TIPO_FENOMENO).
     gdf["departamento"] = gdf["departamento"].replace(CORRECCION_DEPARTAMENTO, regex=True)
