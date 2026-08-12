@@ -30,6 +30,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+            
+            {/* Card 1: Gauge */}
             <div className="col-span-1 bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tertiary-fixed-dim to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="font-label-sm text-on-surface-variant uppercase tracking-widest self-start mb-4 text-xs font-semibold text-slate-500">
@@ -48,38 +50,62 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             </div>
 
             <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
-                <div className="flex justify-between items-start">
+              
+              {/* Card 2: Regiones en Alerta Crítica (With 3D Alert Radar Image) */}
+              <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+                <div className="flex justify-between items-start z-10">
                   <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Regiones en Alerta Crítica</span>
                   <span className="material-symbols-outlined text-tertiary-fixed-dim p-2 bg-tertiary-fixed/20 rounded-full text-primary">warning</span>
                 </div>
-                <div className="mt-4">
+
+                {/* 3D Visual Image in the center whitespace */}
+                <div className="my-2 flex justify-center items-center h-28 relative z-10">
+                  <img
+                    src="/assets/card_alert_icon.png"
+                    alt="Alerta Crítica Radar 3D"
+                    className="max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                <div className="mt-2 z-10">
                   <span className="font-display-lg text-4xl font-extrabold text-on-surface block leading-none mb-1">
                     0{highRiskDeptos.length}
                   </span>
-                  <span className="font-body-md text-sm text-on-surface-variant text-slate-600 truncate block">
+                  <span className="font-body-md text-sm text-on-surface-variant text-slate-600 truncate block font-medium">
                     {highRiskNames}
                   </span>
                 </div>
               </div>
 
-              <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
-                <div className="flex justify-between items-start">
+              {/* Card 3: Ejecución PP 0068 (With 3D Budget Growth Chart Image) */}
+              <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+                <div className="flex justify-between items-start z-10">
                   <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Ejecución PP 0068 (MEF)</span>
                   <span className="material-symbols-outlined text-tertiary-fixed-dim p-2 bg-tertiary-fixed/20 rounded-full text-primary">account_balance</span>
                 </div>
-                <div className="mt-4 flex flex-col gap-2">
+
+                {/* 3D Visual Image in the center whitespace */}
+                <div className="my-2 flex justify-center items-center h-28 relative z-10">
+                  <img
+                    src="/assets/card_budget_icon.png"
+                    alt="Presupuesto MEF 3D Chart"
+                    className="max-h-full max-w-full object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                <div className="mt-2 flex flex-col gap-2 z-10">
                   <div className="flex items-end gap-2">
                     <span className="font-display-lg text-3xl font-extrabold text-on-surface block leading-none">
                       {NATIONAL_META.pctEjecucionNacional}%
                     </span>
-                    <span className="font-label-sm text-xs text-slate-400 mb-1">PROMEDIO NACIONAL</span>
+                    <span className="font-label-sm text-xs text-slate-400 mb-1 font-semibold">PROMEDIO NACIONAL</span>
                   </div>
                   <div className="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
                     <div className="bg-gradient-to-r from-primary-fixed to-primary h-full rounded-full shadow-[0_0_10px_rgba(56,189,248,0.5)]" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </section>
