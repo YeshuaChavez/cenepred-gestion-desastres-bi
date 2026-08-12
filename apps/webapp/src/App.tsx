@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import SplashScreen from './components/SplashScreen';
 import HomeView from './components/views/HomeView';
 import MonitoreoView from './components/views/MonitoreoView';
+import HistoricoTendenciasView from './components/views/HistoricoTendenciasView';
 import RiesgoPredictivoView from './components/views/RiesgoPredictivoView';
 import PresupuestoMEFView from './components/views/PresupuestoMEFView';
 import ComparativoRegionalView from './components/views/ComparativoRegionalView';
@@ -10,7 +12,8 @@ import AIChatbotModal from './components/AIChatbotModal';
 import { ActivePath } from './types';
 
 export default function App() {
-  const [activePath, setActivePath] = useState<ActivePath>('monitoreo-diario');
+  const [showSplash, setShowSplash] = useState<boolean>(true);
+  const [activePath, setActivePath] = useState<ActivePath>('home');
 
   const renderActiveView = () => {
     switch (activePath) {
@@ -18,30 +21,42 @@ export default function App() {
         return <HomeView setActivePath={setActivePath} />;
       case 'monitoreo-diario':
         return <MonitoreoView />;
+      case 'historico-tendencias':
+        return <HistoricoTendenciasView />;
       case 'riesgo-predictivo':
         return <RiesgoPredictivoView />;
       case 'presupuesto-mef':
         return <PresupuestoMEFView />;
       case 'comparativo-regional':
-      case 'historico-tendencias':
         return <ComparativoRegionalView />;
       default:
-        return <MonitoreoView />;
+        return <HomeView setActivePath={setActivePath} />;
     }
   };
 
   return (
-    <div className="bg-background font-sans text-on-surface min-h-screen flex">
-      <Sidebar activePath={activePath} setActivePath={setActivePath} />
+    <>
+      {showSplash && (
+        <SplashScreen
+          onFinish={() => {
+            setShowSplash(false);
+            setActivePath('home');
+          }}
+        />
+      )}
 
-      <div className="pl-72 w-full flex-1">
-        <Header />
-        <main className="relative pt-20 min-h-screen bg-background">
-          {renderActiveView()}
-        </main>
+      <div className="bg-slate-50 font-sans text-slate-900 min-h-screen flex selection:bg-sky-500 selection:text-white">
+        <Sidebar activePath={activePath} setActivePath={setActivePath} />
+
+        <div className="pl-72 w-full flex-1">
+          <Header />
+          <main className="relative pt-20 min-h-screen bg-slate-50">
+            {renderActiveView()}
+          </main>
+        </div>
+
+        <AIChatbotModal />
       </div>
-
-      <AIChatbotModal />
-    </div>
+    </>
   );
 }
