@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage } from '../types';
+import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../data/mockData';
 
 export default function AIChatbotModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -7,7 +8,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
-      text: 'Hola, soy el asistente analítico del SAT CENEPRED. ¿Qué información regional, predictiva o presupuestal necesitas consultar hoy?'
+      text: 'Hola, soy el asistente analítico del SAT CENEPRED. Estoy conectado a la capa Gold (25 departamentos, 84k+ emergencias). ¿Qué región, indicador o presupuesto deseas consultar hoy?'
     }
   ]);
 
@@ -27,20 +28,30 @@ export default function AIChatbotModal() {
     setTimeout(() => {
       const botResponse = generateAIResponse(userText);
       setMessages(prev => [...prev, { sender: 'bot', text: botResponse }]);
-    }, 500);
+    }, 400);
   };
 
   const generateAIResponse = (query: string): string => {
     const q = query.toLowerCase();
-    if (q.includes('piura') || q.includes('lluvias')) {
-      return 'Piura - Riesgo Crítico (78%). Las lluvias de los últimos 7 días acumulan +24.5mm sobre lo normal según Open-Meteo. La ejecución del PP 0068 está al 22.4%, dejando una brecha crítica de atención en la cuenca del Río Chira.';
-    } else if (q.includes('apurimac') || q.includes('focos')) {
-      return 'Apurímac presenta un riesgo predictivo del 88% (Alto). La causa principal en el desglose SHAP son los focos de calor activos detectados por el satélite VIIRS de NASA FIRMS (+32.4) y el historial de friajes.';
-    } else if (q.includes('presupuesto') || q.includes('mef')) {
-      return 'El Programa Presupuestal PP 0068 registra una ejecución acumulada nacional de S/ 1.1B (45.8% del PIM total). Los pliegos con mayor ejecución son MINDEF (82%) y MINSA (75%).';
-    } else {
-      return `Conectado al Lakehouse Azure Databricks: analizando '${query}'. El modelo XGBoost actualiza diariamente la inferencia con datos de Open-Meteo, USGS y NASA FIRMS. ¿Deseas consultar el riesgo o brecha MEF de alguna región específica?`;
+    
+    // Check if user mentions any department
+    const deptKeys = Object.keys(PERU_DEPARTAMENTOS);
+    const matchedKey = deptKeys.find(k => q.includes(k) || q.includes(PERU_DEPARTAMENTOS[k].name.toLowerCase()));
+
+    if (matchedKey) {
+      const d = PERU_DEPARTAMENTOS[matchedKey];
+      return `Región ${d.name}: Score de riesgo del ${d.prob}% (${d.tag}). Registra ${d.emergencias} emergencias históricas en SINPAD, ${d.precipitacionMm}mm de precipitación acumulada, ${d.focosCalor} focos de calor FIRMS. Su ejecución presupuestal PP0068 es de S/ ${d.devengadoM}M de S/ ${d.pimM}M (${d.pctEjecucion}%).`;
     }
+
+    if (q.includes('presupuesto') || q.includes('mef') || q.includes('pim')) {
+      return `El Programa Presupuestal PP0068 (PREVAED) registra un PIM asignado de S/ ${NATIONAL_META.totalPimMillones}M a nivel nacional y un devengado acumulado de S/ ${NATIONAL_META.totalDevengadoMillones}M (${NATIONAL_META.pctEjecucionNacional}% de avance).`;
+    }
+
+    if (q.includes('emergencia') || q.includes('afectado') || q.includes('sinpad')) {
+      return `En la capa Gold tenemos registrados ${NATIONAL_META.totalEmergencias.toLocaleString()} emergencias históricas, sumando ${NATIONAL_META.totalAfectados.toLocaleString()} personas afectadas y ${NATIONAL_META.totalDamnificados.toLocaleString()} damnificados en 25 departamentos.`;
+    }
+
+    return `Conectado al Lakehouse CENEPRED (25 Departamentos). Analizando '${query}'. El modelo XGBoost actualiza diariamente la inferencia con datos de Open-Meteo, USGS y NASA FIRMS. ¿Deseas consultar datos de alguna región específica?`;
   };
 
   return (
@@ -54,7 +65,7 @@ export default function AIChatbotModal() {
               </div>
               <div>
                 <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">CENEPRED Assistant</h4>
-                <span className="font-label-sm text-[10px] text-primary font-semibold">Powered by Azure OpenAI</span>
+                <span className="font-label-sm text-[10px] text-primary font-semibold">Gold Layer RAG Connected</span>
               </div>
             </div>
             <button
@@ -88,7 +99,7 @@ export default function AIChatbotModal() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Consultar RAG..."
+                placeholder="Consultar departamento o indicador..."
                 className="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-4 pr-10 text-slate-800 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 font-medium"
               />
               <button

@@ -1,13 +1,13 @@
 import React from 'react';
-import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES } from '../../data/mockData';
+import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES, NATIONAL_META } from '../../data/mockData';
 
 export default function PresupuestoMEFView() {
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
       <div className="flex flex-col gap-2">
-        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto MEF PP 0068 (PREVAED)</h2>
+        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto MEF PP 0068 (PREVAED) - Capa Gold</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Análisis de ejecución presupuestal del Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias por Desastres. Identificación de brechas entre riesgo y ejecución.
+          Análisis de ejecución presupuestal del Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias por Desastres. Integrando los 25 departamentos del Perú.
         </p>
       </div>
 
@@ -18,9 +18,9 @@ export default function PresupuestoMEFView() {
             <span className="material-symbols-outlined text-primary">account_balance</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ 2.4B</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalPimMillones}M</span>
             <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-              <span className="material-symbols-outlined text-xs">arrow_upward</span> +5.2% vs PIA
+              <span className="material-symbols-outlined text-xs">arrow_upward</span> Base Datos MEF Gold
             </span>
           </div>
         </div>
@@ -31,33 +31,35 @@ export default function PresupuestoMEFView() {
             <span className="material-symbols-outlined text-secondary">trending_up</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ 1.1B</span>
-            <span className="text-xs font-semibold text-slate-600">45.8% Avance</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
+            <span className="text-xs font-semibold text-slate-600">{NATIONAL_META.pctEjecucionNacional}% Avance Global</span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-1.5 mt-1">
-            <div className="bg-secondary h-full rounded-full" style={{ width: '45.8%' }}></div>
+            <div className="bg-secondary h-full rounded-full" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Brecha Meta Anual</span>
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Brecha por Ejecutar</span>
             <span className="material-symbols-outlined text-red-600">warning</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-red-600">S/ 850M</span>
-            <span className="text-xs font-medium text-slate-500">Para alcanzar meta 80%</span>
+            <span className="font-display-lg text-3xl font-extrabold text-red-600">
+              S/ {roundNum(NATIONAL_META.totalPimMillones - NATIONAL_META.totalDevengadoMillones)}M
+            </span>
+            <span className="text-xs font-medium text-slate-500">Pendiente de devengado</span>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Proyección Cierre</span>
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Regiones Atendidas</span>
             <span className="material-symbols-outlined text-primary">analytics</span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">72%</span>
-            <span className="text-xs font-semibold text-primary">Basado en ritmo actual</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">{NATIONAL_META.totalDepartamentos}</span>
+            <span className="font-xs font-semibold text-primary">Departamentos Monitoreados</span>
           </div>
         </div>
       </div>
@@ -65,21 +67,17 @@ export default function PresupuestoMEFView() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
           <div className="flex justify-between items-center">
-            <h3 className="font-title-md text-base font-bold text-slate-900">Ejecución vs Riesgo por Departamento</h3>
-            <div className="flex gap-2">
-              <button className="px-3 py-1 bg-slate-100 rounded-full font-label-sm text-xs text-slate-600 font-semibold hover:bg-slate-200">Gobierno Regional</button>
-              <button className="px-3 py-1 bg-primary text-white rounded-full font-label-sm text-xs font-semibold">Gobierno Local</button>
-            </div>
+            <h3 className="font-title-md text-base font-bold text-slate-900">Ejecución Presupuestal por Departamento (25 Regiones)</h3>
           </div>
 
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto max-h-[500px] overflow-y-auto">
             <table className="w-full text-left border-collapse min-w-[600px]">
-              <thead>
+              <thead className="sticky top-0 bg-slate-100 shadow-xs z-10">
                 <tr className="border-b border-slate-200">
                   <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">Departamento</th>
-                  <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">PIM (Millones S/)</th>
+                  <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">PIM (Millones)</th>
                   <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">Ejecución (%)</th>
-                  <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">Nivel Riesgo SAT</th>
+                  <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">Nivel Riesgo</th>
                   <th className="py-3 px-4 font-label-sm text-xs text-slate-500 uppercase font-semibold">Estado</th>
                 </tr>
               </thead>
@@ -92,7 +90,7 @@ export default function PresupuestoMEFView() {
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold w-12">{row.ejec}</span>
                         <div className="w-24 bg-slate-100 rounded-full h-1.5">
-                          <div className={`h-full rounded-full ${row.pct < 30 ? 'bg-red-500' : row.pct < 60 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${row.pct}%` }}></div>
+                          <div className={`h-full rounded-full ${row.pct < 30 ? 'bg-red-500' : row.pct < 60 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(100, row.pct)}%` }}></div>
                         </div>
                       </div>
                     </td>
@@ -109,20 +107,10 @@ export default function PresupuestoMEFView() {
               </tbody>
             </table>
           </div>
-
-          <div className="mt-2 p-4 bg-red-50 text-red-900 rounded-xl flex gap-3 items-start border border-red-200 shadow-sm">
-            <span className="material-symbols-outlined text-red-600 mt-0.5">notification_important</span>
-            <div>
-              <h4 className="font-title-md text-sm font-bold text-red-900">Alerta de Desempeño Crítico</h4>
-              <p className="font-body-md text-xs text-red-800 mt-1">
-                3 regiones del norte (Piura, Lambayeque, Tumbes) concentran el 40% del riesgo proyectado para el próximo trimestre, pero muestran una ejecución promedio inferior al 25% del PIM asignado para emergencias.
-              </p>
-            </div>
-          </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
-          <h3 className="font-title-md text-base font-bold text-slate-900">Top Ejecutores (Pliego)</h3>
+          <h3 className="font-title-md text-base font-bold text-slate-900">Top Pliegos Ejecutores</h3>
           <div className="flex flex-col gap-4">
             {PLIEGOS_EJECUTORES.map((pliego, idx) => (
               <div key={idx} className="flex flex-col gap-1.5">
@@ -136,14 +124,12 @@ export default function PresupuestoMEFView() {
               </div>
             ))}
           </div>
-
-          <div className="mt-auto pt-4">
-            <button className="w-full py-2.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-lg font-label-sm text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
-              <span className="material-symbols-outlined text-sm">download</span> Descargar Reporte Completo (CSV)
-            </button>
-          </div>
         </div>
       </div>
     </div>
   );
+}
+
+function roundNum(num: number): string {
+  return (Math.round(num * 10) / 10).toFixed(1);
 }

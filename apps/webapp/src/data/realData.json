@@ -1,0 +1,1750 @@
+{
+  "meta": {
+    "totalEmergencias": 84369,
+    "totalAfectados": 11178408,
+    "totalDamnificados": 1005110,
+    "totalPimMillones": 31016.2,
+    "totalDevengadoMillones": 22150.8,
+    "pctEjecucionNacional": 71.4,
+    "totalDepartamentos": 25
+  },
+  "departamentos": {
+    "amazonas": {
+      "name": "AMAZONAS",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3149",
+          "pct": 62,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "17.5k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+17789",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "83.6%",
+          "pct": 16,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3149,
+      "afectados": 78166,
+      "damnificados": 22289,
+      "fallecidos": 16,
+      "precipitacionMm": 17540.6,
+      "focosCalor": 17789,
+      "sismos7d": 189,
+      "tempMax": 20.3,
+      "pimM": 290.3,
+      "devengadoM": 242.8,
+      "pctEjecucion": 83.6
+    },
+    "ancash": {
+      "name": "ANCASH",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+4017",
+          "pct": 80,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "19.1k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+15687",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "52.3%",
+          "pct": 47,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 4017,
+      "afectados": 275706,
+      "damnificados": 36207,
+      "fallecidos": 60,
+      "precipitacionMm": 19120.9,
+      "focosCalor": 15687,
+      "sismos7d": 322,
+      "tempMax": 19.5,
+      "pimM": 1764.1,
+      "devengadoM": 923.3,
+      "pctEjecucion": 52.3
+    },
+    "apurimac": {
+      "name": "APURIMAC",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+7839",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "11.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+10573",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "87.8%",
+          "pct": 12,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 7839,
+      "afectados": 773549,
+      "damnificados": 45385,
+      "fallecidos": 63,
+      "precipitacionMm": 11868.8,
+      "focosCalor": 10573,
+      "sismos7d": 322,
+      "tempMax": 22.7,
+      "pimM": 470.5,
+      "devengadoM": 413.2,
+      "pctEjecucion": 87.8
+    },
+    "arequipa": {
+      "name": "AREQUIPA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3107",
+          "pct": 62,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "6.5k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+11831",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "68.6%",
+          "pct": 31,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3107,
+      "afectados": 564020,
+      "damnificados": 36726,
+      "fallecidos": 43,
+      "precipitacionMm": 6507.3,
+      "focosCalor": 11831,
+      "sismos7d": 4284,
+      "tempMax": 22.1,
+      "pimM": 902.4,
+      "devengadoM": 619.3,
+      "pctEjecucion": 68.6
+    },
+    "ayacucho": {
+      "name": "AYACUCHO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+6368",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "9.4k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+17316",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "71.7%",
+          "pct": 28,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 6368,
+      "afectados": 366741,
+      "damnificados": 20363,
+      "fallecidos": 75,
+      "precipitacionMm": 9386.8,
+      "focosCalor": 17316,
+      "sismos7d": 553,
+      "tempMax": 20.5,
+      "pimM": 778.2,
+      "devengadoM": 558.0,
+      "pctEjecucion": 71.7
+    },
+    "cajamarca": {
+      "name": "CAJAMARCA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+5044",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "22.5k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+27386",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "78.8%",
+          "pct": 21,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 5044,
+      "afectados": 142372,
+      "damnificados": 24749,
+      "fallecidos": 78,
+      "precipitacionMm": 22508.3,
+      "focosCalor": 27386,
+      "sismos7d": 56,
+      "tempMax": 19.9,
+      "pimM": 686.6,
+      "devengadoM": 540.9,
+      "pctEjecucion": 78.8
+    },
+    "callao": {
+      "name": "CALLAO",
+      "prob": 25,
+      "tag": "Moderado",
+      "tagColor": "secondary",
+      "needleDeg": -40,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+668",
+          "pct": 20,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "0.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+148",
+          "pct": 29,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "81.5%",
+          "pct": 18,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 668,
+      "afectados": 14425,
+      "damnificados": 4052,
+      "fallecidos": 9,
+      "precipitacionMm": 912.1,
+      "focosCalor": 148,
+      "sismos7d": 112,
+      "tempMax": 22.3,
+      "pimM": 458.5,
+      "devengadoM": 373.5,
+      "pctEjecucion": 81.5
+    },
+    "cusco": {
+      "name": "CUSCO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+7015",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "14.6k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+43033",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "80.1%",
+          "pct": 19,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 7015,
+      "afectados": 1128210,
+      "damnificados": 27598,
+      "fallecidos": 142,
+      "precipitacionMm": 14600.3,
+      "focosCalor": 43033,
+      "sismos7d": 336,
+      "tempMax": 16.6,
+      "pimM": 1520.6,
+      "devengadoM": 1218.3,
+      "pctEjecucion": 80.1
+    },
+    "huancavelica": {
+      "name": "HUANCAVELICA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+8884",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "16.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+7647",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "61.6%",
+          "pct": 38,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 8884,
+      "afectados": 904109,
+      "damnificados": 39663,
+      "fallecidos": 50,
+      "precipitacionMm": 16918.6,
+      "focosCalor": 7647,
+      "sismos7d": 182,
+      "tempMax": 13.9,
+      "pimM": 648.4,
+      "devengadoM": 399.2,
+      "pctEjecucion": 61.6
+    },
+    "huanuco": {
+      "name": "HUANUCO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3420",
+          "pct": 68,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "10.1k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+103549",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "72.7%",
+          "pct": 27,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3420,
+      "afectados": 353323,
+      "damnificados": 12410,
+      "fallecidos": 46,
+      "precipitacionMm": 10148.1,
+      "focosCalor": 103549,
+      "sismos7d": 441,
+      "tempMax": 23.4,
+      "pimM": 485.6,
+      "devengadoM": 352.9,
+      "pctEjecucion": 72.7
+    },
+    "ica": {
+      "name": "ICA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+1167",
+          "pct": 23,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "0.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+7082",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "64.6%",
+          "pct": 35,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 1167,
+      "afectados": 259779,
+      "damnificados": 14089,
+      "fallecidos": 23,
+      "precipitacionMm": 876.6,
+      "focosCalor": 7082,
+      "sismos7d": 1540,
+      "tempMax": 28.4,
+      "pimM": 1504.9,
+      "devengadoM": 972.4,
+      "pctEjecucion": 64.6
+    },
+    "junin": {
+      "name": "JUNIN",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3049",
+          "pct": 60,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "17.3k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+71074",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "77.9%",
+          "pct": 22,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3049,
+      "afectados": 478467,
+      "damnificados": 15027,
+      "fallecidos": 46,
+      "precipitacionMm": 17344.3,
+      "focosCalor": 71074,
+      "sismos7d": 315,
+      "tempMax": 17.1,
+      "pimM": 647.1,
+      "devengadoM": 504.2,
+      "pctEjecucion": 77.9
+    },
+    "la_libertad": {
+      "name": "LA LIBERTAD",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+2385",
+          "pct": 47,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "1.8k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+22887",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "65.9%",
+          "pct": 34,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 2385,
+      "afectados": 491529,
+      "damnificados": 82878,
+      "fallecidos": 47,
+      "precipitacionMm": 1812.6,
+      "focosCalor": 22887,
+      "sismos7d": 126,
+      "tempMax": 23.4,
+      "pimM": 1358.8,
+      "devengadoM": 894.9,
+      "pctEjecucion": 65.9
+    },
+    "lambayeque": {
+      "name": "LAMBAYEQUE",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+820",
+          "pct": 20,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "2.1k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+13074",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "61.0%",
+          "pct": 39,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 820,
+      "afectados": 234206,
+      "damnificados": 49423,
+      "fallecidos": 33,
+      "precipitacionMm": 2108.7,
+      "focosCalor": 13074,
+      "sismos7d": 98,
+      "tempMax": 25.6,
+      "pimM": 1158.5,
+      "devengadoM": 706.3,
+      "pctEjecucion": 61.0
+    },
+    "lima": {
+      "name": "LIMA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+6535",
+          "pct": 95,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "0.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+8318",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "76.8%",
+          "pct": 23,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 6535,
+      "afectados": 226812,
+      "damnificados": 40229,
+      "fallecidos": 230,
+      "precipitacionMm": 912.1,
+      "focosCalor": 8318,
+      "sismos7d": 826,
+      "tempMax": 22.2,
+      "pimM": 10539.2,
+      "devengadoM": 8094.0,
+      "pctEjecucion": 76.8
+    },
+    "loreto": {
+      "name": "LORETO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+1622",
+          "pct": 32,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "32.9k mm",
+          "pct": 21,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+86130",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "80.8%",
+          "pct": 19,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 1622,
+      "afectados": 772245,
+      "damnificados": 256119,
+      "fallecidos": 56,
+      "precipitacionMm": 32905.8,
+      "focosCalor": 86130,
+      "sismos7d": 1617,
+      "tempMax": 29.7,
+      "pimM": 268.3,
+      "devengadoM": 216.9,
+      "pctEjecucion": 80.8
+    },
+    "madre_de_dios": {
+      "name": "MADRE DE DIOS",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+584",
+          "pct": 20,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "28.8k mm",
+          "pct": 19,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+64173",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "63.7%",
+          "pct": 36,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 584,
+      "afectados": 67718,
+      "damnificados": 5737,
+      "fallecidos": 28,
+      "precipitacionMm": 28792.4,
+      "focosCalor": 64173,
+      "sismos7d": 168,
+      "tempMax": 29.7,
+      "pimM": 118.9,
+      "devengadoM": 75.7,
+      "pctEjecucion": 63.7
+    },
+    "moquegua": {
+      "name": "MOQUEGUA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+843",
+          "pct": 20,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "1.7k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+7255",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "78.9%",
+          "pct": 21,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 843,
+      "afectados": 194754,
+      "damnificados": 7384,
+      "fallecidos": 13,
+      "precipitacionMm": 1666.0,
+      "focosCalor": 7255,
+      "sismos7d": 483,
+      "tempMax": 24.3,
+      "pimM": 277.5,
+      "devengadoM": 218.9,
+      "pctEjecucion": 78.9
+    },
+    "pasco": {
+      "name": "PASCO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3939",
+          "pct": 78,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "15.8k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+32309",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "75.3%",
+          "pct": 24,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3939,
+      "afectados": 382468,
+      "damnificados": 6730,
+      "fallecidos": 47,
+      "precipitacionMm": 15812.7,
+      "focosCalor": 32309,
+      "sismos7d": 497,
+      "tempMax": 9.7,
+      "pimM": 281.2,
+      "devengadoM": 211.8,
+      "pctEjecucion": 75.3
+    },
+    "piura": {
+      "name": "PIURA",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+3329",
+          "pct": 66,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "3.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+24321",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "60.6%",
+          "pct": 39,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 3329,
+      "afectados": 1249874,
+      "damnificados": 154581,
+      "fallecidos": 100,
+      "precipitacionMm": 3902.6,
+      "focosCalor": 24321,
+      "sismos7d": 784,
+      "tempMax": 31.2,
+      "pimM": 3900.7,
+      "devengadoM": 2362.5,
+      "pctEjecucion": 60.6
+    },
+    "puno": {
+      "name": "PUNO",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+4568",
+          "pct": 91,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "13.6k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+19846",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "87.0%",
+          "pct": 12,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 4568,
+      "afectados": 1551003,
+      "damnificados": 47213,
+      "fallecidos": 64,
+      "precipitacionMm": 13553.5,
+      "focosCalor": 19846,
+      "sismos7d": 1344,
+      "tempMax": 14.9,
+      "pimM": 639.1,
+      "devengadoM": 556.1,
+      "pctEjecucion": 87.0
+    },
+    "san_martin": {
+      "name": "SAN MARTIN",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+2473",
+          "pct": 49,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "20.2k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+137404",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "80.8%",
+          "pct": 19,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 2473,
+      "afectados": 163075,
+      "damnificados": 28611,
+      "fallecidos": 47,
+      "precipitacionMm": 20183.4,
+      "focosCalor": 137404,
+      "sismos7d": 364,
+      "tempMax": 26.5,
+      "pimM": 633.9,
+      "devengadoM": 512.1,
+      "pctEjecucion": 80.8
+    },
+    "tacna": {
+      "name": "TACNA",
+      "prob": 34,
+      "tag": "Moderado",
+      "tagColor": "secondary",
+      "needleDeg": -26,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+649",
+          "pct": 20,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "0.9k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+790",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "77.6%",
+          "pct": 22,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 649,
+      "afectados": 161909,
+      "damnificados": 8925,
+      "fallecidos": 9,
+      "precipitacionMm": 894.9,
+      "focosCalor": 790,
+      "sismos7d": 2541,
+      "tempMax": 22.5,
+      "pimM": 315.5,
+      "devengadoM": 244.7,
+      "pctEjecucion": 77.6
+    },
+    "tumbes": {
+      "name": "TUMBES",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+1124",
+          "pct": 22,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "8.4k mm",
+          "pct": 15,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+3215",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "67.1%",
+          "pct": 32,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 1124,
+      "afectados": 261163,
+      "damnificados": 3348,
+      "fallecidos": 12,
+      "precipitacionMm": 8392.3,
+      "focosCalor": 3215,
+      "sismos7d": 399,
+      "tempMax": 28.6,
+      "pimM": 1196.7,
+      "devengadoM": 803.4,
+      "pctEjecucion": 67.1
+    },
+    "ucayali": {
+      "name": "UCAYALI",
+      "prob": 98,
+      "tag": "Crítico",
+      "tagColor": "error",
+      "needleDeg": 77,
+      "shap": [
+        {
+          "name": "Incidencia Emergencias (SINPAD)",
+          "val": "+1771",
+          "pct": 35,
+          "color": "#ba1a1a"
+        },
+        {
+          "name": "Precipitación Acumulada (mm)",
+          "val": "27.7k mm",
+          "pct": 18,
+          "color": "#006686"
+        },
+        {
+          "name": "Focos Calor / Actividad Satelital",
+          "val": "+140663",
+          "pct": 85,
+          "color": "#565e74"
+        },
+        {
+          "name": "Brecha Presupuestal MEF",
+          "val": "79.4%",
+          "pct": 20,
+          "color": "#94a3b8"
+        }
+      ],
+      "emergencias": 1771,
+      "afectados": 82785,
+      "damnificados": 15374,
+      "fallecidos": 52,
+      "precipitacionMm": 27746.7,
+      "focosCalor": 140663,
+      "sismos7d": 1323,
+      "tempMax": 29.9,
+      "pimM": 170.5,
+      "devengadoM": 135.3,
+      "pctEjecucion": 79.4
+    }
+  },
+  "matrizEstacional": [
+    {
+      "depto": "AMAZONAS",
+      "ene": 5,
+      "feb": 6,
+      "mar": 10,
+      "abr": 7,
+      "may": 5,
+      "jun": 3,
+      "jul": 3,
+      "ago": 3,
+      "sep": 4,
+      "oct": 5,
+      "nov": 7,
+      "dic": 3
+    },
+    {
+      "depto": "ANCASH",
+      "ene": 3,
+      "feb": 4,
+      "mar": 10,
+      "abr": 5,
+      "may": 1,
+      "jun": 1,
+      "jul": 1,
+      "ago": 2,
+      "sep": 2,
+      "oct": 2,
+      "nov": 2,
+      "dic": 1
+    },
+    {
+      "depto": "APURIMAC",
+      "ene": 9,
+      "feb": 10,
+      "mar": 10,
+      "abr": 5,
+      "may": 3,
+      "jun": 4,
+      "jul": 4,
+      "ago": 5,
+      "sep": 5,
+      "oct": 6,
+      "nov": 8,
+      "dic": 5
+    },
+    {
+      "depto": "AREQUIPA",
+      "ene": 7,
+      "feb": 10,
+      "mar": 6,
+      "abr": 1,
+      "may": 1,
+      "jun": 3,
+      "jul": 2,
+      "ago": 2,
+      "sep": 1,
+      "oct": 1,
+      "nov": 1,
+      "dic": 1
+    },
+    {
+      "depto": "AYACUCHO",
+      "ene": 9,
+      "feb": 10,
+      "mar": 8,
+      "abr": 4,
+      "may": 2,
+      "jun": 2,
+      "jul": 3,
+      "ago": 2,
+      "sep": 2,
+      "oct": 3,
+      "nov": 5,
+      "dic": 3
+    },
+    {
+      "depto": "CAJAMARCA",
+      "ene": 2,
+      "feb": 4,
+      "mar": 10,
+      "abr": 4,
+      "may": 3,
+      "jun": 1,
+      "jul": 1,
+      "ago": 2,
+      "sep": 1,
+      "oct": 2,
+      "nov": 3,
+      "dic": 1
+    },
+    {
+      "depto": "CALLAO",
+      "ene": 10,
+      "feb": 6,
+      "mar": 4,
+      "abr": 4,
+      "may": 4,
+      "jun": 4,
+      "jul": 4,
+      "ago": 5,
+      "sep": 5,
+      "oct": 5,
+      "nov": 6,
+      "dic": 5
+    },
+    {
+      "depto": "CUSCO",
+      "ene": 9,
+      "feb": 10,
+      "mar": 7,
+      "abr": 4,
+      "may": 3,
+      "jun": 4,
+      "jul": 5,
+      "ago": 8,
+      "sep": 7,
+      "oct": 7,
+      "nov": 6,
+      "dic": 3
+    },
+    {
+      "depto": "HUANCAVELICA",
+      "ene": 7,
+      "feb": 10,
+      "mar": 8,
+      "abr": 4,
+      "may": 2,
+      "jun": 3,
+      "jul": 4,
+      "ago": 4,
+      "sep": 3,
+      "oct": 3,
+      "nov": 4,
+      "dic": 3
+    },
+    {
+      "depto": "HUANUCO",
+      "ene": 10,
+      "feb": 9,
+      "mar": 9,
+      "abr": 5,
+      "may": 3,
+      "jun": 3,
+      "jul": 4,
+      "ago": 5,
+      "sep": 5,
+      "oct": 5,
+      "nov": 6,
+      "dic": 3
+    },
+    {
+      "depto": "ICA",
+      "ene": 10,
+      "feb": 9,
+      "mar": 7,
+      "abr": 3,
+      "may": 2,
+      "jun": 2,
+      "jul": 3,
+      "ago": 2,
+      "sep": 3,
+      "oct": 3,
+      "nov": 3,
+      "dic": 2
+    },
+    {
+      "depto": "JUNIN",
+      "ene": 8,
+      "feb": 10,
+      "mar": 10,
+      "abr": 5,
+      "may": 4,
+      "jun": 6,
+      "jul": 6,
+      "ago": 6,
+      "sep": 6,
+      "oct": 5,
+      "nov": 7,
+      "dic": 6
+    },
+    {
+      "depto": "LA LIBERTAD",
+      "ene": 3,
+      "feb": 5,
+      "mar": 10,
+      "abr": 3,
+      "may": 2,
+      "jun": 1,
+      "jul": 1,
+      "ago": 2,
+      "sep": 1,
+      "oct": 1,
+      "nov": 2,
+      "dic": 3
+    },
+    {
+      "depto": "LAMBAYEQUE",
+      "ene": 3,
+      "feb": 8,
+      "mar": 10,
+      "abr": 3,
+      "may": 3,
+      "jun": 2,
+      "jul": 2,
+      "ago": 2,
+      "sep": 2,
+      "oct": 3,
+      "nov": 4,
+      "dic": 2
+    },
+    {
+      "depto": "LIMA",
+      "ene": 7,
+      "feb": 8,
+      "mar": 10,
+      "abr": 4,
+      "may": 3,
+      "jun": 3,
+      "jul": 4,
+      "ago": 3,
+      "sep": 3,
+      "oct": 3,
+      "nov": 3,
+      "dic": 3
+    },
+    {
+      "depto": "LORETO",
+      "ene": 10,
+      "feb": 8,
+      "mar": 8,
+      "abr": 6,
+      "may": 6,
+      "jun": 4,
+      "jul": 5,
+      "ago": 8,
+      "sep": 10,
+      "oct": 5,
+      "nov": 5,
+      "dic": 2
+    },
+    {
+      "depto": "MADRE DE DIOS",
+      "ene": 6,
+      "feb": 8,
+      "mar": 5,
+      "abr": 3,
+      "may": 4,
+      "jun": 4,
+      "jul": 4,
+      "ago": 8,
+      "sep": 10,
+      "oct": 7,
+      "nov": 6,
+      "dic": 3
+    },
+    {
+      "depto": "MOQUEGUA",
+      "ene": 9,
+      "feb": 10,
+      "mar": 5,
+      "abr": 2,
+      "may": 2,
+      "jun": 5,
+      "jul": 4,
+      "ago": 3,
+      "sep": 2,
+      "oct": 2,
+      "nov": 2,
+      "dic": 2
+    },
+    {
+      "depto": "PASCO",
+      "ene": 7,
+      "feb": 10,
+      "mar": 10,
+      "abr": 4,
+      "may": 2,
+      "jun": 4,
+      "jul": 4,
+      "ago": 4,
+      "sep": 5,
+      "oct": 3,
+      "nov": 4,
+      "dic": 3
+    },
+    {
+      "depto": "PIURA",
+      "ene": 4,
+      "feb": 6,
+      "mar": 10,
+      "abr": 3,
+      "may": 2,
+      "jun": 2,
+      "jul": 2,
+      "ago": 2,
+      "sep": 2,
+      "oct": 2,
+      "nov": 2,
+      "dic": 2
+    },
+    {
+      "depto": "PUNO",
+      "ene": 6,
+      "feb": 10,
+      "mar": 5,
+      "abr": 3,
+      "may": 1,
+      "jun": 3,
+      "jul": 5,
+      "ago": 5,
+      "sep": 4,
+      "oct": 4,
+      "nov": 3,
+      "dic": 2
+    },
+    {
+      "depto": "SAN MARTIN",
+      "ene": 7,
+      "feb": 5,
+      "mar": 7,
+      "abr": 6,
+      "may": 5,
+      "jun": 3,
+      "jul": 2,
+      "ago": 5,
+      "sep": 10,
+      "oct": 8,
+      "nov": 8,
+      "dic": 4
+    },
+    {
+      "depto": "TACNA",
+      "ene": 10,
+      "feb": 8,
+      "mar": 6,
+      "abr": 2,
+      "may": 5,
+      "jun": 6,
+      "jul": 6,
+      "ago": 2,
+      "sep": 2,
+      "oct": 2,
+      "nov": 2,
+      "dic": 4
+    },
+    {
+      "depto": "TUMBES",
+      "ene": 4,
+      "feb": 8,
+      "mar": 10,
+      "abr": 4,
+      "may": 2,
+      "jun": 2,
+      "jul": 1,
+      "ago": 1,
+      "sep": 2,
+      "oct": 2,
+      "nov": 2,
+      "dic": 2
+    },
+    {
+      "depto": "UCAYALI",
+      "ene": 7,
+      "feb": 8,
+      "mar": 6,
+      "abr": 5,
+      "may": 3,
+      "jun": 3,
+      "jul": 5,
+      "ago": 9,
+      "sep": 10,
+      "oct": 7,
+      "nov": 7,
+      "dic": 3
+    }
+  ],
+  "tablaMef": [
+    {
+      "depto": "AMAZONAS",
+      "pim": "S/ 290.3M",
+      "ejec": "83.6%",
+      "pct": 83.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "ANCASH",
+      "pim": "S/ 1764.1M",
+      "ejec": "52.3%",
+      "pct": 52.3,
+      "riesgo": "Medio",
+      "estado": "info",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "APURIMAC",
+      "pim": "S/ 470.5M",
+      "ejec": "87.8%",
+      "pct": 87.8,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "AREQUIPA",
+      "pim": "S/ 902.4M",
+      "ejec": "68.6%",
+      "pct": 68.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "AYACUCHO",
+      "pim": "S/ 778.2M",
+      "ejec": "71.7%",
+      "pct": 71.7,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "CAJAMARCA",
+      "pim": "S/ 686.6M",
+      "ejec": "78.8%",
+      "pct": 78.8,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "CALLAO",
+      "pim": "S/ 458.5M",
+      "ejec": "81.5%",
+      "pct": 81.5,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "CUSCO",
+      "pim": "S/ 1520.6M",
+      "ejec": "80.1%",
+      "pct": 80.1,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "HUANCAVELICA",
+      "pim": "S/ 648.4M",
+      "ejec": "61.6%",
+      "pct": 61.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "HUANUCO",
+      "pim": "S/ 485.6M",
+      "ejec": "72.7%",
+      "pct": 72.7,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "ICA",
+      "pim": "S/ 1504.9M",
+      "ejec": "64.6%",
+      "pct": 64.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "JUNIN",
+      "pim": "S/ 647.1M",
+      "ejec": "77.9%",
+      "pct": 77.9,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "LA LIBERTAD",
+      "pim": "S/ 1358.8M",
+      "ejec": "65.9%",
+      "pct": 65.9,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "LAMBAYEQUE",
+      "pim": "S/ 1158.5M",
+      "ejec": "61.0%",
+      "pct": 61.0,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "LIMA",
+      "pim": "S/ 10539.2M",
+      "ejec": "76.8%",
+      "pct": 76.8,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "LORETO",
+      "pim": "S/ 268.3M",
+      "ejec": "80.8%",
+      "pct": 80.8,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "MADRE DE DIOS",
+      "pim": "S/ 118.9M",
+      "ejec": "63.7%",
+      "pct": 63.7,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "MOQUEGUA",
+      "pim": "S/ 277.5M",
+      "ejec": "78.9%",
+      "pct": 78.9,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "PASCO",
+      "pim": "S/ 281.2M",
+      "ejec": "75.3%",
+      "pct": 75.3,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "PIURA",
+      "pim": "S/ 3900.7M",
+      "ejec": "60.6%",
+      "pct": 60.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "PUNO",
+      "pim": "S/ 639.1M",
+      "ejec": "87.0%",
+      "pct": 87.0,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "SAN MARTIN",
+      "pim": "S/ 633.9M",
+      "ejec": "80.8%",
+      "pct": 80.8,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "TACNA",
+      "pim": "S/ 315.5M",
+      "ejec": "77.6%",
+      "pct": 77.6,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "TUMBES",
+      "pim": "S/ 1196.7M",
+      "ejec": "67.1%",
+      "pct": 67.1,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    },
+    {
+      "depto": "UCAYALI",
+      "pim": "S/ 170.5M",
+      "ejec": "79.4%",
+      "pct": 79.4,
+      "riesgo": "Medio",
+      "estado": "check_circle",
+      "alertMsg": "Ejecución óptima"
+    }
+  ],
+  "pliegosEjecutores": [
+    {
+      "nombre": "MINDEF - Ejército del Perú (Gestión de Riesgos)",
+      "monto": "S/ 540M (84%)",
+      "pct": 84,
+      "color": "bg-emerald-500"
+    },
+    {
+      "nombre": "MINSA - DIGESA (Atención de Emergencias)",
+      "monto": "S/ 310M (78%)",
+      "pct": 78,
+      "color": "bg-emerald-500"
+    },
+    {
+      "nombre": "MTC - Provías Nacional (Infraestructura)",
+      "monto": "S/ 820M (64%)",
+      "pct": 64,
+      "color": "bg-secondary"
+    },
+    {
+      "nombre": "Autoridad Nacional del Agua (ANA)",
+      "monto": "S/ 190M (48%)",
+      "pct": 48,
+      "color": "bg-tertiary"
+    },
+    {
+      "nombre": "INDECI (Respuesta ante Desastres)",
+      "monto": "S/ 240M (32%)",
+      "pct": 32,
+      "color": "bg-error",
+      "isAlert": true
+    }
+  ]
+}

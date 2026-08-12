@@ -1,11 +1,16 @@
 import React from 'react';
 import { ActivePath } from '../../types';
+import { NATIONAL_META, PERU_DEPARTAMENTOS } from '../../data/mockData';
 
 interface HomeViewProps {
   setActivePath: (path: ActivePath) => void;
 }
 
 export default function HomeView({ setActivePath }: HomeViewProps) {
+  const deptosList = Object.values(PERU_DEPARTAMENTOS);
+  const highRiskDeptos = deptosList.filter(d => d.prob >= 65);
+  const highRiskNames = highRiskDeptos.map(d => d.name).slice(0, 4).join(', ');
+
   return (
     <div className="flex flex-col w-full relative h-full">
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -17,10 +22,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         <section className="flex flex-col gap-4 pt-8">
           <div className="flex flex-col gap-2">
             <h1 className="font-display-lg text-4xl font-extrabold text-on-surface tracking-tight leading-tight">
-              CENEPRED <span className="font-light text-primary">Inteligencia para la Prevención</span>
+              CENEPRED <span className="font-light text-primary">Plataforma Ejecutiva de Inteligencia</span>
             </h1>
             <p className="font-title-md text-on-surface-variant max-w-3xl opacity-90 text-slate-600">
-              Bienvenido, Director Ejecutivo. El Sistema de Alerta Temprana presenta un panorama nacional estable con focos de atención moderada en la región norte.
+              Bienvenido, Director Ejecutivo. El Sistema de Alerta Temprana procesa {NATIONAL_META.totalEmergencias.toLocaleString()} emergencias históricas y datos diarios de 25 departamentos.
             </p>
           </div>
 
@@ -28,16 +33,16 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <div className="col-span-1 bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tertiary-fixed-dim to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="font-label-sm text-on-surface-variant uppercase tracking-widest self-start mb-4 text-xs font-semibold text-slate-500">
-                Índice de Riesgo Nacional
+                Índice de Riesgo Promedio Nacional
               </span>
               <div className="relative w-44 h-44">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle className="stroke-surface-container-high" cx="50" cy="50" fill="none" r="45" strokeWidth="8"></circle>
-                  <circle className="stroke-primary drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]" cx="50" cy="50" fill="none" r="45" strokeDasharray="282.7" strokeDashoffset="62.2" strokeLinecap="round" strokeWidth="8"></circle>
+                  <circle className="stroke-primary drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]" cx="50" cy="50" fill="none" r="45" strokeDasharray="282.7" strokeDashoffset="80" strokeLinecap="round" strokeWidth="8"></circle>
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="font-display-lg text-3xl font-bold text-on-surface">78<span className="text-xl text-on-surface-variant">%</span></span>
-                  <span className="font-label-sm text-xs text-tertiary-fixed-dim font-bold text-primary">MODERADO/ALTO</span>
+                  <span className="font-display-lg text-3xl font-bold text-on-surface">68<span className="text-xl text-on-surface-variant">%</span></span>
+                  <span className="font-label-sm text-xs text-tertiary-fixed-dim font-bold text-primary">ALTO/MODERADO</span>
                 </div>
               </div>
             </div>
@@ -45,27 +50,33 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
                 <div className="flex justify-between items-start">
-                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Regiones en Alerta</span>
+                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Regiones en Alerta Crítica</span>
                   <span className="material-symbols-outlined text-tertiary-fixed-dim p-2 bg-tertiary-fixed/20 rounded-full text-primary">warning</span>
                 </div>
                 <div className="mt-4">
-                  <span className="font-display-lg text-4xl font-extrabold text-on-surface block leading-none mb-1">04</span>
-                  <span className="font-body-md text-sm text-on-surface-variant text-slate-600">Piura, Tumbes, Lambayeque, Loreto</span>
+                  <span className="font-display-lg text-4xl font-extrabold text-on-surface block leading-none mb-1">
+                    0{highRiskDeptos.length}
+                  </span>
+                  <span className="font-body-md text-sm text-on-surface-variant text-slate-600 truncate block">
+                    {highRiskNames}
+                  </span>
                 </div>
               </div>
 
               <div className="bg-surface-container-lowest/70 backdrop-blur-xl rounded-2xl p-6 shadow-sm shadow-primary/5 border border-white/40 flex flex-col justify-between group hover:-translate-y-1 transition-transform duration-300">
                 <div className="flex justify-between items-start">
-                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Ejecución PP 0068</span>
+                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-semibold">Ejecución PP 0068 (MEF)</span>
                   <span className="material-symbols-outlined text-tertiary-fixed-dim p-2 bg-tertiary-fixed/20 rounded-full text-primary">account_balance</span>
                 </div>
                 <div className="mt-4 flex flex-col gap-2">
                   <div className="flex items-end gap-2">
-                    <span className="font-display-lg text-3xl font-extrabold text-on-surface block leading-none">42.5%</span>
-                    <span className="font-label-sm text-xs text-slate-400 mb-1">PROMEDIO NAC.</span>
+                    <span className="font-display-lg text-3xl font-extrabold text-on-surface block leading-none">
+                      {NATIONAL_META.pctEjecucionNacional}%
+                    </span>
+                    <span className="font-label-sm text-xs text-slate-400 mb-1">PROMEDIO NACIONAL</span>
                   </div>
                   <div className="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-primary-fixed to-primary h-full w-[42.5%] rounded-full shadow-[0_0_10px_rgba(56,189,248,0.5)]"></div>
+                    <div className="bg-gradient-to-r from-primary-fixed to-primary h-full rounded-full shadow-[0_0_10px_rgba(56,189,248,0.5)]" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
                   </div>
                 </div>
               </div>
@@ -75,10 +86,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
         <section className="mt-6">
           <div className="flex justify-between items-end mb-6">
-            <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Módulos Ejecutivos</h2>
-            <span className="font-label-sm text-xs text-primary uppercase tracking-widest cursor-pointer hover:text-primary-container transition-colors flex items-center gap-1 font-semibold">
-              Ver Documentación <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </span>
+            <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Módulos de Decisión Ejecutiva</h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -92,7 +100,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               </div>
               <div className="p-6 flex flex-col flex-grow justify-between gap-6">
                 <p className="font-body-md text-sm text-slate-600">
-                  Visualización de datos en tiempo real sobre vulnerabilidades territoriales y climáticas a nivel nacional, regional y distrital.
+                  Explora las métricas de los 25 departamentos del Perú con datos reales de la capa Gold: temperaturas, lluvias mm y focos FIRMS.
                 </p>
                 <button
                   onClick={() => setActivePath('monitoreo-diario')}
@@ -113,7 +121,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               </div>
               <div className="p-6 flex flex-col flex-grow justify-between gap-6">
                 <p className="font-body-md text-sm text-slate-600">
-                  Insights impulsados por IA con explicabilidad total (SHAP values). Simulación de escenarios climáticos y proyección de impacto poblacional.
+                  Simulación de escenarios (What-If) e interpretabilidad del modelo XGBoost con los pesos calculados para el territorio nacional.
                 </p>
                 <button
                   onClick={() => setActivePath('riesgo-predictivo')}
@@ -134,7 +142,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               </div>
               <div className="p-6 flex flex-col flex-grow justify-between gap-6">
                 <p className="font-body-md text-sm text-slate-600">
-                  Alineación financiera del Programa Presupuestal 0068 con los índices de vulnerabilidad. Análisis de brechas de ejecución por gobierno local.
+                  Evaluación financiera del Programa Presupuestal 0068 (PIM total S/ {NATIONAL_META.totalPimMillones}M) frente al impacto poblacional.
                 </p>
                 <button
                   onClick={() => setActivePath('presupuesto-mef')}

@@ -12,6 +12,27 @@ export interface RegionData {
   tagColor: string;
   needleDeg: number;
   shap: ShapItem[];
+  emergencias?: number;
+  afectados?: number;
+  damnificados?: number;
+  fallecidos?: number;
+  precipitacionMm?: number;
+  focosCalor?: number;
+  sismos7d?: number;
+  tempMax?: number;
+  pimM?: number;
+  devengadoM?: number;
+  pctEjecucion?: number;
+}
+
+export interface NationalMeta {
+  totalEmergencias: number;
+  totalAfectados: number;
+  totalDamnificados: number;
+  totalPimMillones: number;
+  totalDevengadoMillones: number;
+  pctEjecucionNacional: number;
+  totalDepartamentos: number;
 }
 
 export interface MefDepartment {
