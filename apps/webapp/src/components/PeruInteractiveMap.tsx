@@ -1,12 +1,33 @@
-import React from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { RegionData } from '../types';
+
+// Fix Leaflet default icon issues in Webpack/Vite
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 interface PeruInteractiveMapProps {
   departamentos: Record<string, RegionData>;
   selectedDeptoKey: string;
   onSelectDepto: (key: string) => void;
+}
+
+// Controller to trigger map invalidateSize() after render
+function MapResizer({ selectedDeptoKey }: { selectedDeptoKey: string }) {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [map, selectedDeptoKey]);
+  return null;
 }
 
 // Coordinates map for the 25 departments of Peru
@@ -51,25 +72,28 @@ export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, on
   };
 
   return (
-    <div className="w-full h-full min-h-[460px] rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-white relative z-0">
+    <div className="w-full h-[480px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-50 relative z-0">
       <MapContainer
         center={centerPeru}
         zoom={5}
         scrollWheelZoom={true}
-        className="w-full h-full min-h-[460px]"
-        style={{ background: '#f8fafc' }}
+        className="w-full h-full"
+        style={{ height: '480px', width: '100%', background: '#f8fafc' }}
       >
-        {/* CartoDB Voyager Light Tiles (Modern, clean, crisp light map) */}
+        <MapResizer selectedDeptoKey={selectedDeptoKey} />
+
+        {/* CartoDB Voyager Light Tiles (Clean, modern light map) */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          maxZoom={18}
         />
 
         {Object.entries(departamentos).map(([key, data]) => {
           const coords = DEPT_COORDS[key] || centerPeru;
           const isSelected = key === selectedDeptoKey;
           const color = getColorByProb(data.prob);
-          const radius = Math.max(10, Math.min(24, Math.round(data.prob / 4)));
+          const radius = Math.max(12, Math.min(26, Math.round(data.prob / 3.8)));
 
           return (
             <CircleMarker
@@ -78,9 +102,9 @@ export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, on
               radius={isSelected ? radius + 4 : radius}
               pathOptions={{
                 fillColor: color,
-                fillOpacity: isSelected ? 0.9 : 0.7,
+                fillOpacity: isSelected ? 0.95 : 0.75,
                 color: isSelected ? '#0f172a' : '#ffffff',
-                weight: isSelected ? 3 : 1.5
+                weight: isSelected ? 3 : 1.8
               }}
               eventHandlers={{
                 click: () => onSelectDepto(key)
