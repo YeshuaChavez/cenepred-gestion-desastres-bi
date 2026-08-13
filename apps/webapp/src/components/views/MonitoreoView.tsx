@@ -2,18 +2,33 @@ import React, { useState } from 'react';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../../data/mockData';
 import PeruInteractiveMap from '../PeruInteractiveMap';
 
+type MacroRegion = 'todas' | 'norte' | 'sierra_sur' | 'selva' | 'costa_centro';
+
+const MACRO_REGIONS: Record<string, string[]> = {
+  norte: ['piura', 'tumbes', 'lambayeque', 'la_libertad', 'cajamarca'],
+  sierra_sur: ['arequipa', 'cusco', 'apurimac', 'ayacucho', 'puno', 'huancavelica', 'junin', 'pasco', 'huanuco'],
+  selva: ['loreto', 'ucayali', 'san_martin', 'amazonas', 'madre_de_dios'],
+  costa_centro: ['lima', 'callao', 'ica', 'moquegua', 'tacna', 'ancash']
+};
+
 export default function MonitoreoView() {
   const departmentKeys = Object.keys(PERU_DEPARTAMENTOS);
   const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>(departmentKeys[0] || 'piura');
+  const [macroRegion, setMacroRegion] = useState<MacroRegion>('todas');
   const [exportToast, setExportToast] = useState<boolean>(false);
   
   const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
+
+  // Filter department keys by macro-region
+  const filteredKeys = departmentKeys.filter(key => {
+    if (macroRegion === 'todas') return true;
+    return MACRO_REGIONS[macroRegion]?.includes(key);
+  });
 
   // Calculate top high risk regions
   const highRiskDeptos = Object.values(PERU_DEPARTAMENTOS).filter(d => d.prob >= 65);
 
   const handleExportCSV = () => {
-    // Generate real CSV from PERU_DEPARTAMENTOS data
     const headers = ["Departamento", "Riesgo SAT (%)", "Categoría", "Emergencias", "Afectados", "Lluvia (mm)", "Focos Calor", "PIM (S/ M)", "Ejecución MEF (%)"];
     const rows = Object.values(PERU_DEPARTAMENTOS).map(d => [
       `"${d.name}"`,
@@ -51,7 +66,7 @@ export default function MonitoreoView() {
         </div>
       )}
 
-      <div className="flex items-end justify-between w-full mb-2">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between w-full gap-4 mb-2">
         <div>
           <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
             Monitoreo Nacional de Riesgos de Desastres
@@ -70,6 +85,43 @@ export default function MonitoreoView() {
         </div>
       </div>
 
+      {/* Macrorregion Filter Bar */}
+      <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 shadow-xs text-xs font-semibold overflow-x-auto">
+        <span className="text-slate-500 font-bold px-2 flex items-center gap-1">
+          <span className="material-symbols-outlined text-sm text-sky-700">filter_alt</span> Macrorregión:
+        </span>
+        <button
+          onClick={() => setMacroRegion('todas')}
+          className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${macroRegion === 'todas' ? 'bg-sky-700 text-white font-bold' : 'text-slate-600 hover:bg-slate-100'}`}
+        >
+          Todas las Regiones (25)
+        </button>
+        <button
+          onClick={() => setMacroRegion('norte')}
+          className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${macroRegion === 'norte' ? 'bg-sky-700 text-white font-bold' : 'text-slate-600 hover:bg-slate-100'}`}
+        >
+          Costa Norte
+        </button>
+        <button
+          onClick={() => setMacroRegion('sierra_sur')}
+          className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${macroRegion === 'sierra_sur' ? 'bg-sky-700 text-white font-bold' : 'text-slate-600 hover:bg-slate-100'}`}
+        >
+          Sierra Centro / Sur
+        </button>
+        <button
+          onClick={() => setMacroRegion('selva')}
+          className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${macroRegion === 'selva' ? 'bg-sky-700 text-white font-bold' : 'text-slate-600 hover:bg-slate-100'}`}
+        >
+          Selva / Amazonía
+        </button>
+        <button
+          onClick={() => setMacroRegion('costa_centro')}
+          className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${macroRegion === 'costa_centro' ? 'bg-sky-700 text-white font-bold' : 'text-slate-600 hover:bg-slate-100'}`}
+        >
+          Costa Centro / Sur
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full">
         <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow border border-slate-200/80 shadow-xs">
           <div className="flex items-start justify-between mb-4 relative z-10">
@@ -83,12 +135,22 @@ export default function MonitoreoView() {
             <span className="font-display-lg text-4xl font-extrabold text-red-600">{highRiskDeptos.length}</span>
             <span className="font-body-md text-sm text-slate-600 mb-1 font-medium">de 25 Regiones</span>
           </div>
+          
+          {/* Clickable High Risk Badges */}
           <div className="mt-4 flex flex-wrap gap-1.5 relative z-10">
-            {highRiskDeptos.slice(0, 4).map((d, i) => (
-              <span key={i} className="px-2 py-0.5 bg-red-50 text-red-600 rounded-md text-[10px] font-bold border-l-2 border-red-500 uppercase">
-                {d.name.substring(0, 3)}
-              </span>
-            ))}
+            {highRiskDeptos.slice(0, 5).map((d) => {
+              const matchingKey = departmentKeys.find(k => PERU_DEPARTAMENTOS[k].name === d.name);
+              return (
+                <button
+                  key={d.name}
+                  onClick={() => matchingKey && setSelectedDeptoKey(matchingKey)}
+                  className="px-2 py-0.5 bg-red-50 text-red-700 rounded-md text-[10px] font-bold border-l-2 border-red-500 uppercase hover:bg-red-100 cursor-pointer transition-colors"
+                  title={`Seleccionar ${d.name}`}
+                >
+                  {d.name.substring(0, 4)}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -156,7 +218,7 @@ export default function MonitoreoView() {
                   onChange={(e) => setSelectedDeptoKey(e.target.value)}
                   className="appearance-none bg-slate-100 text-slate-700 font-label-sm px-4 py-2 pr-8 rounded-lg outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer w-48 truncate border border-slate-200 font-semibold"
                 >
-                  {departmentKeys.map(k => (
+                  {filteredKeys.map(k => (
                     <option key={k} value={k}>
                       {PERU_DEPARTAMENTOS[k].name} ({PERU_DEPARTAMENTOS[k].prob}%)
                     </option>
@@ -204,9 +266,9 @@ export default function MonitoreoView() {
               </div>
               <div className="flex flex-col gap-3">
                 {deptoData.shap.map((item, idx) => (
-                  <div key={idx}>
+                  <div key={idx} className="group cursor-pointer">
                     <div className="flex justify-between font-label-sm text-xs mb-1 text-slate-700">
-                      <span>{item.name}</span>
+                      <span className="group-hover:text-sky-700 font-medium">{item.name}</span>
                       <span className="font-bold" style={{ color: item.color }}>{item.val}</span>
                     </div>
                     <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
