@@ -1,5 +1,5 @@
 import React from 'react';
-import { LOGO_CENEPRED, PROFILE_AVATAR } from '../data/mockData';
+import { LOGO_CENEPRED } from '../data/mockData';
 import { ActivePath } from '../types';
 
 interface SidebarProps {
@@ -24,25 +24,22 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function Sidebar({ activePath, setActivePath }: SidebarProps) {
   return (
-    <aside className="fixed left-0 top-0 h-full w-72 bg-white/80 backdrop-blur border-r border-outline-variant/20 z-50 flex flex-col shadow-sm">
-      <div className="p-6 mb-8 flex flex-col gap-2">
+    <aside className="fixed left-0 top-0 h-full w-72 bg-white/90 backdrop-blur border-r border-slate-200 z-50 flex flex-col shadow-xs">
+      <div className="p-6 mb-4 flex flex-col gap-2 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <img
             src={LOGO_CENEPRED}
             alt="CENEPRED Logo"
             className="h-10 w-auto object-contain"
           />
-          <span className="font-title-md text-title-md text-slate-900 tracking-tight font-bold">
-            SAT Riesgo
-          </span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold px-1 mt-2">
-            Lakehouse Architecture
-          </span>
-          <span className="text-[9px] text-primary font-semibold px-1">
-            Medallion • Azure Databricks
-          </span>
+          <div className="flex flex-col">
+            <span className="font-title-md text-base text-slate-900 tracking-tight font-bold leading-tight">
+              Gestión del Riesgo
+            </span>
+            <span className="text-[10px] text-sky-700 font-semibold uppercase tracking-wider">
+              CENEPRED • Perú
+            </span>
+          </div>
         </div>
       </div>
 
@@ -55,8 +52,8 @@ export default function Sidebar({ activePath, setActivePath }: SidebarProps) {
               onClick={() => setActivePath(item.path)}
               className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 group text-left w-full ${
                 isActive
-                  ? 'bg-primary-container/20 text-primary font-bold shadow-sm'
-                  : 'text-slate-600 hover:bg-surface-container-low hover:text-slate-900'
+                  ? 'bg-sky-50 text-sky-700 font-bold border border-sky-200/60 shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <span className="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">
@@ -68,18 +65,11 @@ export default function Sidebar({ activePath, setActivePath }: SidebarProps) {
         })}
       </nav>
 
-      <div className="p-6 border-t border-outline-variant/20">
-        <div className="flex items-center gap-3 p-3 bg-white/80 border border-outline-variant/20 rounded-2xl shadow-sm">
-          <img
-            src={PROFILE_AVATAR}
-            alt="Profile"
-            className="w-10 h-10 rounded-full border-2 border-primary/20 object-cover"
-          />
-          <div className="flex flex-col">
-            <span className="text-xs font-bold text-slate-900">Director Ejecutivo</span>
-            <span className="text-[10px] text-slate-500">CENEPRED Admin</span>
-          </div>
-        </div>
+      {/* Footer Info */}
+      <div className="p-5 border-t border-slate-200 text-center">
+        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block">
+          Plataforma Institucional • CENEPRED
+        </span>
       </div>
     </aside>
   );

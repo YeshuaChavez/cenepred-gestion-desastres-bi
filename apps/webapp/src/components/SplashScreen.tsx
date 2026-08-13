@@ -7,7 +7,7 @@ interface SplashScreenProps {
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState('Inicializando CENEPRED SAT...');
+  const [statusText, setStatusText] = useState('Inicializando Plataforma CENEPRED...');
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         clearInterval(interval);
         setTimeout(() => {
           setIsFading(true);
-          setTimeout(onFinish, 600); // Trigger transition finish
+          setTimeout(onFinish, 600);
         }, 400);
       }
     }, 400);
@@ -52,10 +52,10 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         {/* Title */}
         <div className="space-y-1">
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            CENEPRED <span className="text-sky-600 font-light">SAT Riesgo</span>
+            CENEPRED <span className="text-sky-700 font-light">Centro de Inteligencia</span>
           </h1>
           <p className="text-xs uppercase tracking-widest font-semibold text-slate-500">
-            Executive Decision Intelligence Platform
+            Plataforma Nacional para la Gestión del Riesgo de Desastres
           </p>
         </div>
 

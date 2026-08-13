@@ -8,7 +8,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
-      text: 'Hola, soy el asistente analítico del SAT CENEPRED. Estoy conectado a la capa Gold (25 departamentos, 84k+ emergencias). ¿Qué región, indicador o presupuesto deseas consultar hoy?'
+      text: 'Hola, soy el asistente analítico de Inteligencia para la Gestión del Riesgo de CENEPRED. Estoy conectado a la capa Gold (25 departamentos, 84k+ emergencias). ¿Qué región, indicador o presupuesto deseas consultar hoy?'
     }
   ]);
 

@@ -15,7 +15,7 @@ export default function MonitoreoView() {
       <div className="flex items-end justify-between w-full mb-2">
         <div>
           <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
-            Monitoreo Diario de Riesgos (Mapa Interactivo Leaflet Light)
+            Monitoreo Nacional de Riesgos de Desastres (Mapa Interactivo Leaflet)
           </h2>
           <p className="font-body-md text-sm text-slate-600 max-w-3xl">
             Visor geocartográfico interactivo sobre la capa Gold. Haz clic en cualquiera de los 25 departamentos del mapa para explorar la telemetría satelital y presupuestal.
