@@ -8,7 +8,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
-      text: 'Hola, soy el asistente analítico de Inteligencia para la Gestión del Riesgo de CENEPRED. Estoy conectado a la capa Gold (25 departamentos, 84k+ emergencias). ¿Qué región, indicador o presupuesto deseas consultar hoy?'
+      text: 'Hola, soy el asistente analítico de Inteligencia para la Gestión del Riesgo de CENEPRED (25 departamentos, 84k+ emergencias). ¿Qué región, indicador o presupuesto deseas consultar hoy?'
     }
   ]);
 
@@ -40,7 +40,7 @@ export default function AIChatbotModal() {
 
     if (matchedKey) {
       const d = PERU_DEPARTAMENTOS[matchedKey];
-      return `Región ${d.name}: Score de riesgo del ${d.prob}% (${d.tag}). Registra ${d.emergencias} emergencias históricas en SINPAD, ${d.precipitacionMm}mm de precipitación acumulada, ${d.focosCalor} focos de calor FIRMS. Su ejecución presupuestal PP0068 es de S/ ${d.devengadoM}M de S/ ${d.pimM}M (${d.pctEjecucion}%).`;
+      return `Región ${d.name}: Score de riesgo del ${d.prob}% (${d.tag}). Registra ${d.emergencias} emergencias históricas en SINPAD, ${d.precipitacionMm}mm de precipitación acumulada, ${d.focosCalor} focos de calor. Su ejecución presupuestal PP0068 es de S/ ${d.devengadoM}M de S/ ${d.pimM}M (${d.pctEjecucion}%).`;
     }
 
     if (q.includes('presupuesto') || q.includes('mef') || q.includes('pim')) {
@@ -48,10 +48,10 @@ export default function AIChatbotModal() {
     }
 
     if (q.includes('emergencia') || q.includes('afectado') || q.includes('sinpad')) {
-      return `En la capa Gold tenemos registrados ${NATIONAL_META.totalEmergencias.toLocaleString()} emergencias históricas, sumando ${NATIONAL_META.totalAfectados.toLocaleString()} personas afectadas y ${NATIONAL_META.totalDamnificados.toLocaleString()} damnificados en 25 departamentos.`;
+      return `Tenemos registrados ${NATIONAL_META.totalEmergencias.toLocaleString()} emergencias históricas, sumando ${NATIONAL_META.totalAfectados.toLocaleString()} personas afectadas y ${NATIONAL_META.totalDamnificados.toLocaleString()} damnificados en 25 departamentos.`;
     }
 
-    return `Conectado al Lakehouse CENEPRED (25 Departamentos). Analizando '${query}'. El modelo XGBoost actualiza diariamente la inferencia con datos de Open-Meteo, USGS y NASA FIRMS. ¿Deseas consultar datos de alguna región específica?`;
+    return `Conectado al Centro de Inteligencia CENEPRED (25 Departamentos). Analizando '${query}'. El modelo XGBoost actualiza diariamente la inferencia con datos meteorológicos e hidrológicos. ¿Deseas consultar datos de alguna región específica?`;
   };
 
   return (
@@ -64,13 +64,13 @@ export default function AIChatbotModal() {
                 <span className="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
               </div>
               <div>
-                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">CENEPRED Assistant</h4>
-                <span className="font-label-sm text-[10px] text-primary font-semibold">Gold Layer RAG Connected</span>
+                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">Asistente CENEPRED</h4>
+                <span className="font-label-sm text-[10px] text-primary font-semibold">Inteligencia de Datos Activa</span>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-slate-500 hover:text-slate-800 transition-colors"
+              className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -99,14 +99,14 @@ export default function AIChatbotModal() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Consultar departamento o indicador..."
-                className="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-4 pr-10 text-slate-800 text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 font-medium"
+                placeholder="Escribe una pregunta sobre riesgo o regiones..."
+                className="w-full bg-slate-100 text-slate-900 placeholder:text-slate-400 rounded-full pl-4 pr-10 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/40 font-medium"
               />
               <button
                 onClick={handleSend}
-                className="absolute right-1.5 w-7 h-7 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition-colors"
+                className="absolute right-1.5 p-1.5 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors flex items-center justify-center cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[14px]">send</span>
+                <span className="material-symbols-outlined text-[16px]">send</span>
               </button>
             </div>
           </div>
@@ -115,10 +115,10 @@ export default function AIChatbotModal() {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-primary text-white rounded-full shadow-[0_4px_14px_rgba(0,102,138,0.4)] hover:shadow-[0_6px_20px_rgba(0,102,138,0.6)] flex items-center justify-center hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden"
-        title="CENEPRED Assistant"
+        className="px-4 py-3 bg-primary text-white font-bold text-xs rounded-full shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer active:scale-95"
       >
-        <span className="material-symbols-outlined text-[26px]">smart_toy</span>
+        <span className="material-symbols-outlined text-[20px]">smart_toy</span>
+        <span>Asistente CENEPRED</span>
       </button>
     </div>
   );

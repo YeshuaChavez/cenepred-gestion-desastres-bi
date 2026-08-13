@@ -29,7 +29,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16">
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg">
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold">
             Plataforma Nacional de Inteligencia
           </span>
 
@@ -86,12 +86,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 Datos en Vivo
               </h2>
               <p className="font-body-md text-sm text-slate-500">
-                Estado actual del territorio nacional consumido directamente de la capa Gold
+                Estado actual del territorio nacional
               </p>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-bold shadow-xs">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-              Sincronizado con Capa Gold
             </div>
           </div>
 
