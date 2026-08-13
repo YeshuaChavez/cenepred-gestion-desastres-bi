@@ -27,9 +27,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16">
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold">
+        {/* Hero Content with Smooth Fade-In-Up & Floating Badge */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16 animate-fade-in-up">
+          
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold animate-float-slow">
             Plataforma Nacional de Inteligencia
           </span>
 
@@ -65,7 +66,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
       {/* 2. Institutional Mission Section */}
       <section className="relative z-20 w-full px-6 py-24 bg-slate-50 -mt-12 rounded-t-[40px] shadow-[0_-20px_40px_rgba(0,0,0,0.08)] border-t border-slate-200/60">
-        <div className="max-w-4xl mx-auto text-center space-y-4">
+        <div className="max-w-4xl mx-auto text-center space-y-4 animate-fade-in-up">
           <span className="material-symbols-outlined text-[48px] text-sky-700 opacity-90">account_balance</span>
           <h2 className="font-headline-lg text-3xl md:text-4xl text-slate-900 font-bold tracking-tight">
             Prevención Estratégica Basada en Evidencia
@@ -93,10 +94,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Indicador 1: Riesgo Nacional */}
+            {/* Indicador 1: Riesgo Nacional (Glass Hover + Radial Gauge Animation) */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
               title="Ver Monitoreo Diario de Riesgo"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-sky-500/20 transition-colors"></div>
@@ -108,7 +109,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 <div className="relative w-44 h-44 flex items-center justify-center">
                   <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
                     <circle className="text-slate-200" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeWidth="8"></circle>
-                    <circle className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeDasharray="283" strokeDashoffset="90" strokeLinecap="round" strokeWidth="8"></circle>
+                    <circle className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)] animate-gauge" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeDasharray="283" strokeDashoffset="90" strokeLinecap="round" strokeWidth="8"></circle>
                   </svg>
                   <div className="absolute flex flex-col items-center">
                     <span className="font-display-lg text-[42px] font-extrabold leading-none text-slate-900">
@@ -127,7 +128,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Indicador 2: Alertas Críticas */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '100ms' }}
               title="Filtrar Regiones en Alerta Crítica"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-red-500/20 transition-colors"></div>
@@ -148,7 +150,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 <div className="mt-8 pt-6 border-t border-slate-200">
                   <ul className="flex flex-wrap gap-2">
                     {highRiskDeptos.slice(0, 5).map((d) => (
-                      <li key={d.name} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-label-sm text-[11px] font-bold uppercase">
+                      <li key={d.name} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-label-sm text-[11px] font-bold uppercase hover:bg-red-600 hover:text-white transition-colors">
                         {d.name}
                       </li>
                     ))}
@@ -160,7 +162,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Indicador 3: Presupuesto MEF */}
             <div
               onClick={() => setActivePath('presupuesto-mef')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '200ms' }}
               title="Ver Control Presupuestal MEF PP 0068"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-emerald-500/20 transition-colors"></div>
@@ -199,7 +202,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       <section className="w-full px-6 md:px-16 py-24 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto">
           
-          <div className="mb-14">
+          <div className="mb-14 animate-fade-in-up">
             <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-2">
               Servicios de Inteligencia
             </h2>
@@ -213,12 +216,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 1 (Large Featured) */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="lg:col-span-2 bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+              className="lg:col-span-2 bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="relative z-10 flex justify-between items-start mb-12">
-                <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">satellite_alt</span>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
@@ -237,12 +240,13 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 2: Historico & Tendencias */}
             <div
               onClick={() => setActivePath('historico-tendencias')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '100ms' }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="relative z-10 flex justify-between items-start mb-12">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">history</span>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 group-hover:text-indigo-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
@@ -261,12 +265,13 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 3: Riesgo Predictivo & SHAP */}
             <div
               onClick={() => setActivePath('riesgo-predictivo')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '150ms' }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="relative z-10 flex justify-between items-start mb-12">
-                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">model_training</span>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 group-hover:text-amber-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
@@ -285,12 +290,13 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 4: Comparativo Regional */}
             <div
               onClick={() => setActivePath('comparativo-regional')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '200ms' }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="relative z-10 flex justify-between items-start mb-12">
-                <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">map</span>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
@@ -309,12 +315,13 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 5: Presupuesto MEF */}
             <div
               onClick={() => setActivePath('presupuesto-mef')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: '250ms' }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div className="relative z-10 flex justify-between items-start mb-12">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">account_balance_wallet</span>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
@@ -336,7 +343,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
       {/* 5. Executive CTA Section */}
       <section className="w-full px-6 md:px-16 py-24 bg-white">
-        <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+        <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl glass-card-hover animate-fade-in-up">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
           
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
