@@ -9,198 +9,377 @@ interface HomeViewProps {
 export default function HomeView({ setActivePath }: HomeViewProps) {
   const deptosList = Object.values(PERU_DEPARTAMENTOS);
   const highRiskDeptos = deptosList.filter(d => d.prob >= 65);
-  const highRiskNames = highRiskDeptos.map(d => d.name).join(', ');
 
   return (
-    <div className="flex flex-col w-full relative h-full">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-sky-500/5 rounded-full blur-[100px] mix-blend-multiply opacity-70 animate-pulse"></div>
-        <div className="absolute top-[40%] -left-20 w-[500px] h-[500px] bg-sky-200/30 rounded-full blur-[120px] mix-blend-multiply opacity-50"></div>
-      </div>
+    <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
+      
+      {/* 1. Hero Section (Cinematic Oceanic Satellite View) */}
+      <section className="relative w-full h-[90vh] min-h-[640px] flex items-center justify-center overflow-hidden bg-slate-950">
+        
+        {/* Ambient Background Image & Glass Overlay */}
+        <div className="absolute inset-0 z-0">
+          <div
+            className="w-full h-full bg-cover bg-center opacity-70 mix-blend-luminosity scale-105 transition-transform duration-1000"
+            style={{
+              backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxcHZzv6rIjp10lM3lq6K9DVfpOAw9Zwl5uoA76fZLUVYUuJP2CWWbUsR9cHFhHJHArZXKeH-Gi8M8sutkGXt7gbljgDBa8OfTuS5pw_lRWtI2M5VgZCy2Ym90DXzBx2cIGnXHLV57mITZ2EZgWmiiK3NZoSxSBTQfGUDyPs6ssfKiV6PFc5IkMjKAhCoQThBKc39saMiot5OGSGArjlQRdF6xK7m9XvtzYwFLyPoIcHGHWzEyYJjtZg')`
+            }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
+        </div>
 
-      <div className="relative z-10 flex flex-col gap-6 px-16 pb-16 max-w-[1600px] mx-auto w-full">
-        <section className="flex flex-col gap-4 pt-8">
-          <div className="flex flex-col gap-2">
-            <h1 className="font-display-lg text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              CENEPRED <span className="font-light text-sky-700">Centro de Inteligencia para la Gestión del Riesgo</span>
-            </h1>
-            <p className="font-title-md text-slate-600 max-w-3xl opacity-90 text-sm">
-              Plataforma Nacional de Gestión del Riesgo de Desastres. Procesamiento en tiempo real de {NATIONAL_META.totalEmergencias.toLocaleString()} emergencias históricas y monitoreo continuo de los 25 departamentos del Perú.
-            </p>
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16">
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg">
+            Plataforma Nacional de Inteligencia
+          </span>
+
+          <h1 className="font-display-lg text-4xl sm:text-5xl md:text-[68px] md:leading-[76px] text-white font-bold tracking-tighter mb-6 drop-shadow-2xl">
+            CENEPRED — Centro de Inteligencia para la <span className="text-sky-400">Gestión del Riesgo</span>
+          </h1>
+
+          <p className="font-body-md text-lg md:text-[22px] leading-relaxed text-slate-200 max-w-3xl mb-10 opacity-95">
+            Procesamiento en tiempo real de <span className="font-bold text-white">84,369</span> emergencias históricas · Monitoreo continuo de los 25 departamentos del Perú.
+          </p>
+
+          <button
+            onClick={() => setActivePath('monitoreo-diario')}
+            className="group relative px-8 py-4 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_60px_-10px_rgba(56,189,248,0.9)] overflow-hidden cursor-pointer active:scale-95"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              Ver Monitoreo Nacional
+              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">arrow_forward</span>
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+          </button>
+        </div>
+
+        {/* Scroll Bouncing Indicator */}
+        <div
+          onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer animate-bounce"
+        >
+          <span className="font-label-sm text-[10px] uppercase text-white tracking-widest font-bold">Explorar</span>
+          <span className="material-symbols-outlined text-white text-lg">south</span>
+        </div>
+      </section>
+
+      {/* 2. Institutional Mission Section */}
+      <section className="relative z-20 w-full px-6 py-24 bg-slate-50 -mt-12 rounded-t-[40px] shadow-[0_-20px_40px_rgba(0,0,0,0.08)] border-t border-slate-200/60">
+        <div className="max-w-4xl mx-auto text-center space-y-4">
+          <span className="material-symbols-outlined text-[48px] text-sky-700 opacity-90">account_balance</span>
+          <h2 className="font-headline-lg text-3xl md:text-4xl text-slate-900 font-bold tracking-tight">
+            Prevención Estratégica Basada en Evidencia
+          </h2>
+          <p className="font-body-md text-base md:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
+            El Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres (CENEPRED) provee inteligencia accionable para proteger la vida y el patrimonio de los peruanos, articulando tecnología predictiva y gestión territorial dinámica.
+          </p>
+        </div>
+      </section>
+
+      {/* 3. Live Data Section (Indicadores en Vivo) */}
+      <section className="w-full px-6 md:px-16 py-20 bg-white">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
+            <div>
+              <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-1">
+                Datos en Vivo
+              </h2>
+              <p className="font-body-md text-sm text-slate-500">
+                Estado actual del territorio nacional consumido directamente de la capa Gold
+              </p>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-bold shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+              Sincronizado con Capa Gold
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Card 1: Gauge Circular (Clickable to Monitoreo) */}
+            {/* Indicador 1: Riesgo Nacional */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="col-span-1 bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
-              title="Haz clic para ver el monitoreo detallado por región"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              title="Ver Monitoreo Diario de Riesgo"
             >
-              <span className="font-label-sm uppercase tracking-widest text-center mb-4 text-xs font-bold text-slate-500">
-                Índice de Riesgo Promedio Nacional
-              </span>
-              <div className="relative w-44 h-44 my-2">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle className="stroke-slate-200" cx="50" cy="50" fill="none" r="45" strokeWidth="8"></circle>
-                  <circle className="stroke-sky-600 drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]" cx="50" cy="50" fill="none" r="45" strokeDasharray="282.7" strokeDashoffset="80" strokeLinecap="round" strokeWidth="8"></circle>
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="font-display-lg text-3xl font-extrabold text-slate-900">68<span className="text-xl text-slate-500">%</span></span>
-                  <span className="font-label-sm text-xs font-bold text-sky-700">ALTO / MODERADO</span>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-sky-500/20 transition-colors"></div>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold">
+                Índice de Riesgo Nacional
+              </h3>
+              
+              <div className="flex flex-col items-center justify-center">
+                <div className="relative w-44 h-44 flex items-center justify-center">
+                  <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+                    <circle className="text-slate-200" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeWidth="8"></circle>
+                    <circle className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeDasharray="283" strokeDashoffset="90" strokeLinecap="round" strokeWidth="8"></circle>
+                  </svg>
+                  <div className="absolute flex flex-col items-center">
+                    <span className="font-display-lg text-[42px] font-extrabold leading-none text-slate-900">
+                      68<span className="text-xl text-slate-400">%</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                  <span className="font-label-sm text-xs font-bold text-slate-800">ALTO / MODERADO</span>
                 </div>
               </div>
-              <span className="text-[10px] text-sky-700 font-semibold mt-2 group-hover:underline flex items-center gap-1">
-                Ver Monitoreo Nacional <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-              </span>
             </div>
 
-            <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Indicador 2: Alertas Críticas */}
+            <div
+              onClick={() => setActivePath('monitoreo-diario')}
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              title="Filtrar Regiones en Alerta Crítica"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-red-500/20 transition-colors"></div>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-4 font-bold">
+                Regiones en Alerta Crítica
+              </h3>
               
-              {/* Card 2: Regiones en Alerta Crítica (Clickable to Monitoreo) */}
-              <div
-                onClick={() => setActivePath('monitoreo-diario')}
-                className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
-                title="Haz clic para ver las regiones en alerta crítica"
-              >
-                <div className="flex flex-col items-center gap-1 w-full">
-                  <div className="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mb-1 group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">warning</span>
-                  </div>
-                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-bold">
-                    Regiones en Alerta Crítica
-                  </span>
-                </div>
-
-                <div className="my-6 flex flex-col items-center justify-center w-full">
-                  <span className="font-display-lg text-5xl font-extrabold text-red-600 block leading-none mb-2">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <span className="font-display-lg text-[68px] font-extrabold leading-none text-red-600 tracking-tighter">
                     0{highRiskDeptos.length}
                   </span>
-                  <p className="text-xs text-slate-600 font-medium max-w-[240px] truncate-3-lines leading-relaxed px-2">
-                    {highRiskNames}
+                  <p className="font-body-md text-sm text-slate-600 mt-2 font-semibold">
+                    Emergencias activas Nivel 4
                   </p>
                 </div>
 
-                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-red-600 group-hover:underline">
-                  <span>Filtrar Alertas Críticas</span>
-                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                <div className="mt-8 pt-6 border-t border-slate-200">
+                  <ul className="flex flex-wrap gap-2">
+                    {highRiskDeptos.slice(0, 5).map((d) => (
+                      <li key={d.name} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-label-sm text-[11px] font-bold uppercase">
+                        {d.name}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
+            </div>
 
-              {/* Card 3: Ejecución PP 0068 MEF (Clickable to Presupuesto MEF) */}
-              <div
-                onClick={() => setActivePath('presupuesto-mef')}
-                className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
-                title="Haz clic para ver el control presupuestal MEF"
+            {/* Indicador 3: Presupuesto MEF */}
+            <div
+              onClick={() => setActivePath('presupuesto-mef')}
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+              title="Ver Control Presupuestal MEF PP 0068"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-emerald-500/20 transition-colors"></div>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold">
+                Ejecución PP 0068 (MEF)
+              </h3>
+              
+              <div className="flex flex-col h-full justify-center">
+                <div className="flex justify-between items-end mb-4">
+                  <span className="font-display-lg text-[44px] font-extrabold leading-none text-emerald-600">
+                    {NATIONAL_META.pctEjecucionNacional}<span className="text-xl text-slate-400">%</span>
+                  </span>
+                  <span className="font-label-sm text-xs text-slate-500 mb-1 font-bold">Promedio Nac.</span>
+                </div>
+
+                <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden relative">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full relative transition-all duration-700"
+                    style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}
+                  >
+                    <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>
+                  </div>
+                </div>
+
+                <p className="font-body-md text-xs text-slate-500 mt-6 leading-relaxed">
+                  Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Services Grid Section (Servicios de Inteligencia) */}
+      <section className="w-full px-6 md:px-16 py-24 bg-slate-50 relative">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="mb-14">
+            <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-2">
+              Servicios de Inteligencia
+            </h2>
+            <p className="font-body-md text-slate-600 text-base max-w-2xl">
+              Herramientas analíticas diseñadas para la toma de decisiones ejecutivas en los tres niveles de gobierno.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)]">
+            
+            {/* Card 1 (Large Featured) */}
+            <div
+              onClick={() => setActivePath('monitoreo-diario')}
+              className="lg:col-span-2 bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div className="relative z-10 flex justify-between items-start mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[30px]">satellite_alt</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
+                  Monitoreo Diario
+                </h3>
+                <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                  Supervisión continua de peligros inminentes, variables meteorológicas e hidrológicas integradas con las 25 regiones del Perú y mapas satelitales.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2: Historico & Tendencias */}
+            <div
+              onClick={() => setActivePath('historico-tendencias')}
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div className="relative z-10 flex justify-between items-start mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[30px]">history</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-indigo-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-indigo-700 transition-colors">
+                  Histórico & Tendencias
+                </h3>
+                <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                  Análisis longitudinal y explorador Time-Intelligence (Año → Trimestre → Mes → Día) sobre 84,369 emergencias pasadas.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Riesgo Predictivo & SHAP */}
+            <div
+              onClick={() => setActivePath('riesgo-predictivo')}
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div className="relative z-10 flex justify-between items-start mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[30px]">model_training</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-amber-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-amber-700 transition-colors">
+                  Riesgo Predictivo & SHAP
+                </h3>
+                <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                  Modelos de Machine Learning explicables (XGBoost) con simulador de escenarios What-If en tiempo real.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4: Comparativo Regional */}
+            <div
+              onClick={() => setActivePath('comparativo-regional')}
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div className="relative z-10 flex justify-between items-start mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[30px]">map</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
+                  Comparativo Regional
+                </h3>
+                <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                  Herramienta de confrontación lado a lado de departamentos y matriz estacional región × mes.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 5: Presupuesto MEF */}
+            <div
+              onClick={() => setActivePath('presupuesto-mef')}
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col justify-between cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div className="relative z-10 flex justify-between items-start mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[30px]">account_balance_wallet</span>
+                </div>
+                <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-emerald-700 transition-colors">
+                  Presupuesto MEF PP 0068
+                </h3>
+                <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                  Seguimiento financiero de la asignación y ejecución presupuestal destinada a la gestión del riesgo (S/ 1,420M PIM).
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Executive CTA Section */}
+      <section className="w-full px-6 md:px-16 py-24 bg-white">
+        <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div className="max-w-xl space-y-4">
+              <h2 className="font-display-lg text-3xl md:text-[44px] leading-tight font-bold">
+                Acceda al Sistema de Información Nacional
+              </h2>
+              <p className="font-body-md text-sky-200 text-base md:text-lg">
+                Plataforma abierta para la consulta ciudadana, especialistas y gestores del riesgo de desastres a nivel nacional, regional y local.
+              </p>
+            </div>
+
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => setActivePath('monitoreo-diario')}
+                className="px-8 py-4 bg-white text-sky-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 transition-colors shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer active:scale-95"
               >
-                <div className="flex flex-col items-center gap-1 w-full">
-                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-1 group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">account_balance</span>
-                  </div>
-                  <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-bold">
-                    Ejecución PP 0068 (MEF)
-                  </span>
-                </div>
-
-                <div className="my-6 flex flex-col items-center justify-center w-full px-4">
-                  <div className="flex items-baseline justify-center gap-2 mb-2">
-                    <span className="font-display-lg text-5xl font-extrabold text-slate-900 block leading-none">
-                      {NATIONAL_META.pctEjecucionNacional}%
-                    </span>
-                  </div>
-                  <span className="font-label-sm text-xs text-slate-500 font-bold uppercase tracking-wider block mb-3">
-                    Promedio Nacional
-                  </span>
-                  <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200/60 max-w-[200px]">
-                    <div
-                      className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                      style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-emerald-700 group-hover:underline">
-                  <span>Ver Avance por Departamento</span>
-                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                </div>
-              </div>
-
+                EXPLORAR PLATAFORMA
+              </button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Modules Section */}
-        <section className="mt-6">
-          <div className="flex justify-between items-end mb-6">
-            <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Módulos de Decisión Institucional</h2>
+      {/* Footer */}
+      <footer className="w-full bg-slate-900 text-slate-400 py-12 px-6 md:px-16 border-t border-slate-800 text-xs font-medium">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-white uppercase text-sm">CENEPRED</span>
+            <span>© 2026 Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres • UNMSM BI</span>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-white/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 flex flex-col h-full group">
-              <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-sky-900 to-slate-900 opacity-90"></div>
-                <div className="relative z-10 flex items-center gap-3 text-white">
-                  <span className="material-symbols-outlined text-4xl text-sky-400">wb_sunny</span>
-                  <span className="font-title-md text-xl font-bold">Monitoreo de Riesgos</span>
-                </div>
-              </div>
-              <div className="p-6 flex flex-col flex-grow justify-between gap-6">
-                <p className="font-body-md text-sm text-slate-600">
-                  Explora las métricas de los 25 departamentos del Perú con datos reales de la capa Gold: temperaturas, lluvias mm y focos FIRMS.
-                </p>
-                <button
-                  onClick={() => setActivePath('monitoreo-diario')}
-                  className="w-full py-3 px-4 bg-sky-700 text-white font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-sky-800 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
-                >
-                  Explorar Monitoreo <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 flex flex-col h-full group">
-              <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-900 to-slate-900 opacity-90"></div>
-                <div className="relative z-10 flex items-center gap-3 text-white">
-                  <span className="material-symbols-outlined text-4xl text-indigo-400">smart_toy</span>
-                  <span className="font-title-md text-xl font-bold">Riesgo Predictivo & SHAP</span>
-                </div>
-              </div>
-              <div className="p-6 flex flex-col flex-grow justify-between gap-6">
-                <p className="font-body-md text-sm text-slate-600">
-                  Simulación de escenarios (What-If) e interpretabilidad del modelo XGBoost con los pesos calculados para el territorio nacional.
-                </p>
-                <button
-                  onClick={() => setActivePath('riesgo-predictivo')}
-                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
-                >
-                  Simular Escenarios <span className="material-symbols-outlined text-[18px]">science</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 flex flex-col h-full group">
-              <div className="h-40 relative w-full overflow-hidden bg-slate-900 flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 to-slate-900 opacity-90"></div>
-                <div className="relative z-10 flex items-center gap-3 text-white">
-                  <span className="material-symbols-outlined text-4xl text-emerald-400">payments</span>
-                  <span className="font-title-md text-xl font-bold">Control Presupuestal</span>
-                </div>
-              </div>
-              <div className="p-6 flex flex-col flex-grow justify-between gap-6">
-                <p className="font-body-md text-sm text-slate-600">
-                  Evaluación financiera del Programa Presupuestal 0068 (PIM total S/ {NATIONAL_META.totalPimMillones}M) frente al impacto poblacional.
-                </p>
-                <button
-                  onClick={() => setActivePath('presupuesto-mef')}
-                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
-                >
-                  Ver Ejecución MEF <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span>
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center gap-6">
+            <span>Portal Institucional</span>
+            <span>Transparencia de Datos</span>
+            <span>SIAF MEF</span>
           </div>
-        </section>
-      </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
