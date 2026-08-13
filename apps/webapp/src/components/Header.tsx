@@ -20,13 +20,13 @@ export interface RealTimeNotification {
 export default function Header({ setActivePath, isCollapsed = false }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [realTimeToast, setRealTimeToast] = useState<RealTimeNotification | null>(null);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Real-time notifications initialized with real department data
   const [notifications, setNotifications] = useState<RealTimeNotification[]>([
     {
       id: 'n1',
@@ -59,7 +59,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  // Real-time streaming simulation: pushes new alert every 12 seconds with real data
   useEffect(() => {
     const deptosKeys = Object.keys(PERU_DEPARTAMENTOS);
     const interval = setInterval(() => {
@@ -89,7 +88,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
     return () => clearInterval(interval);
   }, []);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -100,7 +98,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Focus search input
   useEffect(() => {
     if (showSearch) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -117,6 +114,10 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
     if (setActivePath) {
       setActivePath('monitoreo-diario');
     }
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   const deptosList = Object.entries(PERU_DEPARTAMENTOS);
@@ -147,6 +148,24 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
       {/* Right Controls */}
       <div className="flex items-center gap-3 relative">
         
+        {/* Print Executive Report Button */}
+        <button
+          onClick={handlePrint}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
+          title="Imprimir / Exportar Reporte PDF Ejecución"
+        >
+          <span className="material-symbols-outlined text-[20px]">print</span>
+        </button>
+
+        {/* Platform Help Guide Trigger Button */}
+        <button
+          onClick={() => setShowHelp(true)}
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
+          title="Guía e Información de la Plataforma"
+        >
+          <span className="material-symbols-outlined text-[20px]">help_outline</span>
+        </button>
+
         {/* Search Trigger Button */}
         <button
           onClick={() => setShowSearch(true)}
@@ -245,7 +264,58 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
         </div>
       )}
 
-      {/* Full-Screen Edge-to-Edge Search Modal (Smooth Blur Across Entire Window) */}
+      {/* Institutional Platform Tour Help Modal */}
+      {showHelp && (
+        <div
+          className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: isCollapsed ? '-80px' : '-288px',
+            width: '100vw',
+            height: '100vh'
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden p-6 space-y-4 text-slate-800 relative z-[1000]">
+            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+                <span className="material-symbols-outlined text-sky-700">info</span>
+                Centro de Información Institucional
+              </h3>
+              <button
+                onClick={() => setShowHelp(false)}
+                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
+              >
+                ESC
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs leading-relaxed text-slate-600">
+              <p className="font-semibold text-slate-800">
+                Esta plataforma integra datos en tiempo real y registros históricos de las siguientes fuentes oficiales del Estado Peruano y agencias internacionales:
+              </p>
+              
+              <ul className="space-y-2 border-l-2 border-sky-500 pl-3">
+                <li><b>INDECI / SINPAD</b>: 84,369 registros históricos de emergencias (2012-2023).</li>
+                <li><b>Open-Meteo API</b>: Monitoreo meteorológico de precipitaciones en los 25 departamentos.</li>
+                <li><b>NASA FIRMS Satelital</b>: Detección y recuento de focos de calor activos.</li>
+                <li><b>MEF (SIAF - PP 0068)</b>: Seguimiento presupuestal de S/ 1,420.5M asignados a PREVAED.</li>
+              </ul>
+
+              <div className="pt-2 text-right">
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className="px-4 py-2 bg-sky-700 text-white rounded-lg font-bold text-xs hover:bg-sky-800 transition-colors cursor-pointer"
+                >
+                  Entendido
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Edge-to-Edge Search Modal */}
       {showSearch && (
         <div
           className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-fade-in"

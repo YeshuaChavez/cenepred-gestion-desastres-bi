@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MATRIZ_ESTACIONAL } from '../../data/mockData';
+import { MATRIZ_ESTACIONAL, PERU_DEPARTAMENTOS } from '../../data/mockData';
 
 const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
@@ -11,6 +11,13 @@ interface CellDetail {
 
 export default function ComparativoRegionalView() {
   const [selectedCell, setSelectedCell] = useState<CellDetail | null>(null);
+
+  const deptosKeys = Object.keys(PERU_DEPARTAMENTOS);
+  const [depto1Key, setDepto1Key] = useState<string>('piura');
+  const [depto2Key, setDepto2Key] = useState<string>('cusco');
+
+  const depto1 = PERU_DEPARTAMENTOS[depto1Key] || PERU_DEPARTAMENTOS['piura'];
+  const depto2 = PERU_DEPARTAMENTOS[depto2Key] || PERU_DEPARTAMENTOS['cusco'];
 
   const getColorClass = (val: number): string => {
     if (val >= 8) return 'bg-red-500 text-white font-bold cursor-pointer hover:scale-110 transition-transform shadow-xs';
@@ -83,8 +90,109 @@ export default function ComparativoRegionalView() {
       <div className="flex flex-col gap-2 border-b border-slate-200 pb-3">
         <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Comparativo Regional y Matriz Estacional</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Matriz de recurrencia e intensidad de emergencias climáticas por departamento y mes basada en 84,369 eventos históricos. Haz clic en cualquier celda para consultar la ficha mensual.
+          Matriz de recurrencia e intensidad de emergencias climáticas por departamento y mes basada en 84,369 eventos históricos.
         </p>
+      </div>
+
+      {/* Side-by-Side Executive Comparator Tool */}
+      <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-6">
+        <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+          <div>
+            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+              <span className="material-symbols-outlined text-sky-700">compare_arrows</span>
+              Comparador Lado a Lado de Departamentos
+            </h3>
+            <p className="text-xs text-slate-500">Selecciona 2 regiones para confrontar su perfil de riesgo y ejecución presupuestal</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          {/* Department 1 Card */}
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Región A</span>
+              <select
+                value={depto1Key}
+                onChange={(e) => setDepto1Key(e.target.value)}
+                className="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-bold text-sky-800 shadow-xs cursor-pointer outline-none"
+              >
+                {deptosKeys.map(k => (
+                  <option key={k} value={k}>{PERU_DEPARTAMENTOS[k].name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-baseline justify-between border-b border-slate-200 pb-3">
+              <span className="text-2xl font-extrabold text-slate-900">{depto1.name}</span>
+              <span className={`px-2.5 py-0.5 rounded text-xs font-bold text-white uppercase ${depto1.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
+                Riesgo {depto1.prob}%
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias SINPAD</span>
+                <span className="font-extrabold text-slate-900 text-base">{(depto1.emergencias ?? 0).toLocaleString()}</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación Acum</span>
+                <span className="font-extrabold text-sky-700 text-base">{depto1.precipitacionMm} mm</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">PIM Asignado MEF</span>
+                <span className="font-extrabold text-slate-900 text-base">S/ {depto1.pimM}M</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Ejecución PP 0068</span>
+                <span className="font-extrabold text-emerald-600 text-base">{depto1.pctEjecucion}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Department 2 Card */}
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Región B</span>
+              <select
+                value={depto2Key}
+                onChange={(e) => setDepto2Key(e.target.value)}
+                className="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-bold text-sky-800 shadow-xs cursor-pointer outline-none"
+              >
+                {deptosKeys.map(k => (
+                  <option key={k} value={k}>{PERU_DEPARTAMENTOS[k].name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-baseline justify-between border-b border-slate-200 pb-3">
+              <span className="text-2xl font-extrabold text-slate-900">{depto2.name}</span>
+              <span className={`px-2.5 py-0.5 rounded text-xs font-bold text-white uppercase ${depto2.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
+                Riesgo {depto2.prob}%
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias SINPAD</span>
+                <span className="font-extrabold text-slate-900 text-base">{(depto2.emergencias ?? 0).toLocaleString()}</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación Acum</span>
+                <span className="font-extrabold text-sky-700 text-base">{depto2.precipitacionMm} mm</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">PIM Asignado MEF</span>
+                <span className="font-extrabold text-slate-900 text-base">S/ {depto2.pimM}M</span>
+              </div>
+              <div className="p-3 bg-white rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Ejecución PP 0068</span>
+                <span className="font-extrabold text-emerald-600 text-base">{depto2.pctEjecucion}%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-4">
