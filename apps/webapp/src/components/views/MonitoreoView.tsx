@@ -15,17 +15,14 @@ export default function MonitoreoView() {
       <div className="flex items-end justify-between w-full mb-2">
         <div>
           <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
-            Monitoreo Nacional de Riesgos de Desastres (Mapa Interactivo Leaflet)
+            Monitoreo Nacional de Riesgos de Desastres
           </h2>
           <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-            Visor geocartográfico interactivo sobre la capa Gold. Haz clic en cualquiera de los 25 departamentos del mapa para explorar la telemetría satelital y presupuestal.
+            Visor geocartográfico para la supervisión del riesgo climático y presupuestal por región. Selecciona cualquiera de las 25 regiones en el mapa para explorar el informe detallado.
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <span className="px-3 py-1 bg-white border border-slate-200 rounded-full font-label-sm text-xs text-slate-700 flex items-center gap-2 shadow-xs">
-            <span className="material-symbols-outlined text-[16px] text-sky-600">update</span> Databricks Gold Active
-          </span>
-          <button className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-lg shadow-sm hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold">
+          <button className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-lg shadow-xs hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold">
             <span className="material-symbols-outlined text-[18px]">download</span> Exportar Reporte
           </button>
         </div>
@@ -67,7 +64,7 @@ export default function MonitoreoView() {
           </div>
           <div className="mt-4 flex items-center gap-2 relative z-10">
             <span className="material-symbols-outlined text-[14px] text-sky-600">cloud</span>
-            <span className="font-label-sm text-xs text-slate-500">Open-Meteo • Temp máx {deptoData.tempMax}°C</span>
+            <span className="font-label-sm text-xs text-slate-500">Servicio Meteorológico • Temp máx {deptoData.tempMax}°C</span>
           </div>
         </div>
 
@@ -85,7 +82,7 @@ export default function MonitoreoView() {
           </div>
           <div className="mt-4 flex items-center gap-2 relative z-10">
             <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
-            <span className="font-label-sm text-xs text-slate-500">NASA FIRMS Satelital</span>
+            <span className="font-label-sm text-xs text-slate-500">Monitoreo Térmico Satelital</span>
           </div>
         </div>
 
@@ -135,7 +132,7 @@ export default function MonitoreoView() {
               </div>
               <div className="text-center">
                 <span className="font-display-lg text-3xl font-bold text-red-600 block leading-none mb-1">{deptoData.prob}%</span>
-                <span className="font-label-sm text-xs text-slate-500 uppercase tracking-widest font-semibold">Riesgo Predictivo {deptoData.name} ({deptoData.tag})</span>
+                <span className="font-label-sm text-xs text-slate-500 uppercase tracking-widest font-semibold">Nivel de Riesgo — {deptoData.name} ({deptoData.tag})</span>
               </div>
             </div>
 
@@ -160,7 +157,7 @@ export default function MonitoreoView() {
 
             <div className="mt-auto pt-4 border-t border-slate-200">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-label-sm text-xs text-slate-700 uppercase font-bold tracking-wider">SHAP Value Explainability Real</h4>
+                <h4 className="font-label-sm text-xs text-slate-700 uppercase font-bold tracking-wider">Factores Determinantes del Riesgo</h4>
                 <span className="material-symbols-outlined text-[16px] text-sky-600 cursor-help">info</span>
               </div>
               <div className="flex flex-col gap-3">
@@ -180,18 +177,18 @@ export default function MonitoreoView() {
           </div>
         </div>
 
-        {/* Interactive Leaflet Light Map */}
+        {/* Mapa Interactivo */}
         <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col min-h-[500px]">
           <div className="flex justify-between items-center mb-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
             <div>
               <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Mapa Interactivo Leaflet (CartoDB Voyager Light Tiles)
+                Visor Cartográfico Nacional
               </h3>
-              <span className="text-[10px] text-slate-500">Haz clic en los 25 marcadores de departamentos para cambiar la región seleccionada</span>
+              <span className="text-[10px] text-slate-500">Haz clic en los marcadores regionales para consultar el informe dinámico</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-semibold text-sky-700">
-              <span className="material-symbols-outlined text-sm">map</span> CartoDB Voyager Light
+              <span className="material-symbols-outlined text-sm">map</span> Visualización Satelital
             </div>
           </div>
 

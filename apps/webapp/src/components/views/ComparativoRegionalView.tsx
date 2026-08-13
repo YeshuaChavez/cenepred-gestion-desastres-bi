@@ -11,15 +11,15 @@ export default function ComparativoRegionalView() {
 
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Comparativo Regional & Heatmap Estacional</h2>
+      <div className="flex flex-col gap-2 border-b border-slate-200 pb-3">
+        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Comparativo Regional y Matriz Estacional</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Matriz de recurrencia e intensidad de emergencias climáticas por Departamento × Mes basada en 84,369 eventos históricos procesados desde la capa Gold.
+          Matriz de recurrencia e intensidad de emergencias climáticas por departamento y mes basada en 84,369 eventos históricos.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-4">
-        <h3 className="font-title-md text-base font-bold text-slate-900">Heatmap: Recurrencia e Intensidad Mensual (25 Regiones del Perú)</h3>
+      <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-4">
+        <h3 className="font-title-md text-base font-bold text-slate-900">Recurrencia e Intensidad Mensual por Departamento</h3>
 
         <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
           <table className="w-full text-center border-collapse min-w-[750px]">

@@ -12,16 +12,16 @@ export default function RiesgoPredictivoView() {
 
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200">
         <div className="flex flex-col space-y-1">
-          <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo & SHAP</h2>
+          <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo e Interacciones</h2>
           <p className="font-body-md text-sm text-slate-600 max-w-2xl">
-            Análisis de Machine Learning basado en XGBoost para la predicción de riesgo de desastres. Visualización de interpretabilidad del modelo (SHAP) y simulador de escenarios (What-If).
+            Análisis avanzado de estimación y simulación de escenarios de riesgo climático en el territorio nacional.
           </p>
         </div>
-        <div className="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-outline-variant/30 font-medium">
-          <span className="material-symbols-outlined text-primary text-sm">memory</span>
-          <span className="font-body-md text-xs text-slate-800">Model V2.4.1 - Active</span>
+        <div className="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl shadow-xs border border-slate-200 font-medium">
+          <span className="material-symbols-outlined text-sky-700 text-sm">memory</span>
+          <span className="font-body-md text-xs text-slate-800">Modelo Activo</span>
           <span className="relative flex h-2 w-2 ml-1">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -30,42 +30,42 @@ export default function RiesgoPredictivoView() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 shadow-sm flex flex-col space-y-1 border border-outline-variant/30">
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Accuracy (AUC-ROC)</span>
+        <div className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80">
+          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Precisión General</span>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.942</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">94.2%</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
-              <span className="material-symbols-outlined text-xs">arrow_upward</span> 0.015
+              <span className="material-symbols-outlined text-xs">arrow_upward</span> 1.5%
             </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm flex flex-col space-y-1 border border-outline-variant/30">
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Precision (High Risk)</span>
+        <div className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80">
+          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Precisión en Riesgo Alto</span>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.891</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">89.1%</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
-              <span className="material-symbols-outlined text-xs">arrow_upward</span> 0.022
+              <span className="material-symbols-outlined text-xs">arrow_upward</span> 2.2%
             </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm flex flex-col space-y-1 border border-outline-variant/30">
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Recall (Sensitivity)</span>
+        <div className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80">
+          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Sensibilidad</span>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.915</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">91.5%</span>
             <span className="font-body-md text-xs text-red-600 flex items-center font-semibold">
-              <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.004
+              <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.4%
             </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-5 shadow-sm flex flex-col space-y-1 border border-outline-variant/30">
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Log Loss</span>
+        <div className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80">
+          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Margen de Error</span>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.184</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.18</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
-              <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.011
+              <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.01
             </span>
           </div>
         </div>
@@ -73,12 +73,12 @@ export default function RiesgoPredictivoView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 flex flex-col space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col min-h-[450px]">
+          <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col min-h-[450px]">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-title-md text-base font-bold text-slate-900">SHAP Value Summary Plot (Interpretabilidad XGBoost)</h3>
+              <h3 className="font-title-md text-base font-bold text-slate-900">Factores Determinantes de la Predicción</h3>
               <div className="flex space-x-2">
-                <button className="px-3 py-1 bg-primary text-white rounded text-xs font-semibold">Global</button>
-                <button className="px-3 py-1 bg-slate-100 rounded text-slate-600 text-xs font-medium hover:bg-slate-200">Local</button>
+                <button className="px-3 py-1 bg-sky-700 text-white rounded text-xs font-semibold">Nacional</button>
+                <button className="px-3 py-1 bg-slate-100 rounded text-slate-600 text-xs font-medium hover:bg-slate-200">Regional</button>
               </div>
             </div>
 
@@ -119,16 +119,16 @@ export default function RiesgoPredictivoView() {
         </div>
 
         <div className="flex flex-col space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30">
+          <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80">
             <h3 className="font-title-md text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">tune</span> Simulador What-If
+              <span className="material-symbols-outlined text-sky-700">tune</span> Simulador de Escenarios
             </h3>
 
             <div className="space-y-4">
               <div className="space-y-1">
                 <div className="flex justify-between items-end text-xs font-semibold">
                   <label className="text-slate-600">Precipitación 24h (+%)</label>
-                  <span className="text-primary">{precipSlider}%</span>
+                  <span className="text-sky-700 font-bold">{precipSlider}%</span>
                 </div>
                 <input
                   type="range"
@@ -136,14 +136,14 @@ export default function RiesgoPredictivoView() {
                   max="100"
                   value={precipSlider}
                   onChange={(e) => setPrecipSlider(Number(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                  className="w-full accent-sky-700 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
                 />
               </div>
 
               <div className="space-y-1">
                 <div className="flex justify-between items-end text-xs font-semibold">
                   <label className="text-slate-600">Humedad Suelo (+%)</label>
-                  <span className="text-primary">{humedadSlider}%</span>
+                  <span className="text-sky-700 font-bold">{humedadSlider}%</span>
                 </div>
                 <input
                   type="range"
@@ -151,7 +151,7 @@ export default function RiesgoPredictivoView() {
                   max="100"
                   value={humedadSlider}
                   onChange={(e) => setHumedadSlider(Number(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+                  className="w-full accent-sky-700 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
                 />
               </div>
 
@@ -167,7 +167,7 @@ export default function RiesgoPredictivoView() {
 
               <button
                 onClick={handleSimulate}
-                className="w-full py-2.5 bg-primary text-white border border-primary/20 rounded-xl font-label-sm text-xs font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-sky-700 text-white border border-sky-800 rounded-xl font-label-sm text-xs font-semibold hover:bg-sky-800 transition-colors flex items-center justify-center gap-2 shadow-xs"
               >
                 <span className="material-symbols-outlined text-sm">play_arrow</span> Ejecutar Simulación
               </button>

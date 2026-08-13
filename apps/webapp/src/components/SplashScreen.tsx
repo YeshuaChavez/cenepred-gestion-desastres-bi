@@ -12,10 +12,10 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
 
   useEffect(() => {
     const steps = [
-      { pct: 20, text: 'Conectando a Azure Databricks Serverless...' },
-      { pct: 50, text: 'Cargando 84,369 emergencias de la Capa Gold...' },
-      { pct: 75, text: 'Procesando 109,575 registros de monitoreo en 25 departamentos...' },
-      { pct: 95, text: 'Sincronizando modelos predictivos XGBoost & SHAP...' },
+      { pct: 20, text: 'Conectando al Sistema Nacional de Información...' },
+      { pct: 50, text: 'Cargando 84,369 registros históricos de emergencias...' },
+      { pct: 75, text: 'Procesando indicadores de monitoreo para las 25 regiones...' },
+      { pct: 95, text: 'Sincronizando modelos de estimación de riesgo...' },
       { pct: 100, text: 'Plataforma lista. Redirigiendo...' }
     ];
 
@@ -41,7 +41,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     <div className={`fixed inset-0 z-50 bg-slate-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500 ${isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       <div className="flex flex-col items-center max-w-md w-full text-center space-y-6">
         
-        {/* Glowing Logo */}
+        {/* Logo */}
         <div className="relative flex items-center justify-center">
           <div className="absolute w-28 h-28 bg-sky-400/20 rounded-full blur-xl animate-pulse"></div>
           <div className="w-24 h-24 bg-white rounded-2xl p-3 shadow-lg border border-slate-200/80 relative z-10 flex items-center justify-center">
@@ -76,7 +76,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         {/* Footer info */}
         <div className="pt-4 flex items-center justify-center gap-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>Lakehouse Medallion • Azure Databricks</span>
+          <span>Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres</span>
         </div>
 
       </div>

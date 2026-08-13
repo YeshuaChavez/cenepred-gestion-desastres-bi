@@ -4,42 +4,42 @@ import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES, NATIONAL_META } from '../.
 export default function PresupuestoMEFView() {
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto MEF PP 0068 (PREVAED) - Capa Gold</h2>
+      <div className="flex flex-col gap-2 border-b border-slate-200 pb-3">
+        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto MEF PP 0068 (PREVAED)</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Análisis de ejecución presupuestal del Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias por Desastres. Integrando los 25 departamentos del Perú.
+          Análisis de ejecución presupuestal del Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias por Desastres para las 25 regiones del Perú.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+        <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-3">
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">PIM Total Asignado</span>
-            <span className="material-symbols-outlined text-primary">account_balance</span>
+            <span className="material-symbols-outlined text-sky-700">account_balance</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalPimMillones}M</span>
             <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-              <span className="material-symbols-outlined text-xs">arrow_upward</span> Base Datos MEF Gold
+              <span className="material-symbols-outlined text-xs">arrow_upward</span> Programa Presupuestal MEF
             </span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+        <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-3">
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Ejecución Acumulada</span>
-            <span className="material-symbols-outlined text-secondary">trending_up</span>
+            <span className="material-symbols-outlined text-sky-700">trending_up</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
             <span className="text-xs font-semibold text-slate-600">{NATIONAL_META.pctEjecucionNacional}% Avance Global</span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-1.5 mt-1">
-            <div className="bg-secondary h-full rounded-full" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
+            <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+        <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-3">
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Brecha por Ejecutar</span>
             <span className="material-symbols-outlined text-red-600">warning</span>
@@ -52,22 +52,22 @@ export default function PresupuestoMEFView() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-3">
+        <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-3">
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Regiones Atendidas</span>
-            <span className="material-symbols-outlined text-primary">analytics</span>
+            <span className="material-symbols-outlined text-sky-700">analytics</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">{NATIONAL_META.totalDepartamentos}</span>
-            <span className="font-xs font-semibold text-primary">Departamentos Monitoreados</span>
+            <span className="text-xs font-semibold text-sky-700">Departamentos Monitoreados</span>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
+        <div className="xl:col-span-2 bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-6">
           <div className="flex justify-between items-center">
-            <h3 className="font-title-md text-base font-bold text-slate-900">Ejecución Presupuestal por Departamento (25 Regiones)</h3>
+            <h3 className="font-title-md text-base font-bold text-slate-900">Ejecución Presupuestal por Departamento</h3>
           </div>
 
           <div className="w-full overflow-x-auto max-h-[500px] overflow-y-auto">
@@ -109,7 +109,7 @@ export default function PresupuestoMEFView() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-outline-variant/20 flex flex-col gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-6">
           <h3 className="font-title-md text-base font-bold text-slate-900">Top Pliegos Ejecutores</h3>
           <div className="flex flex-col gap-4">
             {PLIEGOS_EJECUTORES.map((pliego, idx) => (
