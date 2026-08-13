@@ -31,8 +31,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
             
-            {/* Card 1: Gauge Circular (Centrado) */}
-            <div className="col-span-1 bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+            {/* Card 1: Gauge Circular (Clickable to Monitoreo) */}
+            <div
+              onClick={() => setActivePath('monitoreo-diario')}
+              className="col-span-1 bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-center relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
+              title="Haz clic para ver el monitoreo detallado por región"
+            >
               <span className="font-label-sm uppercase tracking-widest text-center mb-4 text-xs font-bold text-slate-500">
                 Índice de Riesgo Promedio Nacional
               </span>
@@ -46,14 +50,21 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   <span className="font-label-sm text-xs font-bold text-sky-700">ALTO / MODERADO</span>
                 </div>
               </div>
+              <span className="text-[10px] text-sky-700 font-semibold mt-2 group-hover:underline flex items-center gap-1">
+                Ver Monitoreo Nacional <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+              </span>
             </div>
 
             <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
               
-              {/* Card 2: Regiones en Alerta Crítica (Perfectamente Centrado) */}
-              <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-transform duration-300">
+              {/* Card 2: Regiones en Alerta Crítica (Clickable to Monitoreo) */}
+              <div
+                onClick={() => setActivePath('monitoreo-diario')}
+                className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
+                title="Haz clic para ver las regiones en alerta crítica"
+              >
                 <div className="flex flex-col items-center gap-1 w-full">
-                  <div className="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mb-1">
+                  <div className="w-10 h-10 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600 mb-1 group-hover:scale-110 transition-transform">
                     <span className="material-symbols-outlined text-[22px]">warning</span>
                   </div>
                   <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-bold">
@@ -70,16 +81,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   </p>
                 </div>
 
-                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-slate-500">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                  <span>Evaluación de Riesgo SAT Activa</span>
+                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-red-600 group-hover:underline">
+                  <span>Filtrar Alertas Críticas</span>
+                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </div>
               </div>
 
-              {/* Card 3: Ejecución PP 0068 (MEF) (Perfectamente Centrado) */}
-              <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-transform duration-300">
+              {/* Card 3: Ejecución PP 0068 MEF (Clickable to Presupuesto MEF) */}
+              <div
+                onClick={() => setActivePath('presupuesto-mef')}
+                className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col items-center justify-between text-center group hover:-translate-y-1 transition-all duration-300 cursor-pointer hover:shadow-md"
+                title="Haz clic para ver el control presupuestal MEF"
+              >
                 <div className="flex flex-col items-center gap-1 w-full">
-                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-1">
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-1 group-hover:scale-110 transition-transform">
                     <span className="material-symbols-outlined text-[22px]">account_balance</span>
                   </div>
                   <span className="font-label-sm text-xs uppercase tracking-widest text-slate-500 font-bold">
@@ -104,9 +119,9 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   </div>
                 </div>
 
-                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-slate-500">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>PIM S/ {NATIONAL_META.totalPimMillones}M Asignados</span>
+                <div className="w-full pt-3 border-t border-slate-100 flex items-center justify-center gap-1 text-[11px] font-semibold text-emerald-700 group-hover:underline">
+                  <span>Ver Avance por Departamento</span>
+                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </div>
               </div>
 
@@ -135,7 +150,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 </p>
                 <button
                   onClick={() => setActivePath('monitoreo-diario')}
-                  className="w-full py-3 px-4 bg-sky-700 text-white font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-sky-800 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold"
+                  className="w-full py-3 px-4 bg-sky-700 text-white font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-sky-800 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
                 >
                   Explorar Monitoreo <span className="material-symbols-outlined text-[18px]">open_in_new</span>
                 </button>
@@ -156,7 +171,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 </p>
                 <button
                   onClick={() => setActivePath('riesgo-predictivo')}
-                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold"
+                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
                 >
                   Simular Escenarios <span className="material-symbols-outlined text-[18px]">science</span>
                 </button>
@@ -177,7 +192,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 </p>
                 <button
                   onClick={() => setActivePath('presupuesto-mef')}
-                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold"
+                  className="w-full py-3 px-4 bg-white border border-slate-300 text-slate-800 font-label-sm text-xs uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all shadow-xs flex items-center justify-center gap-2 font-semibold cursor-pointer active:scale-98"
                 >
                   Ver Ejecución MEF <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span>
                 </button>

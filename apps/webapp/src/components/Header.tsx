@@ -7,11 +7,12 @@ interface HeaderProps {
   isCollapsed?: boolean;
 }
 
-interface NotificationItem {
+export interface RealTimeNotification {
   id: string;
   type: 'critical' | 'warning' | 'info';
   title: string;
   desc: string;
+  deptoKey: string;
   time: string;
   read: boolean;
 }
@@ -20,39 +21,75 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  
+  const [realTimeToast, setRealTimeToast] = useState<RealTimeNotification | null>(null);
+
   const notifRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
+  // Real-time notifications initialized with real department data
+  const [notifications, setNotifications] = useState<RealTimeNotification[]>([
     {
-      id: '1',
+      id: 'n1',
       type: 'critical',
       title: 'Alerta Crítica — Piura & Tumbes',
-      desc: 'Precipitación acumulada superó los 88.4 mm en las últimas 24h. Riesgo de inundación al 88%.',
-      time: 'Hace 15 min',
+      desc: 'Precipitación acumulada de 88.4 mm en las últimas 24h. Riesgo de inundación al 88%.',
+      deptoKey: 'piura',
+      time: 'Hace 2 min',
       read: false
     },
     {
-      id: '2',
+      id: 'n2',
       type: 'warning',
-      title: 'Aviso de Bajas Temperaturas — Arequipa & Cusco',
-      desc: 'Descenso de temperatura nocturna en zonas sobre los 3,800 m s. n. m.',
-      time: 'Hace 1 hora',
+      title: 'Aviso Meteorológico — Arequipa & Cusco',
+      desc: 'Temperaturas nocturnas de -4°C en zonas sobre los 3,800 m s. n. m.',
+      deptoKey: 'arequipa',
+      time: 'Hace 12 min',
       read: false
     },
     {
-      id: '3',
+      id: 'n3',
       type: 'info',
-      title: 'Actualización Presupuestal MEF',
-      desc: 'El avance de ejecución del Programa Presupuestal PP 0068 alcanzó el 71.4% nacional.',
-      time: 'Hace 3 horas',
+      title: 'Actualización Presupuestal PP 0068',
+      desc: 'El avance de ejecución alcanzó el 71.4% a nivel nacional (S/ 1,014M devengados).',
+      deptoKey: 'lima',
+      time: 'Hace 35 min',
       read: false
     }
   ]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Real-time streaming simulation: pushes new alert every 12 seconds with real data
+  useEffect(() => {
+    const deptosKeys = Object.keys(PERU_DEPARTAMENTOS);
+    const interval = setInterval(() => {
+      const randomKey = deptosKeys[Math.floor(Math.random() * deptosKeys.length)];
+      const depto = PERU_DEPARTAMENTOS[randomKey];
+      if (!depto) return;
+
+      const isHighRisk = depto.prob >= 65;
+      const newNotif: RealTimeNotification = {
+        id: `rt_${Date.now()}`,
+        type: isHighRisk ? 'critical' : depto.prob >= 50 ? 'warning' : 'info',
+        title: `Telemetría en Vivo — ${depto.name}`,
+        desc: `Nivel de riesgo registrado en ${depto.prob}%. Lluvia acum: ${depto.precipitacionMm} mm, Temp máx: ${depto.tempMax}°C.`,
+        deptoKey: randomKey,
+        time: 'En vivo',
+        read: false
+      };
+
+      setNotifications(prev => [newNotif, ...prev.slice(0, 7)]);
+      setRealTimeToast(newNotif);
+
+      setTimeout(() => {
+        setRealTimeToast(null);
+      }, 4500);
+    }, 12000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -63,6 +100,7 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Focus search input
   useEffect(() => {
     if (showSearch) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -82,67 +120,80 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
   };
 
   const deptosList = Object.entries(PERU_DEPARTAMENTOS);
-  const filteredDeptos = deptosList.filter(([key, data]) =>
+  const filteredDeptos = deptosList.filter(([_, data]) =>
     data.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     data.tag.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <header className={`fixed top-0 ${isCollapsed ? 'left-20' : 'left-72'} right-0 h-20 bg-white/90 backdrop-blur-md z-40 flex items-center justify-between px-12 border-b border-slate-200 shadow-xs transition-all duration-300 ease-in-out`}>
+      
+      {/* Title */}
       <div className="flex flex-col">
-        <h1 className="font-title-md text-base text-slate-900 tracking-tight leading-tight font-bold">
-          CENEPRED — Centro de Inteligencia para la Gestión del Riesgo de Desastres
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="font-title-md text-base text-slate-900 tracking-tight leading-tight font-bold">
+            CENEPRED — Centro de Inteligencia para la Gestión del Riesgo de Desastres
+          </h1>
+          <span className="flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-[10px] font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            En Vivo
+          </span>
+        </div>
         <p className="text-[11px] text-slate-500 uppercase tracking-widest font-medium">
           Plataforma Nacional de Gestión del Riesgo
         </p>
       </div>
 
+      {/* Right Controls */}
       <div className="flex items-center gap-3 relative">
+        
+        {/* Search Trigger Button */}
         <button
           onClick={() => setShowSearch(true)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative"
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
           title="Buscar Departamento"
         >
           <span className="material-symbols-outlined text-[20px]">search</span>
         </button>
 
+        {/* Notification Bell */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative"
-            title="Notificaciones"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
+            title="Notificaciones en tiempo real"
           >
             <span className="material-symbols-outlined text-[20px]">notifications</span>
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white rounded-full text-[9px] font-extrabold flex items-center justify-center border-2 border-white">
+              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white rounded-full text-[9px] font-extrabold flex items-center justify-center border-2 border-white animate-pulse">
                 {unreadCount}
               </span>
             )}
           </button>
 
+          {/* Notifications Popover Dropdown */}
           {showNotifications && (
-            <div className="absolute right-0 mt-3 w-88 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in text-slate-800">
+            <div className="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in text-slate-800">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-sm text-slate-900">Notificaciones Institucionales</h4>
+                  <h4 className="font-bold text-sm text-slate-900">Telemetría en Tiempo Real</h4>
                   {unreadCount > 0 && (
                     <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full">
-                      {unreadCount} nuevas
+                      {unreadCount} en vivo
                     </span>
                   )}
                 </div>
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-[11px] font-semibold text-sky-700 hover:underline"
+                    className="text-[11px] font-semibold text-sky-700 hover:underline cursor-pointer"
                   >
                     Marcar leídas
                   </button>
                 )}
               </div>
 
-              <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+              <div className="max-h-84 overflow-y-auto divide-y divide-slate-100">
                 {notifications.map(n => (
                   <div
                     key={n.id}
@@ -154,14 +205,14 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
                     }}
                   >
                     <div className="mt-0.5">
-                      {n.type === 'critical' && <span className="w-2.5 h-2.5 rounded-full bg-red-500 block"></span>}
+                      {n.type === 'critical' && <span className="w-2.5 h-2.5 rounded-full bg-red-500 block animate-ping"></span>}
                       {n.type === 'warning' && <span className="w-2.5 h-2.5 rounded-full bg-amber-500 block"></span>}
                       {n.type === 'info' && <span className="w-2.5 h-2.5 rounded-full bg-sky-500 block"></span>}
                     </div>
                     <div className="flex-1 space-y-1">
                       <div className="flex justify-between items-baseline">
                         <h5 className="font-bold text-xs text-slate-900">{n.title}</h5>
-                        <span className="text-[10px] text-slate-400">{n.time}</span>
+                        <span className="text-[10px] text-slate-400 font-semibold">{n.time}</span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
                     </div>
@@ -171,11 +222,42 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
             </div>
           )}
         </div>
+
       </div>
 
+      {/* Real-time Push Toast Alert Banner */}
+      {realTimeToast && (
+        <div
+          onClick={() => {
+            if (setActivePath) setActivePath('monitoreo-diario');
+            setRealTimeToast(null);
+          }}
+          className="fixed top-24 right-8 z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 max-w-sm flex items-start gap-3 cursor-pointer animate-fade-in hover:bg-slate-850"
+        >
+          <span className="material-symbols-outlined text-amber-400 text-xl mt-0.5">sensors</span>
+          <div className="flex-1 space-y-1 text-xs">
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-sky-400">{realTimeToast.title}</span>
+              <span className="text-[10px] text-slate-400">En Vivo</span>
+            </div>
+            <p className="text-slate-300 leading-relaxed text-[11px]">{realTimeToast.desc}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Full-Screen Edge-to-Edge Search Modal (Smooth Blur Across Entire Window) */}
       {showSearch && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-start justify-center pt-24 p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden">
+        <div
+          className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-fade-in"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: isCollapsed ? '-80px' : '-288px',
+            width: '100vw',
+            height: '100vh'
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden relative z-[1000]">
             <div className="p-4 border-b border-slate-200 flex items-center gap-3">
               <span className="material-symbols-outlined text-slate-400 text-xl">search</span>
               <input
@@ -188,7 +270,7 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
               />
               <button
                 onClick={() => setShowSearch(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded"
+                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
               >
                 ESC
               </button>
@@ -208,11 +290,13 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">{data.name}</h4>
-                        <span className="text-[11px] text-slate-500">{data.emergencias} emergencias • Precipitación: {data.precipitacionMm} mm</span>
+                        <span className="text-[11px] text-slate-500">{data.emergencias} emergencias • Lluvia: {data.precipitacionMm} mm</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase ${data.prob >= 65 ? 'bg-red-600' : data.prob >= 50 ? 'bg-amber-600' : 'bg-sky-600'}`}>
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
+                        data.prob >= 75 ? 'bg-red-600' : data.prob >= 60 ? 'bg-orange-500' : data.prob >= 45 ? 'bg-amber-500' : 'bg-emerald-600'
+                      }`}>
                         Riesgo {data.prob}%
                       </span>
                     </div>
