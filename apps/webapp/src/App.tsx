@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import SplashScreen from './components/SplashScreen';
 import HomeView from './components/views/HomeView';
 import MonitoreoView from './components/views/MonitoreoView';
 import HistoricoTendenciasView from './components/views/HistoricoTendenciasView';
@@ -12,9 +10,7 @@ import AIChatbotModal from './components/AIChatbotModal';
 import { ActivePath } from './types';
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState<boolean>(true);
   const [activePath, setActivePath] = useState<ActivePath>('home');
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const renderActiveView = () => {
     switch (activePath) {
@@ -36,33 +32,14 @@ export default function App() {
   };
 
   return (
-    <>
-      {showSplash && (
-        <SplashScreen
-          onFinish={() => {
-            setShowSplash(false);
-            setActivePath('home');
-          }}
-        />
-      )}
+    <div className="bg-background font-sans text-on-surface min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+      <Header activePath={activePath} setActivePath={setActivePath} />
 
-      <div className="bg-slate-50 font-sans text-slate-900 min-h-screen flex selection:bg-sky-500 selection:text-white">
-        <Sidebar
-          activePath={activePath}
-          setActivePath={setActivePath}
-          isCollapsed={isCollapsed}
-          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
-        />
+      <main className="w-full pt-20 min-h-screen bg-background flex-1">
+        {renderActiveView()}
+      </main>
 
-        <div className={`${isCollapsed ? 'pl-20' : 'pl-72'} w-full flex-1 transition-all duration-300 ease-in-out`}>
-          <Header setActivePath={setActivePath} isCollapsed={isCollapsed} />
-          <main className="relative pt-20 min-h-screen bg-slate-50">
-            {renderActiveView()}
-          </main>
-        </div>
-
-        <AIChatbotModal />
-      </div>
-    </>
+      <AIChatbotModal />
+    </div>
   );
 }

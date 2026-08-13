@@ -53,10 +53,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </button>
         </div>
 
-        {/* Scroll Bouncing Indicator */}
+        {/* Scroll Indicator */}
         <div
           onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
         >
           <span className="font-label-sm text-[10px] uppercase text-white tracking-widest font-bold">Explorar</span>
           <span className="material-symbols-outlined text-white text-lg">south</span>
@@ -90,7 +90,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               </p>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-bold shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
               Sincronizado con Capa Gold
             </div>
           </div>

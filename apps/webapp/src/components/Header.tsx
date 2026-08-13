@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ActivePath } from '../types';
-import { PERU_DEPARTAMENTOS } from '../data/mockData';
+import { LOGO_CENEPRED, PERU_DEPARTAMENTOS } from '../data/mockData';
 
 interface HeaderProps {
+  activePath?: ActivePath;
   setActivePath?: (path: ActivePath) => void;
-  isCollapsed?: boolean;
 }
 
 export interface NotificationItem {
@@ -12,12 +12,11 @@ export interface NotificationItem {
   type: 'critical' | 'warning' | 'info';
   title: string;
   desc: string;
-  deptoKey: string;
   time: string;
   read: boolean;
 }
 
-export default function Header({ setActivePath, isCollapsed = false }: HeaderProps) {
+export default function Header({ activePath = 'home', setActivePath }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -32,7 +31,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
       type: 'critical',
       title: 'Alerta Crítica — Piura & Tumbes',
       desc: 'Precipitación acumulada de 88.4 mm en las últimas 24h. Riesgo de inundación al 88%.',
-      deptoKey: 'piura',
       time: 'Hoy',
       read: false
     },
@@ -41,7 +39,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
       type: 'warning',
       title: 'Aviso Meteorológico — Arequipa & Cusco',
       desc: 'Temperaturas nocturnas de -4°C en zonas sobre los 3,800 m s. n. m.',
-      deptoKey: 'arequipa',
       time: 'Hoy',
       read: false
     },
@@ -50,7 +47,6 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
       type: 'info',
       title: 'Actualización Presupuestal PP 0068',
       desc: 'El avance de ejecución alcanzó el 71.4% a nivel nacional (S/ 1,014M devengados).',
-      deptoKey: 'lima',
       time: 'Hoy',
       read: false
     }
@@ -97,133 +93,214 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
   );
 
   return (
-    <header className={`fixed top-0 ${isCollapsed ? 'left-20' : 'left-72'} right-0 h-20 bg-white/90 backdrop-blur-md z-40 flex items-center justify-between px-12 border-b border-slate-200 shadow-xs transition-all duration-300 ease-in-out`}>
-      
-      {/* Title */}
-      <div className="flex flex-col">
-        <h1 className="font-title-md text-base text-slate-900 tracking-tight leading-tight font-bold">
-          CENEPRED — Centro de Inteligencia para la Gestión del Riesgo de Desastres
-        </h1>
-        <p className="text-[11px] text-slate-500 uppercase tracking-widest font-medium">
-          Plataforma Nacional de Gestión del Riesgo
-        </p>
-      </div>
-
-      {/* Right Controls */}
-      <div className="flex items-center gap-3 relative">
+    <header className="fixed top-0 w-full z-50 bg-surface-container-lowest/70 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20">
+      <div className="h-20 w-full px-6 md:px-12 flex items-center justify-between">
         
-        {/* Print Executive Report Button */}
-        <button
-          onClick={handlePrint}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
-          title="Imprimir / Exportar Reporte PDF Ejecución"
+        {/* Brand Logo & Title */}
+        <div
+          onClick={() => setActivePath && setActivePath('home')}
+          className="flex items-center gap-4 cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[20px]">print</span>
-        </button>
+          <img
+            alt="CENEPRED Logo"
+            className="h-10 w-auto object-contain"
+            src={LOGO_CENEPRED}
+          />
+          <div className="flex flex-col">
+            <span className="font-headline-lg text-lg tracking-tight text-primary leading-tight font-bold uppercase">
+              CENEPRED
+            </span>
+            <span className="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold">
+              Intelligence Platform
+            </span>
+          </div>
+        </div>
 
-        {/* Platform Help Guide Trigger Button */}
-        <button
-          onClick={() => setShowHelp(true)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
-          title="Guía e Información de la Plataforma"
-        >
-          <span className="material-symbols-outlined text-[20px]">help_outline</span>
-        </button>
-
-        {/* Search Trigger Button */}
-        <button
-          onClick={() => setShowSearch(true)}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
-          title="Buscar Departamento"
-        >
-          <span className="material-symbols-outlined text-[20px]">search</span>
-        </button>
-
-        {/* Notification Bell */}
-        <div className="relative" ref={notifRef}>
+        {/* Center Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-8">
           <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative cursor-pointer"
-            title="Avisos Institucionales"
+            onClick={() => setActivePath && setActivePath('home')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'home'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
           >
-            <span className="material-symbols-outlined text-[20px]">notifications</span>
-            {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white rounded-full text-[9px] font-extrabold flex items-center justify-center border-2 border-white">
-                {unreadCount}
-              </span>
-            )}
+            Overview
           </button>
+          <button
+            onClick={() => setActivePath && setActivePath('monitoreo-diario')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'monitoreo-diario'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Monitoreo Diario
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('historico-tendencias')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'historico-tendencias'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Histórico & Tendencias
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('riesgo-predictivo')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'riesgo-predictivo'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Riesgo Predictivo
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('comparativo-regional')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'comparativo-regional'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Comparativo Regional
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('presupuesto-mef')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'presupuesto-mef'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Presupuesto MEF
+          </button>
+        </nav>
 
-          {/* Notifications Popover Dropdown */}
-          {showNotifications && (
-            <div className="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in text-slate-800">
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-sm text-slate-900">Avisos Institucionales</h4>
-                  {unreadCount > 0 && (
-                    <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full">
-                      {unreadCount} nuevos
-                    </span>
-                  )}
-                </div>
+        {/* Right Controls */}
+        <div className="flex items-center gap-6">
+          
+          {/* Quick Search */}
+          <div className="relative hidden xl:flex items-center">
+            <span className="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">
+              search
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClick={() => setShowSearch(true)}
+              placeholder="Buscar departamento..."
+              className="bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 rounded-full pl-10 pr-4 py-2 text-sm w-60 focus:outline-none focus:ring-2 focus:ring-primary-container transition-all cursor-pointer font-medium"
+            />
+          </div>
+
+          <div className="flex items-center gap-3 border-l border-outline-variant/40 pl-6">
+            
+            {/* Notifications Bell */}
+            <div className="relative" ref={notifRef}>
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer"
+                title="Avisos Institucionales"
+              >
+                <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
+                  notifications
+                </span>
                 {unreadCount > 0 && (
-                  <button
-                    onClick={markAllRead}
-                    className="text-[11px] font-semibold text-sky-700 hover:underline cursor-pointer"
-                  >
-                    Marcar leídas
-                  </button>
+                  <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface-container-lowest"></span>
                 )}
-              </div>
+              </button>
 
-              <div className="max-h-84 overflow-y-auto divide-y divide-slate-100">
-                {notifications.map(n => (
-                  <div
-                    key={n.id}
-                    className={`p-3.5 flex gap-3 hover:bg-slate-50 transition-colors cursor-pointer ${!n.read ? 'bg-sky-50/40' : ''}`}
-                    onClick={() => {
-                      setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, read: true } : item));
-                      if (setActivePath) setActivePath('monitoreo-diario');
-                      setShowNotifications(false);
-                    }}
-                  >
-                    <div className="mt-0.5">
-                      {n.type === 'critical' && <span className="w-2.5 h-2.5 rounded-full bg-red-500 block"></span>}
-                      {n.type === 'warning' && <span className="w-2.5 h-2.5 rounded-full bg-amber-500 block"></span>}
-                      {n.type === 'info' && <span className="w-2.5 h-2.5 rounded-full bg-sky-500 block"></span>}
+              {/* Dropdown Popover */}
+              {showNotifications && (
+                <div className="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in text-slate-800">
+                  <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-sm text-slate-900">Avisos Institucionales</h4>
+                      {unreadCount > 0 && (
+                        <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full">
+                          {unreadCount} nuevos
+                        </span>
+                      )}
                     </div>
-                    <div className="flex-1 space-y-1">
-                      <div className="flex justify-between items-baseline">
-                        <h5 className="font-bold text-xs text-slate-900">{n.title}</h5>
-                        <span className="text-[10px] text-slate-400 font-semibold">{n.time}</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
-                    </div>
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={markAllRead}
+                        className="text-[11px] font-semibold text-sky-700 hover:underline cursor-pointer"
+                      >
+                        Marcar leídas
+                      </button>
+                    )}
                   </div>
-                ))}
-              </div>
+
+                  <div className="max-h-84 overflow-y-auto divide-y divide-slate-100">
+                    {notifications.map(n => (
+                      <div
+                        key={n.id}
+                        className={`p-3.5 flex gap-3 hover:bg-slate-50 transition-colors cursor-pointer ${!n.read ? 'bg-sky-50/40' : ''}`}
+                        onClick={() => {
+                          setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, read: true } : item));
+                          if (setActivePath) setActivePath('monitoreo-diario');
+                          setShowNotifications(false);
+                        }}
+                      >
+                        <div className="mt-1">
+                          {n.type === 'critical' && <span className="w-2.5 h-2.5 rounded-full bg-red-500 block"></span>}
+                          {n.type === 'warning' && <span className="w-2.5 h-2.5 rounded-full bg-amber-500 block"></span>}
+                          {n.type === 'info' && <span className="w-2.5 h-2.5 rounded-full bg-sky-500 block"></span>}
+                        </div>
+                        <div className="flex-1 space-y-1">
+                          <div className="flex justify-between items-baseline">
+                            <h5 className="font-bold text-xs text-slate-900">{n.title}</h5>
+                            <span className="text-[10px] text-slate-400 font-semibold">{n.time}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Institutional Help Modal Trigger */}
+            <button
+              onClick={() => setShowHelp(true)}
+              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer"
+              title="Información Institucional"
+            >
+              <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
+                help
+              </span>
+            </button>
+
+            {/* Print / PDF Action */}
+            <button
+              onClick={handlePrint}
+              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer"
+              title="Imprimir / Exportar Reporte PDF"
+            >
+              <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
+                print
+              </span>
+            </button>
+
+          </div>
         </div>
 
       </div>
 
-      {/* Institutional Platform Tour Help Modal */}
+      {/* Institutional Platform Info Modal */}
       {showHelp && (
-        <div
-          className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: isCollapsed ? '-80px' : '-288px',
-            width: '100vw',
-            height: '100vh'
-          }}
-        >
+        <div className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden p-6 space-y-4 text-slate-800 relative z-[1000]">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-sky-700">info</span>
+                <span className="material-symbols-outlined text-primary">info</span>
                 Centro de Información Institucional
               </h3>
               <button
@@ -236,12 +313,12 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
 
             <div className="space-y-3 text-xs leading-relaxed text-slate-600">
               <p className="font-semibold text-slate-800">
-                Esta plataforma integra datos históricos y monitoreo activo de las siguientes fuentes oficiales del Estado Peruano y agencias internacionales:
+                Esta plataforma integra datos de las siguientes fuentes oficiales del Estado Peruano e internacionales:
               </p>
               
-              <ul className="space-y-2 border-l-2 border-sky-500 pl-3">
+              <ul className="space-y-2 border-l-2 border-primary pl-3 font-medium">
                 <li><b>INDECI / SINPAD</b>: 84,369 registros históricos de emergencias (2012-2023).</li>
-                <li><b>Open-Meteo API</b>: Monitoreo meteorológico de precipitaciones en los 25 departamentos.</li>
+                <li><b>Open-Meteo API</b>: Monitoreo meteorológico de precipitaciones en 25 departamentos.</li>
                 <li><b>NASA FIRMS Satelital</b>: Detección y recuento de focos de calor activos.</li>
                 <li><b>MEF (SIAF - PP 0068)</b>: Seguimiento presupuestal de S/ 1,420.5M asignados a PREVAED.</li>
               </ul>
@@ -249,7 +326,7 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
               <div className="pt-2 text-right">
                 <button
                   onClick={() => setShowHelp(false)}
-                  className="px-4 py-2 bg-sky-700 text-white rounded-lg font-bold text-xs hover:bg-sky-800 transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-primary text-white rounded-lg font-bold text-xs hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Entendido
                 </button>
@@ -259,18 +336,9 @@ export default function Header({ setActivePath, isCollapsed = false }: HeaderPro
         </div>
       )}
 
-      {/* Full-Screen Edge-to-Edge Search Modal */}
+      {/* Global Search Modal */}
       {showSearch && (
-        <div
-          className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-fade-in"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: isCollapsed ? '-80px' : '-288px',
-            width: '100vw',
-            height: '100vh'
-          }}
-        >
+        <div className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden relative z-[1000]">
             <div className="p-4 border-b border-slate-200 flex items-center gap-3">
               <span className="material-symbols-outlined text-slate-400 text-xl">search</span>
