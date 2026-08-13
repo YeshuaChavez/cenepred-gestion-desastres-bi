@@ -49,7 +49,7 @@ export default function App() {
         <Sidebar activePath={activePath} setActivePath={setActivePath} />
 
         <div className="pl-72 w-full flex-1">
-          <Header />
+          <Header setActivePath={setActivePath} />
           <main className="relative pt-20 min-h-screen bg-slate-50">
             {renderActiveView()}
           </main>

@@ -5,13 +5,52 @@ import PeruInteractiveMap from '../PeruInteractiveMap';
 export default function MonitoreoView() {
   const departmentKeys = Object.keys(PERU_DEPARTAMENTOS);
   const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>(departmentKeys[0] || 'piura');
+  const [exportToast, setExportToast] = useState<boolean>(false);
+  
   const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
   // Calculate top high risk regions
   const highRiskDeptos = Object.values(PERU_DEPARTAMENTOS).filter(d => d.prob >= 65);
 
+  const handleExportCSV = () => {
+    // Generate real CSV from PERU_DEPARTAMENTOS data
+    const headers = ["Departamento", "Riesgo SAT (%)", "Categoría", "Emergencias", "Afectados", "Lluvia (mm)", "Focos Calor", "PIM (S/ M)", "Ejecución MEF (%)"];
+    const rows = Object.values(PERU_DEPARTAMENTOS).map(d => [
+      `"${d.name}"`,
+      d.prob,
+      `"${d.tag}"`,
+      d.emergencias,
+      d.afectados,
+      d.precipitacionMm,
+      d.focosCalor,
+      d.pimM,
+      d.pctEjecucion
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Reporte_Nacional_Riesgos_CENEPRED_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setExportToast(true);
+    setTimeout(() => setExportToast(false), 3000);
+  };
+
   return (
-    <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800">
+    <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800 relative">
+      
+      {/* Toast Feedback */}
+      {exportToast && (
+        <div className="fixed bottom-8 right-8 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-fade-in text-xs font-semibold">
+          <span className="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+          <span>Reporte descargado correctamente (CSV).</span>
+        </div>
+      )}
+
       <div className="flex items-end justify-between w-full mb-2">
         <div>
           <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
@@ -22,8 +61,11 @@ export default function MonitoreoView() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-lg shadow-xs hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold">
-            <span className="material-symbols-outlined text-[18px]">download</span> Exportar Reporte
+          <button
+            onClick={handleExportCSV}
+            className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-lg shadow-xs hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold cursor-pointer active:scale-95"
+          >
+            <span className="material-symbols-outlined text-[18px]">download</span> Exportar Reporte CSV
           </button>
         </div>
       </div>
