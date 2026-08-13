@@ -4,6 +4,7 @@ import { PERU_DEPARTAMENTOS } from '../data/mockData';
 
 interface HeaderProps {
   setActivePath?: (path: ActivePath) => void;
+  isCollapsed?: boolean;
 }
 
 interface NotificationItem {
@@ -15,7 +16,7 @@ interface NotificationItem {
   read: boolean;
 }
 
-export default function Header({ setActivePath }: HeaderProps) {
+export default function Header({ setActivePath, isCollapsed = false }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -52,7 +53,6 @@ export default function Header({ setActivePath }: HeaderProps) {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -63,7 +63,6 @@ export default function Header({ setActivePath }: HeaderProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Auto focus search input when search modal opens
   useEffect(() => {
     if (showSearch) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -89,7 +88,7 @@ export default function Header({ setActivePath }: HeaderProps) {
   );
 
   return (
-    <header className="fixed top-0 left-72 right-0 h-20 bg-white/90 backdrop-blur-md z-40 flex items-center justify-between px-12 border-b border-slate-200 shadow-xs">
+    <header className={`fixed top-0 ${isCollapsed ? 'left-20' : 'left-72'} right-0 h-20 bg-white/90 backdrop-blur-md z-40 flex items-center justify-between px-12 border-b border-slate-200 shadow-xs transition-all duration-300 ease-in-out`}>
       <div className="flex flex-col">
         <h1 className="font-title-md text-base text-slate-900 tracking-tight leading-tight font-bold">
           CENEPRED — Centro de Inteligencia para la Gestión del Riesgo de Desastres
@@ -100,8 +99,6 @@ export default function Header({ setActivePath }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-3 relative">
-        
-        {/* Search Trigger Button */}
         <button
           onClick={() => setShowSearch(true)}
           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 relative"
@@ -110,7 +107,6 @@ export default function Header({ setActivePath }: HeaderProps) {
           <span className="material-symbols-outlined text-[20px]">search</span>
         </button>
 
-        {/* Notification Bell with Dropdown */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -125,7 +121,6 @@ export default function Header({ setActivePath }: HeaderProps) {
             )}
           </button>
 
-          {/* Notifications Dropdown */}
           {showNotifications && (
             <div className="absolute right-0 mt-3 w-88 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-50 overflow-hidden animate-fade-in text-slate-800">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
@@ -176,10 +171,8 @@ export default function Header({ setActivePath }: HeaderProps) {
             </div>
           )}
         </div>
-
       </div>
 
-      {/* Global Search Modal */}
       {showSearch && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-start justify-center pt-24 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden">

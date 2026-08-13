@@ -14,6 +14,7 @@ import { ActivePath } from './types';
 export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
   const [activePath, setActivePath] = useState<ActivePath>('home');
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const renderActiveView = () => {
     switch (activePath) {
@@ -46,10 +47,15 @@ export default function App() {
       )}
 
       <div className="bg-slate-50 font-sans text-slate-900 min-h-screen flex selection:bg-sky-500 selection:text-white">
-        <Sidebar activePath={activePath} setActivePath={setActivePath} />
+        <Sidebar
+          activePath={activePath}
+          setActivePath={setActivePath}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+        />
 
-        <div className="pl-72 w-full flex-1">
-          <Header setActivePath={setActivePath} />
+        <div className={`${isCollapsed ? 'pl-20' : 'pl-72'} w-full flex-1 transition-all duration-300 ease-in-out`}>
+          <Header setActivePath={setActivePath} isCollapsed={isCollapsed} />
           <main className="relative pt-20 min-h-screen bg-slate-50">
             {renderActiveView()}
           </main>
