@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivePath } from '../../types';
 import { NATIONAL_META, PERU_DEPARTAMENTOS } from '../../data/mockData';
 import ScrollReveal from '../ScrollReveal';
@@ -8,8 +8,40 @@ interface HomeViewProps {
 }
 
 export default function HomeView({ setActivePath }: HomeViewProps) {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const deptosList = Object.values(PERU_DEPARTAMENTOS);
   const highRiskDeptos = deptosList.filter(d => d.prob >= 65);
+
+  const faqList = [
+    {
+      q: '¿Qué es la Plataforma Nacional de Inteligencia CENEPRED?',
+      a: 'Es un centro analítico ejecutivo que integra telemetría satelital en tiempo real (NASA FIRMS, Open-Meteo, USGS), el registro histórico del SINPAD (84,369 emergencias) y la ejecución presupuestal del MEF (Programa PP 0068) para la estimación y reducción del riesgo de desastres en las 25 regiones del Perú.'
+    },
+    {
+      q: '¿Con qué frecuencia se actualizan los indicadores e información satelital?',
+      a: 'Los monitoreos meteorológicos (precipitaciones y temperaturas) y focos de calor satelitales se actualizan automáticamente cada 24 horas. Los registros históricos de emergencias del SINPAD y los datos de ejecución presupuestal del SIAF-MEF se sincronizan diariamente.'
+    },
+    {
+      q: '¿Cómo calcula el modelo de Machine Learning (XGBoost) el nivel de riesgo regional?',
+      a: 'El modelo evalúa múltiples dimensiones climáticas y territoriales: volumen de lluvias acumuladas (mm/24h), anomalías térmicas del Océano Pacífico (Índice ONI / El Niño), eventos sísmicos recientes y el historial de vulnerabilidad física para generar una probabilidad de riesgo calibrada (F1-score: 0.912, AUC-ROC: 0.942).'
+    },
+    {
+      q: '¿Qué información proporciona el Programa Presupuestal PP 0068 (PREVAED)?',
+      a: 'Visualiza la asignación del Presupuesto Institucional Modificado (PIM) y el avance devengado (S/ 1,014M ejecutados de S/ 1,420M PIM a nivel nacional). Permite auditar el cumplimiento financiero por pliego ejecutor en cada departamento.'
+    },
+    {
+      q: '¿Cómo utilizar el Asistente Analítico con Inteligencia Artificial?',
+      a: 'Puedes interactuar con el asistente haciendo clic en el botón flotante con el icono de robot en la esquina inferior derecha. El asistente responde consultas en lenguaje natural sobre cualquier región, montos presupuestales o alertas de emergencia en tiempo real.'
+    },
+    {
+      q: '¿Es libre el acceso a la plataforma o requiere inicio de sesión?',
+      a: 'La plataforma es de acceso público, libre y transparente para la ciudadanía, investigadores, medios de comunicación y gestores de riesgo. No requiere creación de cuenta ni contraseña para explorar la totalidad de sus indicadores y mapas.'
+    }
+  ];
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   return (
     <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
@@ -33,319 +65,245 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
-        {/* Hero Content (Generous spacing & refined typography) */}
+        {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto my-auto animate-fade-in-up">
           
           <span className="font-label-sm text-xs text-sky-300 uppercase tracking-[0.2em] mb-8 py-2 px-5 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold">
             Plataforma Nacional de Inteligencia
           </span>
 
-          <h1 className="font-display-lg text-3xl sm:text-5xl md:text-[60px] md:leading-[72px] text-white font-extrabold tracking-tight mb-8 drop-shadow-2xl max-w-4xl">
-            CENEPRED — Centro de Inteligencia para la <span className="text-sky-400 font-extrabold">Gestión del Riesgo</span>
+          <h1 className="font-display-lg text-4xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-8">
+            Gestión del Riesgo de Desastres <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent">
+              en el Perú
+            </span>
           </h1>
 
-          <p className="font-body-md text-base sm:text-lg md:text-[20px] leading-relaxed text-slate-200/90 max-w-2xl mb-10 font-normal">
-            Procesamiento en tiempo real de <span className="font-bold text-white">84,369</span> emergencias históricas · Monitoreo continuo de los 25 departamentos del Perú.
+          <p className="font-body-md text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed mb-12">
+            Estimación dinámica de riesgo climático mediante modelos analíticos de aprendizaje automático (XGBoost), monitoreo satelital en tiempo real y seguimiento presupuestal MEF PP 0068.
           </p>
 
-          <button
-            onClick={() => setActivePath('monitoreo-diario')}
-            className="group relative px-9 py-4 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_70px_-10px_rgba(56,189,248,0.9)] overflow-hidden cursor-pointer active:scale-95"
-          >
-            <span className="relative z-10 flex items-center gap-2.5">
-              Ver Monitoreo Nacional
-              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">arrow_forward</span>
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
+            <button
+              onClick={() => setActivePath('monitoreo-diario')}
+              className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold text-xs uppercase tracking-widest rounded-full shadow-[0_4px_20px_rgba(56,189,248,0.35)] hover:bg-sky-400 hover:shadow-[0_6px_25px_rgba(56,189,248,0.5)] transition-all cursor-pointer active:scale-95"
+            >
+              Monitoreo Nacional
+            </button>
+            <button
+              onClick={() => setActivePath('riesgo-predictivo')}
+              className="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest rounded-full backdrop-blur-md border border-white/20 transition-all cursor-pointer"
+            >
+              Inferencia de Riesgo (ML)
+            </button>
+          </div>
+
         </div>
       </section>
 
-      {/* 2. Institutional Mission Section */}
-      <section className="relative z-20 w-full px-6 py-24 bg-slate-50 -mt-12 rounded-t-[40px] shadow-[0_-20px_40px_rgba(0,0,0,0.08)] border-t border-slate-200/60">
-        <ScrollReveal>
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <span className="material-symbols-outlined text-[48px] text-sky-700 opacity-90">account_balance</span>
-            <h2 className="font-headline-lg text-3xl md:text-4xl text-slate-900 font-bold tracking-tight">
-              Prevención Estratégica Basada en Evidencia
-            </h2>
-            <p className="font-body-md text-base md:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
-              El Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres (CENEPRED) provee inteligencia accionable para proteger la vida y el patrimonio de los peruanos, articulando tecnología predictiva y gestión territorial dinámica.
-            </p>
-          </div>
-        </ScrollReveal>
-      </section>
-
-      {/* 3. Live Data Section (Indicadores en Vivo) */}
-      <section className="w-full px-6 md:px-16 py-20 bg-white">
-        <div className="max-w-7xl mx-auto">
+      {/* 2. Key Indicators Grid (High Impact Metrics) */}
+      <section className="w-full px-6 md:px-16 -mt-16 relative z-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          <ScrollReveal>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
-              <div>
-                <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-1">
-                  Datos en Vivo
-                </h2>
-                <p className="font-body-md text-sm text-slate-500">
-                  Estado actual del territorio nacional
-                </p>
+          <ScrollReveal delayMs={100}>
+            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all group">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-label-sm text-xs font-bold text-on-surface-variant uppercase tracking-wider">Emergencias SINPAD</span>
+                <span className="p-2 bg-sky-50 text-sky-700 rounded-xl group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">warning</span>
+                </span>
               </div>
+              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 mb-2">
+                {NATIONAL_META.totalEmergencias.toLocaleString()}
+              </div>
+              <p className="font-body-md text-xs text-slate-500 font-medium">Eventos históricos registrados en los 25 departamentos</p>
             </div>
           </ScrollReveal>
+
+          <ScrollReveal delayMs={200}>
+            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all group">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-label-sm text-xs font-bold text-on-surface-variant uppercase tracking-wider">Población Afectada</span>
+                <span className="p-2 bg-amber-50 text-amber-700 rounded-xl group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">groups</span>
+                </span>
+              </div>
+              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 mb-2">
+                {NATIONAL_META.totalAfectados.toLocaleString()}
+              </div>
+              <p className="font-body-md text-xs text-slate-500 font-medium">Personas registradas con impacto directo por desastres</p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={300}>
+            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all group">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-label-sm text-xs font-bold text-on-surface-variant uppercase tracking-wider">Alerta Nivel 4 (Alta)</span>
+                <span className="p-2 bg-red-50 text-red-700 rounded-xl group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">error</span>
+                </span>
+              </div>
+              <div className="font-headline-lg text-4xl font-extrabold text-red-600 mb-2">
+                {highRiskDeptos.length} Regiones
+              </div>
+              <p className="font-body-md text-xs text-slate-500 font-medium">Departamentos con riesgo superior al 65% (Piura, Tumbes...)</p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={400}>
+            <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl border border-outline-variant/30 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all group">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-label-sm text-xs font-bold text-on-surface-variant uppercase tracking-wider">Ejecución PP 0068</span>
+                <span className="p-2 bg-emerald-50 text-emerald-700 rounded-xl group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">account_balance</span>
+                </span>
+              </div>
+              <div className="font-headline-lg text-4xl font-extrabold text-emerald-600 mb-2">
+                {NATIONAL_META.pctEjecucionNacional}%
+              </div>
+              <p className="font-body-md text-xs text-slate-500 font-medium">S/ {NATIONAL_META.totalDevengadoMillones}M devengados de S/ {NATIONAL_META.totalPimMillones}M PIM</p>
+            </div>
+          </ScrollReveal>
+
+        </div>
+      </section>
+
+      {/* 3. High Risk Regions Spotlight */}
+      <section className="w-full px-6 md:px-16 py-24 bg-surface-container-lowest">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <span className="font-label-sm text-xs font-bold text-primary uppercase tracking-widest mb-2 block">
+                Zonas de Mayor Vulnerabilidad
+              </span>
+              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+                Regiones con Riesgo Alerta Nivel 4
+              </h2>
+            </div>
+            <button
+              onClick={() => setActivePath('riesgo-predictivo')}
+              className="text-xs font-bold uppercase tracking-wider text-primary hover:text-sky-700 transition-colors flex items-center gap-2 cursor-pointer self-start md:self-auto"
+            >
+              Ver Inferencia Completa XGBoost
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {highRiskDeptos.map((d, index) => (
+              <ScrollReveal key={d.name} delayMs={index * 100}>
+                <div
+                  onClick={() => setActivePath('riesgo-predictivo')}
+                  className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-bold text-slate-900 group-hover:text-primary transition-colors">
+                        {d.name}
+                      </span>
+                      <span className="px-3 py-1 bg-red-100 text-red-700 text-[11px] font-bold rounded-full">
+                        {d.prob}% Riesgo
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 text-xs text-slate-600 mb-6 font-medium">
+                      <div className="flex justify-between border-b border-slate-100 pb-2">
+                        <span className="text-slate-400">Precipitación 24h:</span>
+                        <span className="font-bold text-slate-800">{d.precipitacionMm} mm</span>
+                      </div>
+                      <div className="flex justify-between border-b border-slate-100 pb-2">
+                        <span className="text-slate-400">Focos de Calor:</span>
+                        <span className="font-bold text-slate-800">{d.focosCalor} detectados</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Ejecución MEF:</span>
+                        <span className="font-bold text-emerald-700">{d.pctEjecucion}%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-primary group-hover:underline">
+                    <span>Analizar Predictivo</span>
+                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">chevron_right</span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. Core Features Showcase */}
+      <section className="w-full px-6 md:px-16 py-24 bg-surface-container-low/50 border-y border-outline-variant/15">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <span className="font-label-sm text-xs font-bold text-primary uppercase tracking-widest mb-3 block">
+              Módulos de la Plataforma
+            </span>
+            <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+              Herramientas de Decisión Estratégica
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Indicador 1: Riesgo Nacional */}
-            <ScrollReveal delayMs={0}>
+            <ScrollReveal delayMs={100}>
               <div
                 onClick={() => setActivePath('monitoreo-diario')}
-                className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer h-full"
-                title="Ver Monitoreo Diario de Riesgo"
+                className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
               >
-                {/* BetterUp 3D Background Curtain Reveal on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
-
-                <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold relative z-10">
-                  Índice de Riesgo Nacional
-                </h3>
-                
-                <div className="flex flex-col items-center justify-center relative z-10">
-                  <div className="relative w-44 h-44 flex items-center justify-center">
-                    <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-                      <circle className="text-slate-200" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeWidth="8"></circle>
-                      <circle className="text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)] animate-gauge" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeDasharray="283" strokeDashoffset="90" strokeLinecap="round" strokeWidth="8"></circle>
-                    </svg>
-                    <div className="absolute flex flex-col items-center">
-                      <span className="font-display-lg text-[42px] font-extrabold leading-none text-slate-900">
-                        68<span className="text-xl text-slate-400">%</span>
-                      </span>
-                    </div>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="w-14 h-14 bg-sky-100 text-sky-700 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-3xl">satellite_alt</span>
                   </div>
+                  <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+                </div>
 
-                  <div className="mt-6 flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                    <span className="font-label-sm text-xs font-bold text-slate-800">ALTO / MODERADO</span>
-                  </div>
+                <div className="relative z-10">
+                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
+                    Monitoreo Diario Satelital
+                  </h3>
+                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                    Visualización cartográfica en tiempo real de lluvias (Open-Meteo), focos de calor (NASA FIRMS) y sismicidad (USGS).
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
 
-            {/* Indicador 2: Alertas Críticas */}
-            <ScrollReveal delayMs={150}>
+            <ScrollReveal delayMs={200}>
               <div
-                onClick={() => setActivePath('monitoreo-diario')}
-                className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer h-full"
-                title="Filtrar Regiones en Alerta Crítica"
+                onClick={() => setActivePath('riesgo-predictivo')}
+                className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
               >
-                {/* BetterUp 3D Background Curtain Reveal on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-red-600/15 via-red-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
-
-                <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-4 font-bold relative z-10">
-                  Regiones en Alerta Crítica
-                </h3>
-                
-                <div className="flex flex-col h-full justify-between relative z-10">
-                  <div>
-                    <span className="font-display-lg text-[68px] font-extrabold leading-none text-red-600 tracking-tighter">
-                      0{highRiskDeptos.length}
-                    </span>
-                    <p className="font-body-md text-sm text-slate-600 mt-2 font-semibold">
-                      Emergencias activas Nivel 4
-                    </p>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="w-14 h-14 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-3xl">psychology</span>
                   </div>
+                  <span className="material-symbols-outlined text-slate-400 group-hover:text-purple-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+                </div>
 
-                  <div className="mt-8 pt-6 border-t border-slate-200">
-                    <ul className="flex flex-wrap gap-2">
-                      {highRiskDeptos.slice(0, 5).map((d) => (
-                        <li key={d.name} className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-label-sm text-[11px] font-bold uppercase hover:bg-red-600 hover:text-white transition-colors">
-                          {d.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="relative z-10">
+                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-purple-700 transition-colors">
+                    Inferencia de Riesgo ML
+                  </h3>
+                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
+                    Algoritmo XGBoost Classifier calibrado para predecir la probabilidad de desastres por región y atribución SHAP.
+                  </p>
                 </div>
               </div>
             </ScrollReveal>
 
-            {/* Indicador 3: Presupuesto MEF */}
             <ScrollReveal delayMs={300}>
               <div
                 onClick={() => setActivePath('presupuesto-mef')}
-                className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer h-full"
-                title="Ver Control Presupuestal MEF PP 0068"
+                className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full"
               >
-                {/* BetterUp 3D Background Curtain Reveal on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/15 via-emerald-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
-
-                <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold relative z-10">
-                  Ejecución PP 0068 (MEF)
-                </h3>
-                
-                <div className="flex flex-col h-full justify-center relative z-10">
-                  <div className="flex justify-between items-end mb-4">
-                    <span className="font-display-lg text-[44px] font-extrabold leading-none text-emerald-600">
-                      {NATIONAL_META.pctEjecucionNacional}<span className="text-xl text-slate-400">%</span>
-                    </span>
-                    <span className="font-label-sm text-xs text-slate-500 mb-1 font-bold">Promedio Nac.</span>
-                  </div>
-
-                  <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden relative">
-                    <div
-                      className="h-full bg-emerald-500 rounded-full relative transition-all duration-700"
-                      style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}
-                    >
-                      <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>
-                    </div>
-                  </div>
-
-                  <p className="font-body-md text-xs text-slate-500 mt-6 leading-relaxed">
-                    Programa Presupuestal 0068: Reducción de Vulnerabilidad y Atención de Emergencias
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Services Grid Section (Servicios de Inteligencia) */}
-      <section className="w-full px-6 md:px-16 py-24 bg-slate-50 relative">
-        <div className="max-w-7xl mx-auto">
-          
-          <ScrollReveal>
-            <div className="mb-14">
-              <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-2">
-                Servicios de Inteligencia
-              </h2>
-              <p className="font-body-md text-slate-600 text-base max-w-2xl">
-                Herramientas analíticas diseñadas para la toma de decisiones ejecutivas en los tres niveles de gobierno.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)]">
-            
-            {/* Card 1 (Large Featured) */}
-            <ScrollReveal className="lg:col-span-2" delayMs={0}>
-              <div
-                onClick={() => setActivePath('monitoreo-diario')}
-                className="w-full bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer min-h-[300px]"
-              >
-                {/* BetterUp Background Curtain Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
-
-                <div className="relative z-10 flex justify-between items-start mb-12">
-                  <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[30px]">satellite_alt</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div className="relative z-10">
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
-                    Monitoreo Diario
-                  </h3>
-                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
-                    Supervisión continua de peligros inminentes, variables meteorológicas e hidrológicas integradas con las 25 regiones del Perú y mapas satelitales.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 2: Historico & Tendencias */}
-            <ScrollReveal delayMs={100}>
-              <div
-                onClick={() => setActivePath('historico-tendencias')}
-                className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer min-h-[300px]"
-              >
-                {/* BetterUp Background Curtain Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600/15 via-indigo-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
-
-                <div className="relative z-10 flex justify-between items-start mb-12">
-                  <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[30px]">history</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-indigo-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div className="relative z-10">
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-indigo-700 transition-colors">
-                    Histórico & Tendencias
-                  </h3>
-                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
-                    Análisis longitudinal y explorador Time-Intelligence (Año → Trimestre → Mes → Día) sobre 84,369 emergencias pasadas.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 3: Riesgo Predictivo & SHAP */}
-            <ScrollReveal delayMs={150}>
-              <div
-                onClick={() => setActivePath('riesgo-predictivo')}
-                className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer min-h-[300px]"
-              >
-                {/* BetterUp Background Curtain Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-amber-600/15 via-amber-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
-
-                <div className="relative z-10 flex justify-between items-start mb-12">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[30px]">model_training</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-amber-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div className="relative z-10">
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-amber-700 transition-colors">
-                    Riesgo Predictivo & SHAP
-                  </h3>
-                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
-                    Modelos de Machine Learning explicables (XGBoost) con simulador de escenarios What-If en tiempo real.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 4: Comparativo Regional */}
-            <ScrollReveal delayMs={200}>
-              <div
-                onClick={() => setActivePath('comparativo-regional')}
-                className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer min-h-[300px]"
-              >
-                {/* BetterUp Background Curtain Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
-
-                <div className="relative z-10 flex justify-between items-start mb-12">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[30px]">map</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div className="relative z-10">
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
-                    Comparativo Regional
-                  </h3>
-                  <p className="font-body-md text-sm text-slate-600 leading-relaxed">
-                    Herramienta de confrontación lado a lado de departamentos y matriz estacional región × mes.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 5: Presupuesto MEF */}
-            <ScrollReveal delayMs={250}>
-              <div
-                onClick={() => setActivePath('presupuesto-mef')}
-                className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer min-h-[300px]"
-              >
-                {/* BetterUp Background Curtain Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/15 via-emerald-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
-
-                <div className="relative z-10 flex justify-between items-start mb-12">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[30px]">account_balance_wallet</span>
+                <div className="flex items-center justify-between mb-8">
+                  <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-3xl">analytics</span>
                   </div>
                   <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
                 </div>
@@ -366,7 +324,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 5. Executive CTA Section */}
-      <section className="w-full px-6 md:px-16 py-24 bg-white">
+      <section className="w-full px-6 md:px-16 py-20 bg-white">
         <ScrollReveal>
           <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
@@ -392,6 +350,60 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             </div>
           </div>
         </ScrollReveal>
+      </section>
+
+      {/* 6. Modern Interactive Q&A / FAQ Section (Abajo de todo) */}
+      <section className="w-full px-6 md:px-16 py-24 bg-slate-50 border-t border-slate-200/80">
+        <div className="max-w-5xl mx-auto">
+          
+          <ScrollReveal>
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="font-label-sm text-xs font-bold text-primary uppercase tracking-[0.2em] px-4 py-1.5 bg-sky-100/80 text-sky-800 rounded-full inline-block mb-4 border border-sky-200">
+                Centro de Ayuda & Transparencia
+              </span>
+              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight mb-4">
+                Preguntas Frecuentes & Respuestas
+              </h2>
+              <p className="font-body-md text-slate-600 text-sm md:text-base">
+                Respuestas claras y detalladas sobre el funcionamiento analítico, los modelos de Machine Learning y la telemetría del CENEPRED.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Accordion List */}
+          <div className="space-y-4">
+            {faqList.map((item, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <ScrollReveal key={index} delayMs={index * 60}>
+                  <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden transition-all duration-300">
+                    <button
+                      onClick={() => toggleFaq(index)}
+                      className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors"
+                    >
+                      <span className="font-bold text-sm md:text-base text-slate-900 flex items-center gap-3">
+                        <span className="w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                          {index + 1}
+                        </span>
+                        {item.q}
+                      </span>
+                      <div className={`w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 bg-sky-700 text-white' : 'text-slate-600'}`}>
+                        <span className="material-symbols-outlined text-lg">expand_more</span>
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-6 pb-6 pt-1 text-slate-600 text-xs md:text-sm leading-relaxed border-t border-slate-100 bg-sky-50/20 animate-fade-in font-medium">
+                        <p>{item.a}</p>
+                      </div>
+                    )}
+                  </div>
+                </ScrollReveal>
+              );
+            })}
+          </div>
+
+        </div>
       </section>
 
       {/* Footer */}
