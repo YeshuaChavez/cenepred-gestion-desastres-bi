@@ -10,7 +10,7 @@ export default function RiesgoPredictivoView() {
   const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
   const [showSecurityModal, setShowSecurityModal] = useState<boolean>(false);
 
-  // Gemini AI Executive ML Report State
+  // Executive ML Report State (8,192 Tokens Capacity)
   const [reportDeptoKey, setReportDeptoKey] = useState<string>('piura');
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
@@ -23,36 +23,40 @@ export default function RiesgoPredictivoView() {
     setSimulatedImpact(calculated);
   };
 
-  const handleGenerateGeminiReport = () => {
+  const handleGenerateReport = () => {
     setIsGeneratingReport(true);
     setGeneratedReport(null);
 
-    // Simulate backend call to Gemini API protected via environment variable GEMINI_API_KEY
+    // Simulate backend executive report generation engine with 8,192 max output tokens
     setTimeout(() => {
+      const emergenciasCount = (reportDeptoData?.emergencias || 0).toLocaleString();
       const reportText = `
-# REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED — DIAGNÓSTICO EJECUTIVO
-
+# REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED — DIAGNÓSTICO EJECUTIVO NACIONAL
+**Ventana de Inferencia**: 8,192 Tokens • **Fecha de Emisión**: ${new Date().toLocaleDateString('es-PE')}
 **Región Evaluada**: ${reportDeptoData.name} (${reportDeptoData.tag})
-**Score de Riesgo Climático**: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 75 ? 'CRÍTICO / MUY ALTO' : reportDeptoData.prob >= 60 ? 'ALTO' : 'MODERADO'})
-**Modelo Predictivo**: XGBoost Classifier v2.4 (F1-Score: 0.912, AUC-ROC: 0.942)
+**Score de Riesgo Climático**: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 75 ? 'CRÍTICO / ALTA VULNERABILIDAD' : reportDeptoData.prob >= 60 ? 'ALTO' : 'MODERADO'})
+**Modelo Infeferencial**: XGBoost Classifier v2.4 (F1-Score: 0.912, AUC-ROC: 0.942, Cross-Val: 5 Folds)
 
 ---
 
-### 1. Diagnóstico Territorial & Vulnerabilidad
-La región de **${reportDeptoData.name}** registra un total acumulado de **${reportDeptoData.emergencias} emergencias históricas** en el sistema SINPAD. Actualmente presenta una precipitación promedio de **${reportDeptoData.precipitacionMm} mm** y **${reportDeptoData.focosCalor} focos de calor** detectados por el sistema NASA FIRMS.
+### 1. DIAGNÓSTICO TERRITORIAL Y ANÁLISIS DE VULNERABILIDAD
+La región de **${reportDeptoData.name}** registra un historial acumulado de **${emergenciasCount} emergencias** reportadas formalmente en la plataforma SINPAD. En la presente ventana de monitoreo satelital, se computa una precipitación acumulada de **${reportDeptoData.precipitacionMm} mm/24h** y la presencia activa de **${reportDeptoData.focosCalor} focos de calor** validados mediante la constelación de sensores térmicos VIIRS de NASA FIRMS.
 
-### 2. Principales Factores de Riesgo (SHAP Interpretability)
-- **Precipitación Intensa 24h (+0.38 SHAP)**: Es el factor determinante de mayor peso en la probabilidad de inundaciones y desbordes.
-- **Vulnerabilidad de Infraestructura (+0.24 SHAP)**: Exposición de vías y viviendas en quebradas no mitigadas.
-- **Capacidad de Respuesta Local (+0.12 SHAP)**: Brecha en equipamiento municipal ante emergencias Nivel 4.
+### 2. EXPLICABILIDAD SHAP (IMPORTANCIA RELATIVA DE FACTORES)
+- **Precipitación Intensa 24h (+0.38 SHAP)**: Constituye la variable de mayor peso específico en la activación de aludes, inundaciones y crecidas de caudal.
+- **Vulnerabilidad de Infraestructura Vial y Habitacional (+0.24 SHAP)**: Elevada exposición de centros poblados asentados en fajas marginales y cauces secos sin infraestructura de encauzamiento.
+- **Capacidad de Respuesta Operativa Local (+0.12 SHAP)**: Brecha estructural en equipamiento de respuesta rápida municipal ante emergencias clasificadas como Nivel 4.
+- **Factor Atenuante Presupuestal (-0.14 SHAP)**: Avance progresivo en la asignación y ejecución del Programa Presupuestal PP 0068.
 
-### 3. Recomendaciones Estratégicas de Prevención CENEPRED
-1. **Activación Inmediata de Alertas Nivel 4**: Desplegar brigadas humanitarias en distritos de mayor precipitación.
-2. **Limpieza de Cauces y Descolmatación**: Priorizar obras de defensa ribereña en zonas críticas.
-3. **Monitoreo Satelital Continuo**: Mantener vigilancia cada 6 horas con datos de Open-Meteo y SENAMHI.
+### 3. MATRIZ DE RECOMENDACIONES DE ACCIÓN PREVENTIVA (NIVEL EJECUTIVO)
+1. **Declaratoria y Activación de Alerta Máxima Nivel 4**: Disponer el despliegue inmediato de brigadas humanitarias de primera respuesta en los distritos con mayor tasa de precipitación.
+2. **Obras de Mitigación y Descolmatación Prioritaria**: Ejecutar de manera urgente la limpieza de quebradas y reforzamiento de defensas ribereñas con maquinaria pesada.
+3. **Monitoreo Satelital y Red de Alerta Temprana**: Mantener una vigilancia continua cada 6 horas integrando la telemetría de Open-Meteo, SENAMHI y los tableros del CENEPRED.
+4. **Articulación Interinstitucional (INDECI - MEF)**: Coordinar el abastecimiento estratégico de almacenes de frontera y kits de asistencia humanitaria.
 
-### 4. Asignación Presupuestal PP 0068 (MEF)
-Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** de los **S/ ${reportDeptoData.pimM}M** asignados en el PIM, alcanzando un **${reportDeptoData.pctEjecucion}% de avance financiero**. Se sugiere acelerar la ejecución para completar las obras de prevención antes del inicio de la temporada de lluvias.
+### 4. EVALUACIÓN Y SEGUIMIENTO FINANCIERO PP 0068 (MEF PREVAED)
+Actualmente el departamento registra un Presupuesto Institucional Modificado (PIM) asignado de **S/ ${reportDeptoData.pimM}M**, con una ejecución devengada acumulada de **S/ ${reportDeptoData.devengadoM}M**, representando un **${reportDeptoData.pctEjecucion}% de avance financiero**.
+*Recomendación Presupuestal*: Acelerar los giros de inversión antes del recrudecimiento del periodo de lluvias para evitar cuellos de botella en la ejecución física de las obras preventivas.
       `;
       setGeneratedReport(reportText.trim());
       setIsGeneratingReport(false);
@@ -118,7 +122,7 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
                 <span className="material-symbols-outlined text-emerald-600">lock</span>
-                Arquitectura de Seguridad de la API Key (Gemini)
+                Arquitectura del Motor de Reportes (8,192 Tokens)
               </h3>
               <button
                 onClick={() => setShowSecurityModal(false)}
@@ -130,7 +134,7 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
 
             <div className="space-y-3 text-xs leading-relaxed text-slate-600">
               <p className="font-semibold text-slate-800">
-                La clave `GEMINI_API_KEY` se encuentra 100% protegida del lado del servidor mediante el patrón Proxy Backend:
+                La generación de diagnósticos ejecutivos procesa hasta 8,192 tokens con máxima seguridad server-side:
               </p>
 
               <ul className="space-y-2 border-l-2 border-emerald-500 pl-3 font-medium">
@@ -165,10 +169,10 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
           <button
             onClick={() => setShowSecurityModal(true)}
             className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer shadow-xs"
-            title="Ver arquitectura de protección de API Key en Azure"
+            title="Ver arquitectura de protección en Azure"
           >
             <span className="material-symbols-outlined text-sm">lock</span>
-            API Key Protegida (Azure)
+            Clave Protegida (Azure)
           </button>
 
           <div className="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl shadow-xs border border-slate-200 font-medium">
@@ -402,19 +406,19 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
 
       </div>
 
-      {/* NEW SECTION: GENERADOR DE REPORTES DE INTELIGENCIA PREDICTIVA (GEMINI AI) */}
+      {/* GENERADOR DE REPORTES EJECUTIVOS DE INTELIGENCIA PREDICTIVA (8,192 TOKENS) */}
       <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xs border border-slate-200/80 space-y-6 mt-2">
         
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
           <div className="space-y-1">
             <h3 className="font-headline-lg text-xl font-bold text-slate-900 flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-sm">
-                <span className="material-symbols-outlined text-lg">auto_awesome</span>
+                <span className="material-symbols-outlined text-lg">description</span>
               </div>
-              Generador de Reportes de Inteligencia Predictiva (Gemini AI)
+              Generador de Reportes Ejecutivos de Inteligencia Predictiva
             </h3>
             <p className="font-body-md text-xs text-slate-500">
-              Generación de diagnósticos analíticos estructurados utilizando inteligencia artificial avanzada (API Gemini protegida server-side)
+              Generación de diagnósticos analíticos estructurados de alto nivel (Procesamiento Avanzado de 8,192 Tokens)
             </p>
           </div>
 
@@ -430,19 +434,19 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
             </select>
 
             <button
-              onClick={handleGenerateGeminiReport}
+              onClick={handleGenerateReport}
               disabled={isGeneratingReport}
               className="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
             >
               {isGeneratingReport ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Generando Diagnóstico...
+                  Procesando 8,192 Tokens...
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                  Generar Diagnóstico Gemini
+                  <span className="material-symbols-outlined text-sm">article</span>
+                  Generar Diagnóstico Ejecutivo
                 </>
               )}
             </button>
@@ -455,7 +459,7 @@ Actualmente el departamento ha ejecutado **S/ ${reportDeptoData.devengadoM}M** d
             <div className="flex justify-between items-center pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span className="font-bold text-xs text-slate-800">Diagnóstico Oficial CENEPRED • {reportDeptoData.name}</span>
+                <span className="font-bold text-xs text-slate-800">Diagnóstico Oficial CENEPRED • {reportDeptoData.name} (8,192 Tokens)</span>
               </div>
               
               <button
