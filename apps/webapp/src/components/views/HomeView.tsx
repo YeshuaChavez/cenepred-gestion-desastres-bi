@@ -14,17 +14,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
   return (
     <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
       
-      {/* 1. Hero Section (Cinematic Oceanic Satellite View) */}
+      {/* 1. Hero Section (Cinematic 4K UHD Video Background) */}
       <section className="relative w-full h-[90vh] min-h-[640px] flex items-center justify-center overflow-hidden bg-slate-950">
         
-        {/* Ambient Background Image & Glass Overlay */}
-        <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-cover bg-center opacity-70 mix-blend-luminosity scale-105 transition-transform duration-1000"
-            style={{
-              backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxcHZzv6rIjp10lM3lq6K9DVfpOAw9Zwl5uoA76fZLUVYUuJP2CWWbUsR9cHFhHJHArZXKeH-Gi8M8sutkGXt7gbljgDBa8OfTuS5pw_lRWtI2M5VgZCy2Ym90DXzBx2cIGnXHLV57mITZ2EZgWmiiK3NZoSxSBTQfGUDyPs6ssfKiV6PFc5IkMjKAhCoQThBKc39saMiot5OGSGArjlQRdF6xK7m9XvtzYwFLyPoIcHGHWzEyYJjtZg')`
-            }}
-          ></div>
+        {/* Ambient Video & Overlay */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105"
+          >
+            <source src="/videos/14636688-uhd_3840_2160_30fps.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
