@@ -68,10 +68,6 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto my-auto animate-fade-in-up">
           
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-[0.2em] mb-8 py-2 px-5 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold">
-            Plataforma Nacional de Inteligencia
-          </span>
-
           <h1 className="font-display-lg text-4xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-8">
             Gestión del Riesgo de Desastres <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent">
