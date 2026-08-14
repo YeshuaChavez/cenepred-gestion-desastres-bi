@@ -15,7 +15,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
     <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
       
       {/* 1. Hero Section (Cinematic Oceanic Satellite View) */}
-      <section className="relative w-full min-h-[580px] h-[calc(100vh-70px)] flex flex-col items-center justify-between overflow-hidden bg-slate-950 pt-24 pb-6">
+      <section className="relative w-full h-[90vh] min-h-[640px] flex items-center justify-center overflow-hidden bg-slate-950">
         
         {/* Ambient Background Image & Glass Overlay */}
         <div className="absolute inset-0 z-0">
@@ -28,24 +28,24 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
-        {/* Hero Content (Centered Flex layout with generous clearance) */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto my-auto animate-fade-in-up">
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16 animate-fade-in-up">
           
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-4 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-md font-bold">
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-md font-bold">
             Plataforma Nacional de Inteligencia
           </span>
 
-          <h1 className="font-display-lg text-3xl sm:text-4xl md:text-[60px] md:leading-[68px] text-white font-bold tracking-tighter mb-4 drop-shadow-2xl">
+          <h1 className="font-display-lg text-4xl sm:text-5xl md:text-[68px] md:leading-[76px] text-white font-bold tracking-tighter mb-6 drop-shadow-2xl">
             CENEPRED — Centro de Inteligencia para la <span className="text-sky-400">Gestión del Riesgo</span>
           </h1>
 
-          <p className="font-body-md text-base md:text-[20px] leading-relaxed text-slate-200 max-w-3xl mb-6 opacity-95">
+          <p className="font-body-md text-lg md:text-[22px] leading-relaxed text-slate-200 max-w-3xl mb-10 opacity-95">
             Procesamiento en tiempo real de <span className="font-bold text-white">84,369</span> emergencias históricas · Monitoreo continuo de los 25 departamentos del Perú.
           </p>
 
           <button
             onClick={() => setActivePath('monitoreo-diario')}
-            className="group relative px-8 py-3.5 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_60px_-10px_rgba(56,189,248,0.9)] overflow-hidden cursor-pointer active:scale-95"
+            className="group relative px-8 py-4 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_60px_-10px_rgba(56,189,248,0.9)] overflow-hidden cursor-pointer active:scale-95"
           >
             <span className="relative z-10 flex items-center gap-2">
               Ver Monitoreo Nacional
@@ -55,13 +55,13 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </button>
         </div>
 
-        {/* Scroll Indicator (Positioned safely at bottom with clean margin) */}
+        {/* Scroll Indicator */}
         <div
-          onClick={() => window.scrollTo({ top: 580, behavior: 'smooth' })}
-          className="relative z-10 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 transition-opacity cursor-pointer pt-2"
+          onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
         >
-          <span className="font-label-sm text-[10px] uppercase text-white/80 tracking-widest font-semibold">Explorar</span>
-          <span className="material-symbols-outlined text-white/80 text-base -mt-1">keyboard_arrow_down</span>
+          <span className="font-label-sm text-[10px] uppercase text-white tracking-widest font-bold">Explorar</span>
+          <span className="material-symbols-outlined text-white text-lg">south</span>
         </div>
       </section>
 
