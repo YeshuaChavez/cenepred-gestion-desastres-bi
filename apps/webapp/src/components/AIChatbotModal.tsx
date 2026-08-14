@@ -8,7 +8,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
-      text: 'Hola, soy el asistente analítico del Centro de Inteligencia CENEPRED. Estoy conectado a la base de datos nacional (25 departamentos, 84,369 emergencias). ¿Qué indicador, región o presupuesto deseas consultar?'
+      text: 'Hola, soy el asistente analítico del SAT. ¿Qué información regional o presupuestal necesitas consultar hoy?'
     }
   ]);
 
@@ -57,38 +57,36 @@ export default function AIChatbotModal() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {isOpen && (
-        <div className="w-85 sm:w-96 h-[470px] mb-4 bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden transition-all duration-300 animate-fade-in text-slate-800">
+        <div className="w-80 sm:w-96 h-[460px] mb-4 bg-white/95 backdrop-blur-2xl rounded-2xl shadow-xl border border-outline-variant/20 flex flex-col overflow-hidden transition-all duration-300 animate-fade-in text-slate-800">
           
-          {/* Header with Custom CENEPRED AI Emblem */}
-          <div className="bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800">
+          {/* Header matching exact HTML specification */}
+          <div className="bg-surface-container-low p-4 flex items-center justify-between border-b border-outline-variant/10">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-md ring-2 ring-sky-300/40">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                <span className="material-symbols-outlined text-primary text-[16px]">smart_toy</span>
               </div>
               <div>
-                <h4 className="font-bold text-sm text-white leading-tight">Asistente CENEPRED</h4>
-                <span className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase">Inteligencia de Datos</span>
+                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">CENEPRED Assistant</h4>
+                <span className="font-label-sm text-[10px] text-primary font-semibold">Powered by Azure OpenAI</span>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[20px]">close</span>
+              <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 font-body-md text-xs leading-relaxed bg-slate-50/60">
+          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 font-body-md text-xs leading-relaxed bg-slate-50/50">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`max-w-[85%] p-3 rounded-2xl shadow-xs ${
+                className={`max-w-[85%] p-3 rounded-xl shadow-xs ${
                   msg.sender === 'user'
-                    ? 'bg-sky-600 text-white self-end rounded-tr-none font-medium'
-                    : 'bg-white text-slate-800 border border-slate-200/80 self-start rounded-tl-none'
+                    ? 'bg-primary text-white self-end rounded-tr-none font-medium'
+                    : 'bg-white text-slate-800 border border-outline-variant/20 self-start rounded-tl-none'
                 }`}
               >
                 {msg.text}
@@ -98,7 +96,7 @@ export default function AIChatbotModal() {
           </div>
 
           {/* Input Field */}
-          <div className="p-3 bg-white border-t border-slate-200">
+          <div className="p-3 bg-white border-t border-outline-variant/10">
             <div className="relative flex items-center">
               <input
                 type="text"
@@ -106,13 +104,13 @@ export default function AIChatbotModal() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Escribe una pregunta sobre riesgo o regiones..."
-                className="w-full bg-slate-100 text-slate-900 placeholder:text-slate-400 rounded-full pl-4 pr-10 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500/40 font-medium"
+                className="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-4 pr-10 text-slate-800 font-body-md text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-slate-400 font-medium"
               />
               <button
                 onClick={handleSend}
-                className="absolute right-1.5 p-1.5 bg-sky-600 text-white rounded-full hover:bg-sky-500 transition-colors flex items-center justify-center cursor-pointer"
+                className="absolute right-1.5 w-7 h-7 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors flex items-center justify-center cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px]">send</span>
+                <span className="material-symbols-outlined text-[14px]">send</span>
               </button>
             </div>
           </div>
@@ -120,15 +118,14 @@ export default function AIChatbotModal() {
         </div>
       )}
 
-      {/* Sleek Floating Institutional CENEPRED AI Emblem Button */}
+      {/* Floating Action Button (FAB) matching exact HTML specification */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-13 h-13 rounded-full bg-gradient-to-br from-slate-900 via-sky-900 to-slate-950 text-white shadow-2xl hover:shadow-sky-500/30 hover:scale-105 transition-all duration-300 flex items-center justify-center cursor-pointer active:scale-95 ring-2 ring-sky-400/40"
-        title="Asistente de Inteligencia CENEPRED"
+        className="w-14 h-14 bg-primary text-white rounded-full shadow-[0_4px_14px_rgba(56,189,248,0.4)] hover:shadow-[0_6px_20px_rgba(56,189,248,0.6)] flex items-center justify-center hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden cursor-pointer"
+        title="CENEPRED Assistant"
       >
-        <svg className="w-6 h-6 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
+        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none"></div>
+        <span className="material-symbols-outlined text-[24px] relative z-10">smart_toy</span>
       </button>
     </div>
   );
