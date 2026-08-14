@@ -27,10 +27,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
-        {/* Hero Content with Smooth Fade-In-Up & Floating Badge */}
+        {/* Hero Content (Static Badge & Smooth Entrance) */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-16 animate-fade-in-up">
           
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold animate-float-slow">
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-widest mb-6 py-1.5 px-4 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-md font-bold">
             Plataforma Nacional de Inteligencia
           </span>
 
@@ -94,18 +94,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            {/* Indicador 1: Riesgo Nacional (Glass Hover + Radial Gauge Animation) */}
+            {/* Indicador 1: Riesgo Nacional */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer animate-fade-in-up"
               title="Ver Monitoreo Diario de Riesgo"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-sky-500/20 transition-colors"></div>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold">
+              {/* BetterUp 3D Background Curtain Reveal on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
+
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold relative z-10">
                 Índice de Riesgo Nacional
               </h3>
               
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center relative z-10">
                 <div className="relative w-44 h-44 flex items-center justify-center">
                   <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
                     <circle className="text-slate-200" cx="50" cy="50" fill="none" r="45" stroke="currentColor" strokeWidth="8"></circle>
@@ -128,16 +130,18 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Indicador 2: Alertas Críticas */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '100ms' }}
               title="Filtrar Regiones en Alerta Crítica"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-red-500/20 transition-colors"></div>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-4 font-bold">
+              {/* BetterUp 3D Background Curtain Reveal on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-red-600/15 via-red-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
+
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-4 font-bold relative z-10">
                 Regiones en Alerta Crítica
               </h3>
               
-              <div className="flex flex-col h-full justify-between">
+              <div className="flex flex-col h-full justify-between relative z-10">
                 <div>
                   <span className="font-display-lg text-[68px] font-extrabold leading-none text-red-600 tracking-tighter">
                     0{highRiskDeptos.length}
@@ -162,16 +166,18 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Indicador 3: Presupuesto MEF */}
             <div
               onClick={() => setActivePath('presupuesto-mef')}
-              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs glass-card-hover relative overflow-hidden group cursor-pointer animate-fade-in-up"
+              className="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 shadow-xs relative overflow-hidden group cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '200ms' }}
               title="Ver Control Presupuestal MEF PP 0068"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-emerald-500/20 transition-colors"></div>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold">
+              {/* BetterUp 3D Background Curtain Reveal on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/15 via-emerald-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-3xl pointer-events-none"></div>
+
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-widest mb-6 font-bold relative z-10">
                 Ejecución PP 0068 (MEF)
               </h3>
               
-              <div className="flex flex-col h-full justify-center">
+              <div className="flex flex-col h-full justify-center relative z-10">
                 <div className="flex justify-between items-end mb-4">
                   <span className="font-display-lg text-[44px] font-extrabold leading-none text-emerald-600">
                     {NATIONAL_META.pctEjecucionNacional}<span className="text-xl text-slate-400">%</span>
@@ -216,10 +222,11 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 1 (Large Featured) */}
             <div
               onClick={() => setActivePath('monitoreo-diario')}
-              className="lg:col-span-2 bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              className="lg:col-span-2 bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+              {/* BetterUp Background Curtain Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
+
               <div className="relative z-10 flex justify-between items-start mb-12">
                 <div className="w-14 h-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">satellite_alt</span>
@@ -240,11 +247,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 2: Historico & Tendencias */}
             <div
               onClick={() => setActivePath('historico-tendencias')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '100ms' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+              {/* BetterUp Background Curtain Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600/15 via-indigo-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
+
               <div className="relative z-10 flex justify-between items-start mb-12">
                 <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">history</span>
@@ -265,11 +273,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 3: Riesgo Predictivo & SHAP */}
             <div
               onClick={() => setActivePath('riesgo-predictivo')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '150ms' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+              {/* BetterUp Background Curtain Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-amber-600/15 via-amber-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
+
               <div className="relative z-10 flex justify-between items-start mb-12">
                 <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">model_training</span>
@@ -290,11 +299,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 4: Comparativo Regional */}
             <div
               onClick={() => setActivePath('comparativo-regional')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '200ms' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+              {/* BetterUp Background Curtain Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/15 via-sky-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
+
               <div className="relative z-10 flex justify-between items-start mb-12">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">map</span>
@@ -315,11 +325,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Card 5: Presupuesto MEF */}
             <div
               onClick={() => setActivePath('presupuesto-mef')}
-              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs glass-card-hover group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
+              className="bg-white p-8 rounded-[28px] border border-slate-200/80 shadow-xs group relative overflow-hidden flex flex-col justify-between cursor-pointer animate-fade-in-up"
               style={{ animationDelay: '250ms' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+              {/* BetterUp Background Curtain Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-600/15 via-emerald-400/5 to-transparent scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500 ease-out rounded-[28px] pointer-events-none"></div>
+
               <div className="relative z-10 flex justify-between items-start mb-12">
                 <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-[30px]">account_balance_wallet</span>
@@ -343,7 +354,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
       {/* 5. Executive CTA Section */}
       <section className="w-full px-6 md:px-16 py-24 bg-white">
-        <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl glass-card-hover animate-fade-in-up">
+        <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl animate-fade-in-up">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
           
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
