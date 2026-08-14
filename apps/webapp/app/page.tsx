@@ -14,6 +14,7 @@ import { ActivePath } from '../src/types';
 
 export default function Page() {
   const [activePath, setActivePath] = useState<ActivePath>('home');
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const renderView = () => {
     switch (activePath) {
@@ -35,11 +36,16 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex bg-background text-on-background">
-      <Sidebar activePath={activePath} setActivePath={setActivePath} />
-      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
+    <div className="min-h-screen flex bg-slate-50 text-slate-900">
+      <Sidebar
+        activePath={activePath}
+        setActivePath={setActivePath}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+      />
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-72'}`}>
         <Header activePath={activePath} setActivePath={setActivePath} />
-        <main className="flex-1 pt-20">
+        <main className="flex-1">
           {renderView()}
         </main>
       </div>
