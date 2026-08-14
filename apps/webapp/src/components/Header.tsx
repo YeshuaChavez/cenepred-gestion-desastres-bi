@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ActivePath } from '../types';
-import { LOGO_CENEPRED, PERU_DEPARTAMENTOS } from '../data/mockData';
+import { LOGO_CENEPRED } from '../data/mockData';
 
 interface HeaderProps {
   activePath?: ActivePath;
@@ -18,12 +18,9 @@ export interface NotificationItem {
 
 export default function Header({ activePath = 'home', setActivePath }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
-  const [showSearch, setShowSearch] = useState<boolean>(false);
   const [showHelp, setShowHelp] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const notifRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
@@ -64,33 +61,13 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    if (showSearch) {
-      setTimeout(() => searchInputRef.current?.focus(), 100);
-    }
-  }, [showSearch]);
-
   const markAllRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
-  const handleSelectSearchDepto = () => {
-    setShowSearch(false);
-    setSearchQuery('');
-    if (setActivePath) {
-      setActivePath('monitoreo-diario');
-    }
   };
 
   const handlePrint = () => {
     window.print();
   };
-
-  const deptosList = Object.entries(PERU_DEPARTAMENTOS);
-  const filteredDeptos = deptosList.filter(([_, data]) =>
-    data.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    data.tag.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <header className="fixed top-0 w-full z-50 bg-surface-container-lowest/70 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20">
@@ -183,21 +160,6 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
         {/* Right Controls */}
         <div className="flex items-center gap-6">
           
-          {/* Quick Search */}
-          <div className="relative hidden xl:flex items-center">
-            <span className="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px]">
-              search
-            </span>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onClick={() => setShowSearch(true)}
-              placeholder="Buscar departamento..."
-              className="bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 rounded-full pl-10 pr-4 py-2 text-sm w-60 focus:outline-none focus:ring-2 focus:ring-primary-container transition-all cursor-pointer font-medium"
-            />
-          </div>
-
           <div className="flex items-center gap-3 border-l border-outline-variant/40 pl-6">
             
             {/* Notifications Bell */}
@@ -258,50 +220,65 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
                             <h5 className="font-bold text-xs text-slate-900">{n.title}</h5>
                             <span className="text-[10px] text-slate-400 font-semibold">{n.time}</span>
                           </div>
-                          <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
+                          <p className="text-xs text-slate-600 leading-snug">{n.desc}</p>
                         </div>
                       </div>
                     ))}
+                  </div>
+
+                  <div className="p-3 bg-slate-50 border-t border-slate-100 text-center">
+                    <button
+                      onClick={() => {
+                        setShowNotifications(false);
+                        if (setActivePath) setActivePath('monitoreo-diario');
+                      }}
+                      className="text-xs font-bold text-sky-700 hover:text-sky-800 transition-colors cursor-pointer"
+                    >
+                      Ver Monitoreo Nacional →
+                    </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Institutional Help Modal Trigger */}
-            <button
-              onClick={() => setShowHelp(true)}
-              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer"
-              title="Información Institucional"
-            >
-              <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
-                help
-              </span>
-            </button>
-
-            {/* Print / PDF Action */}
+            {/* Quick Export / Print Button */}
             <button
               onClick={handlePrint}
-              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer"
-              title="Imprimir / Exportar Reporte PDF"
+              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer text-on-surface-variant"
+              title="Imprimir / Exportar Vista Actual"
             >
-              <span className="material-symbols-outlined text-on-surface-variant text-[22px]">
-                print
-              </span>
+              <span className="material-symbols-outlined text-[22px]">print</span>
             </button>
 
-          </div>
-        </div>
+            {/* Help Info Dialog Button */}
+            <button
+              onClick={() => setShowHelp(true)}
+              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer text-on-surface-variant"
+              title="Información del Sistema"
+            >
+              <span className="material-symbols-outlined text-[22px]">help</span>
+            </button>
 
+            {/* Executive Profile Avatar */}
+            <div className="flex items-center gap-3 pl-2">
+              <div className="w-9 h-9 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-xs text-primary shadow-xs">
+                DIR
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
-      {/* Institutional Platform Info Modal */}
+      {/* System Info Dialog */}
       {showHelp && (
-        <div className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden p-6 space-y-4 text-slate-800 relative z-[1000]">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in text-slate-800">
+          <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-md space-y-4">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">info</span>
-                Centro de Información Institucional
+              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-sky-700">info</span>
+                Centro de Inteligencia CENEPRED v2.4
               </h3>
               <button
                 onClick={() => setShowHelp(false)}
@@ -312,87 +289,37 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
             </div>
 
             <div className="space-y-3 text-xs leading-relaxed text-slate-600">
-              <p className="font-semibold text-slate-800">
-                Esta plataforma integra datos de las siguientes fuentes oficiales del Estado Peruano e internacionales:
+              <p>
+                Plataforma analítica nacional para la gestión del riesgo de desastres, conectada a los 25 departamentos del Perú.
               </p>
-              
-              <ul className="space-y-2 border-l-2 border-primary pl-3 font-medium">
-                <li><b>INDECI / SINPAD</b>: 84,369 registros históricos de emergencias (2012-2023).</li>
-                <li><b>Open-Meteo API</b>: Monitoreo meteorológico de precipitaciones en 25 departamentos.</li>
-                <li><b>NASA FIRMS Satelital</b>: Detección y recuento de focos de calor activos.</li>
-                <li><b>MEF (SIAF - PP 0068)</b>: Seguimiento presupuestal de S/ 1,420.5M asignados a PREVAED.</li>
-              </ul>
-
-              <div className="pt-2 text-right">
-                <button
-                  onClick={() => setShowHelp(false)}
-                  className="px-4 py-2 bg-primary text-white rounded-lg font-bold text-xs hover:bg-primary/90 transition-colors cursor-pointer"
-                >
-                  Entendido
-                </button>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <div className="flex justify-between">
+                  <span className="font-semibold text-slate-700">Arquitectura:</span>
+                  <span>Lakehouse Medallion</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold text-slate-700">Motor ML:</span>
+                  <span>XGBoost + SHAP</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold text-slate-700">Telemetría:</span>
+                  <span>NASA FIRMS & Open-Meteo</span>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* Global Search Modal */}
-      {showSearch && (
-        <div className="fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden relative z-[1000]">
-            <div className="p-4 border-b border-slate-200 flex items-center gap-3">
-              <span className="material-symbols-outlined text-slate-400 text-xl">search</span>
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar departamento o región (ej: Piura, Cusco, Lima)..."
-                className="w-full text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400"
-              />
+            <div className="pt-2 text-right">
               <button
-                onClick={() => setShowSearch(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
+                onClick={() => setShowHelp(false)}
+                className="px-4 py-2 bg-sky-700 text-white rounded-lg font-bold text-xs hover:bg-sky-800 transition-colors cursor-pointer"
               >
-                ESC
+                Cerrar
               </button>
             </div>
-
-            <div className="max-h-96 overflow-y-auto p-2 divide-y divide-slate-100">
-              {filteredDeptos.length > 0 ? (
-                filteredDeptos.map(([key, data]) => (
-                  <div
-                    key={key}
-                    onClick={handleSelectSearchDepto}
-                    className="p-3 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-xs">
-                        {data.name.substring(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm text-slate-900">{data.name}</h4>
-                        <span className="text-[11px] text-slate-500">{data.emergencias} emergencias • Lluvia: {data.precipitacionMm} mm</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
-                        data.prob >= 75 ? 'bg-red-600' : data.prob >= 60 ? 'bg-orange-500' : data.prob >= 45 ? 'bg-amber-500' : 'bg-emerald-600'
-                      }`}>
-                        Riesgo {data.prob}%
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-8 text-center text-slate-400 text-xs font-medium">
-                  No se encontraron regiones con el término "{searchQuery}"
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
+
     </header>
   );
 }
