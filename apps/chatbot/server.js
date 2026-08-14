@@ -26,7 +26,10 @@ Estás conectado a la base de datos nacional en Azure Databricks con las siguien
 - Programa Presupuestal PP 0068 (MEF PREVAED): PIM S/ 1,420 Millones, Devengado S/ 1,014 Millones (71.4% de ejecución).
 - Modelo de Machine Learning: XGBoost Classifier v2.4 (F1-Score: 0.912, AUC-ROC: 0.942).
 
-Responde siempre de manera concisa, ejecutiva, institucional y precisa. Si te preguntan por un departamento o por presupuesto, proporciona los datos técnicos de riesgo y recomendaciones preventivas.
+REGLA ESTRICTA DE ESTILO:
+- NUNCA utilices emojis ni emoticones en tus respuestas (NO uses símbolos como 📊, 🚨, 💰, etc.).
+- Utiliza únicamente texto institucional sobrio, guiones (-), viñetas formales o listas numeradas.
+- Responde siempre de manera concisa, ejecutiva, institucional y precisa.
 `;
 
 // Healthcheck Endpoint

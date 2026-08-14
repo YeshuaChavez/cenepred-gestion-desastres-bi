@@ -58,43 +58,46 @@ export default function AIChatbotModal() {
   const generateRAGAIResponse = (query: string): string => {
     const q = query.toLowerCase();
     const deptKeys = Object.keys(PERU_DEPARTAMENTOS);
-    const matchedKey = deptKeys.find(k => q.includes(k) || q.includes(PERU_DEPARTAMENTOS[k].name.toLowerCase()));
+    const matchedKey = deptKeys.find(k => {
+      const regex = new RegExp(`\\b${k}\\b`, 'i');
+      return regex.test(q) || q.includes(PERU_DEPARTAMENTOS[k].name.toLowerCase());
+    });
 
     if (matchedKey) {
       const d = PERU_DEPARTAMENTOS[matchedKey];
       const emergenciasCount = (d?.emergencias || 0).toLocaleString();
-      return `📊 **Diagnóstico Territorial - Región ${d.name}**:
-• **Score de Riesgo Climático**: ${d.prob}% (${d.tag})
-• **Emergencias SINPAD**: ${emergenciasCount} eventos registrados
-• **Precipitación Acumulada**: ${d.precipitacionMm} mm/24h
-• **Focos de Calor (NASA FIRMS)**: ${d.focosCalor} detectados
-• **Ejecución MEF PP0068**: S/ ${d.devengadoM}M de S/ ${d.pimM}M (${d.pctEjecucion}% de avance financiero).`;
+      return `Diagnóstico Territorial - Región ${d.name}:
+- Score de Riesgo Climático: ${d.prob}% (${d.tag})
+- Emergencias SINPAD: ${emergenciasCount} eventos registrados
+- Precipitación Acumulada: ${d.precipitacionMm} mm/24h
+- Focos de Calor (NASA FIRMS): ${d.focosCalor} detectados
+- Ejecución MEF PP0068: S/ ${d.devengadoM}M de S/ ${d.pimM}M (${d.pctEjecucion}% de avance financiero).`;
     }
 
     if (q.includes('presupuesto') || q.includes('mef') || q.includes('pim') || q.includes('dinero')) {
-      return `💰 **Control Presupuestal MEF PP 0068 (PREVAED)**:
-• **PIM Asignado Nacional**: S/ ${NATIONAL_META.totalPimMillones} Millones
-• **Devengado Acumulado**: S/ ${NATIONAL_META.totalDevengadoMillones} Millones
-• **Avance Financiero**: ${NATIONAL_META.pctEjecucionNacional}% a nivel nacional. Las regiones de Piura y Tumbes lideran la ejecución física de obras de mitigación.`;
+      return `Control Presupuestal MEF PP 0068 (PREVAED):
+- PIM Asignado Nacional: S/ ${NATIONAL_META.totalPimMillones} Millones
+- Devengado Acumulado: S/ ${NATIONAL_META.totalDevengadoMillones} Millones
+- Avance Financiero: ${NATIONAL_META.pctEjecucionNacional}% a nivel nacional. Las regiones de Piura y Tumbes lideran la ejecución física de obras de mitigación.`;
     }
 
     if (q.includes('emergencia') || q.includes('afectado') || q.includes('damnificado') || q.includes('sinpad')) {
-      return `🚨 **Estadísticas de Impacto Histórico (SINPAD)**:
-• **Total Emergencias**: ${NATIONAL_META.totalEmergencias.toLocaleString()} eventos
-• **Población Afectada**: ${NATIONAL_META.totalAfectados.toLocaleString()} personas
-• **Población Damnificada**: ${NATIONAL_META.totalDamnificados.toLocaleString()} personas
-• **Monitoreo**: Cobertura del 100% en los 25 departamentos del Perú.`;
+      return `Estadísticas de Impacto Histórico (SINPAD):
+- Total Emergencias: ${NATIONAL_META.totalEmergencias.toLocaleString()} eventos registrados
+- Población Afectada: ${NATIONAL_META.totalAfectados.toLocaleString()} personas
+- Población Damnificada: ${NATIONAL_META.totalDamnificados.toLocaleString()} personas
+- Cobertura de Monitoreo: 100% en los 25 departamentos del Perú.`;
     }
 
     if (q.includes('riesgo') || q.includes('peligro') || q.includes('crítico') || q.includes('mas alta') || q.includes('peor')) {
       const highRisk = Object.values(PERU_DEPARTAMENTOS).filter(d => d.prob >= 65).map(d => `${d.name} (${d.prob}%)`).join(', ');
-      return `⚠️ **Regiones en Alerta Crítica Nivel 4**:
+      return `Regiones en Alerta Crítica Nivel 4:
 Las regiones con mayor vulnerabilidad climática calculada por el modelo XGBoost son: ${highRisk}. Se recomienda priorizar obras de descolmatación y refugios de primera respuesta.`;
     }
 
-    return `🤖 **Centro de Inteligencia CENEPRED**:
+    return `Centro de Inteligencia CENEPRED:
 He analizado tu consulta sobre '${query}'. Nuestro modelo predictivo procesa telemetría satelital (Open-Meteo, NASA FIRMS) y 84,369 emergencias históricas.
-¿Deseas consultar el score de riesgo de algún departamento específico (ej: *Piura*, *Cusco*, *Arequipa*) o el avance presupuestal del MEF?`;
+¿Deseas consultar el score de riesgo de algún departamento específico (ejemplo: Piura, Cusco, Arequipa) o el avance presupuestal del MEF?`;
   };
 
   return (
