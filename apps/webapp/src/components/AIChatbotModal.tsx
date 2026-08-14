@@ -113,12 +113,13 @@ export default function AIChatbotModal() {
         </div>
       )}
 
+      {/* Floating Circular Icon FAB */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-3 bg-primary text-white font-bold text-xs rounded-full shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+        className="w-13 h-13 bg-primary text-white rounded-full shadow-xl hover:shadow-2xl hover:bg-primary/90 hover:scale-105 transition-all flex items-center justify-center cursor-pointer active:scale-95"
+        title="Asistente CENEPRED"
       >
-        <span className="material-symbols-outlined text-[20px]">smart_toy</span>
-        <span>Asistente CENEPRED</span>
+        <span className="material-symbols-outlined text-[24px]">smart_toy</span>
       </button>
     </div>
   );
