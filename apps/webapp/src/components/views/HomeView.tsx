@@ -14,8 +14,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
   return (
     <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
       
-      {/* 1. Hero Section (Cinematic 4K UHD Video Background with Animated Header) */}
-      <section className="relative w-full min-h-[720px] h-[92vh] flex items-center justify-center overflow-hidden bg-slate-950 pt-16 pb-20">
+      {/* 1. Hero Section (Cinematic 4K UHD Video Background) */}
+      <section className="relative w-full min-h-[680px] h-[88vh] flex items-center justify-center overflow-hidden bg-slate-950 pt-12 pb-16">
         
         {/* Ambient Video & Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden">
@@ -31,61 +31,63 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/90 backdrop-blur-[1px]"></div>
         </div>
 
-        {/* Hero Content (Cinematic Reveal & Generous Breathing Room) */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto my-auto animate-hero-reveal">
+        {/* Hero Content (Generous spacing & refined typography) */}
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto my-auto animate-fade-in-up">
           
-          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-[0.25em] mb-10 py-2.5 px-6 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-xl font-bold animate-float-slow">
+          <span className="font-label-sm text-xs text-sky-300 uppercase tracking-[0.2em] mb-8 py-2 px-5 bg-white/10 rounded-full backdrop-blur-md border border-white/20 shadow-lg font-bold">
             Plataforma Nacional de Inteligencia
           </span>
 
-          <h1 className="font-display-lg text-4xl sm:text-5xl md:text-[64px] md:leading-[76px] text-white font-extrabold tracking-tight mb-10 drop-shadow-2xl max-w-4xl">
-            CENEPRED — Centro de Inteligencia para la <span className="text-sky-400 font-extrabold animate-title-glow inline-block">Gestión del Riesgo</span>
+          <h1 className="font-display-lg text-3xl sm:text-5xl md:text-[60px] md:leading-[72px] text-white font-extrabold tracking-tight mb-8 drop-shadow-2xl max-w-4xl">
+            CENEPRED — Centro de Inteligencia para la <span className="text-sky-400 font-extrabold">Gestión del Riesgo</span>
           </h1>
 
-          <p className="font-body-md text-base sm:text-lg md:text-[21px] leading-relaxed text-slate-200/90 max-w-3xl mb-12 font-normal">
+          <p className="font-body-md text-base sm:text-lg md:text-[20px] leading-relaxed text-slate-200/90 max-w-2xl mb-10 font-normal">
             Procesamiento en tiempo real de <span className="font-bold text-white">84,369</span> emergencias históricas · Monitoreo continuo de los 25 departamentos del Perú.
           </p>
 
           <button
             onClick={() => setActivePath('monitoreo-diario')}
-            className="group relative px-10 py-4.5 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_75px_-10px_rgba(56,189,248,0.95)] overflow-hidden cursor-pointer active:scale-95"
+            className="group relative px-9 py-4 bg-sky-500 text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-400 transition-all duration-300 shadow-[0_0_50px_-10px_rgba(56,189,248,0.6)] hover:shadow-[0_0_70px_-10px_rgba(56,189,248,0.9)] overflow-hidden cursor-pointer active:scale-95"
           >
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center gap-2.5">
               Ver Monitoreo Nacional
-              <span className="material-symbols-outlined group-hover:translate-x-1.5 transition-transform text-base">arrow_forward</span>
+              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">arrow_forward</span>
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
           </button>
         </div>
       </section>
 
-      {/* 2. Institutional Mission Section (Enhanced Spacing) */}
-      <section className="relative z-20 w-full px-6 py-28 md:py-32 bg-slate-50 -mt-14 rounded-t-[44px] shadow-[0_-20px_40px_rgba(0,0,0,0.08)] border-t border-slate-200/60">
+      {/* 2. Institutional Mission Section */}
+      <section className="relative z-20 w-full px-6 py-24 bg-slate-50 -mt-12 rounded-t-[40px] shadow-[0_-20px_40px_rgba(0,0,0,0.08)] border-t border-slate-200/60">
         <ScrollReveal>
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <span className="material-symbols-outlined text-[52px] text-sky-700 opacity-90 mb-2 block">account_balance</span>
-            <h2 className="font-headline-lg text-3xl md:text-[42px] text-slate-900 font-bold tracking-tight leading-tight mb-4">
+          <div className="max-w-4xl mx-auto text-center space-y-4">
+            <span className="material-symbols-outlined text-[48px] text-sky-700 opacity-90">account_balance</span>
+            <h2 className="font-headline-lg text-3xl md:text-4xl text-slate-900 font-bold tracking-tight">
               Prevención Estratégica Basada en Evidencia
             </h2>
-            <p className="font-body-md text-base md:text-[19px] text-slate-600 leading-relaxed max-w-3xl mx-auto font-normal">
+            <p className="font-body-md text-base md:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
               El Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres (CENEPRED) provee inteligencia accionable para proteger la vida y el patrimonio de los peruanos, articulando tecnología predictiva y gestión territorial dinámica.
             </p>
           </div>
         </ScrollReveal>
       </section>
 
-      {/* 3. Live Data Section (Amplio Espaciado y Separación) */}
-      <section className="w-full px-6 md:px-16 py-28 md:py-32 bg-white">
+      {/* 3. Live Data Section (Indicadores en Vivo) */}
+      <section className="w-full px-6 md:px-16 py-20 bg-white">
         <div className="max-w-7xl mx-auto">
           
           <ScrollReveal>
-            <div className="mb-16">
-              <h2 className="font-headline-lg text-3xl md:text-[40px] font-bold text-slate-900 tracking-tight mb-3">
-                Datos en Vivo
-              </h2>
-              <p className="font-body-md text-base text-slate-500">
-                Estado actual del territorio nacional en tiempo real
-              </p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
+              <div>
+                <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-1">
+                  Datos en Vivo
+                </h2>
+                <p className="font-body-md text-sm text-slate-500">
+                  Estado actual del territorio nacional
+                </p>
+              </div>
             </div>
           </ScrollReveal>
 
@@ -205,16 +207,16 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         </div>
       </section>
 
-      {/* 4. Services Grid Section (Espaciado Elegante) */}
-      <section className="w-full px-6 md:px-16 py-28 md:py-32 bg-slate-50 relative">
+      {/* 4. Services Grid Section (Servicios de Inteligencia) */}
+      <section className="w-full px-6 md:px-16 py-24 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto">
           
           <ScrollReveal>
-            <div className="mb-16">
-              <h2 className="font-headline-lg text-3xl md:text-[40px] font-bold text-slate-900 tracking-tight mb-3">
+            <div className="mb-14">
+              <h2 className="font-headline-lg text-3xl md:text-[38px] font-bold text-slate-900 tracking-tight mb-2">
                 Servicios de Inteligencia
               </h2>
-              <p className="font-body-md text-slate-600 text-base max-w-2xl leading-relaxed">
+              <p className="font-body-md text-slate-600 text-base max-w-2xl">
                 Herramientas analíticas diseñadas para la toma de decisiones ejecutivas en los tres niveles de gobierno.
               </p>
             </div>
@@ -362,17 +364,17 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 5. Executive CTA Section */}
-      <section className="w-full px-6 md:px-16 py-28 md:py-32 bg-white">
+      <section className="w-full px-6 md:px-16 py-24 bg-white">
         <ScrollReveal>
-          <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-12 md:p-20 relative overflow-hidden shadow-2xl">
+          <div className="max-w-6xl mx-auto bg-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-400/20 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-              <div className="max-w-xl space-y-5">
+              <div className="max-w-xl space-y-4">
                 <h2 className="font-display-lg text-3xl md:text-[44px] leading-tight font-bold">
                   Acceda al Sistema de Información Nacional
                 </h2>
-                <p className="font-body-md text-sky-200 text-base md:text-lg leading-relaxed">
+                <p className="font-body-md text-sky-200 text-base md:text-lg">
                   Plataforma abierta para la consulta ciudadana, especialistas y gestores del riesgo de desastres a nivel nacional, regional y local.
                 </p>
               </div>
@@ -380,7 +382,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               <div className="flex-shrink-0">
                 <button
                   onClick={() => setActivePath('monitoreo-diario')}
-                  className="px-9 py-4 bg-white text-sky-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 transition-colors shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer active:scale-95"
+                  className="px-8 py-4 bg-white text-sky-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 transition-colors shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer active:scale-95"
                 >
                   EXPLORAR PLATAFORMA
                 </button>
