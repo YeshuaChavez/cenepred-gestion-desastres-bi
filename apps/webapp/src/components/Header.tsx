@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ActivePath } from '../types';
 import { LOGO_CENEPRED } from '../data/mockData';

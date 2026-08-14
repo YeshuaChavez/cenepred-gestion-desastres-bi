@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { ActivePath } from '../../types';
 import { NATIONAL_META, PERU_DEPARTAMENTOS } from '../../data/mockData';

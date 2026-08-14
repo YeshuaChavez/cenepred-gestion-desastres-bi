@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../../data/mockData';
-import PeruInteractiveMap from '../PeruInteractiveMap';
+
+const PeruInteractiveMap = dynamic(() => import('../PeruInteractiveMap'), {
+  ssr: false,
+});
 
 type MacroRegion = 'todas' | 'norte' | 'sierra_sur' | 'selva' | 'costa_centro';
 

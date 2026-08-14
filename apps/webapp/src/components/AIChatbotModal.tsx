@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage } from '../types';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../data/mockData';

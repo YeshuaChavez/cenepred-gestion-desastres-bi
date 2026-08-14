@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES, NATIONAL_META } from '../../data/mockData';
 

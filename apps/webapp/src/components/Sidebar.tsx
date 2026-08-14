@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { LOGO_CENEPRED } from '../data/mockData';
 import { ActivePath } from '../types';
@@ -5,8 +7,8 @@ import { ActivePath } from '../types';
 interface SidebarProps {
   activePath: ActivePath;
   setActivePath: (path: ActivePath) => void;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 interface NavItem {

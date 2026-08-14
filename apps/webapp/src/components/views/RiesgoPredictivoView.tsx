@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { PERU_DEPARTAMENTOS } from '../../data/mockData';
 
