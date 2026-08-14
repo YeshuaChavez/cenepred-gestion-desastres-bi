@@ -69,6 +69,26 @@ jobs:
       - name: pytest
         run: python -m pytest tests/ -v
 
+  webapp-build:
+    name: Build Frontend React (WebApp)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "apps/webapp/package-lock.json"
+
+      - name: Instalar dependencias WebApp
+        working-directory: apps/webapp
+        run: npm ci
+
+      - name: Compilar TypeScript y Vite Build
+        working-directory: apps/webapp
+        run: npm run build
+
   terraform-validate:
     name: Terraform validate (condicional)
     runs-on: ubuntu-latest
