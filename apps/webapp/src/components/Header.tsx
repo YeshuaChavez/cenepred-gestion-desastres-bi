@@ -83,7 +83,7 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
             <span className="font-headline-lg text-lg tracking-tight text-primary leading-tight font-bold uppercase">
               CENEPRED
             </span>
-            <span className="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold">
+            <span className="font-label-sm text-[9px] text-on-surface-variant uppercase tracking-widest font-semibold">
               Centro Nacional de Prevención de Desastres
             </span>
           </div>
