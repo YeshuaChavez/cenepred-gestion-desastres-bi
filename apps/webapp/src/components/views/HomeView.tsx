@@ -24,7 +24,9 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105"
+            preload="auto"
+            disablePictureInPicture
+            className="w-full h-full object-cover opacity-60 mix-blend-luminosity transform-gpu"
           >
             <source src="/videos/14636688-uhd_3840_2160_30fps.mp4" type="video/mp4" />
           </video>
