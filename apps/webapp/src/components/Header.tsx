@@ -65,10 +65,6 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <header className="fixed top-0 w-full z-50 bg-surface-container-lowest/70 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20">
       <div className="h-20 w-full px-6 md:px-12 flex items-center justify-between">
@@ -241,15 +237,6 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
               )}
             </div>
 
-            {/* Quick Export / Print Button */}
-            <button
-              onClick={handlePrint}
-              className="p-2 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer text-on-surface-variant"
-              title="Imprimir / Exportar Vista Actual"
-            >
-              <span className="material-symbols-outlined text-[22px]">print</span>
-            </button>
-
             {/* Help Info Dialog Button */}
             <button
               onClick={() => setShowHelp(true)}
@@ -258,13 +245,6 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
             >
               <span className="material-symbols-outlined text-[22px]">help</span>
             </button>
-
-            {/* Executive Profile Avatar */}
-            <div className="flex items-center gap-3 pl-2">
-              <div className="w-9 h-9 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-xs text-primary shadow-xs">
-                DIR
-              </div>
-            </div>
 
           </div>
 
