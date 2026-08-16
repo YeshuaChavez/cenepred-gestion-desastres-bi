@@ -136,11 +136,11 @@ export default function HistoricoTendenciasView() {
       <div className="flex flex-col gap-4 pb-4 border-b border-slate-200">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
           <div>
-            <h2 className="font-headline-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Histórico Multianual y Explorador Time-Intelligence
+            <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Histórico Multianual y Tendencias
             </h2>
             <p className="font-body-md text-sm text-slate-600 max-w-3xl mt-1">
-              Desglose jerárquico multinivel con profundización interactiva: <span className="font-semibold text-sky-800">Año ➔ Trimestre ➔ Mes ➔ Día</span>.
+              Consulta la evolución histórica de las emergencias atendidas en el país año a año, con desgloses detallados por meses y días.
             </p>
           </div>
 

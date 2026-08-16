@@ -45,11 +45,11 @@ export default function PresupuestoMEFView() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 pb-3">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-200 pb-2">
         <div>
-          <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Presupuesto de Prevención de Desastres</h2>
-          <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-            Transparencia y seguimiento del dinero asignado y ejecutado por el Estado para obras de defensa y reducción del riesgo de desastres en las 25 regiones del Perú.
+          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Presupuesto de Prevención de Desastres</h2>
+          <p className="font-body-md text-sm text-slate-600 max-w-3xl mt-1">
+            Consulta la transparencia en la asignación y ejecución del presupuesto estatal destinado a proteger a la población ante emergencias.
           </p>
         </div>
         <div className="flex items-center gap-3">

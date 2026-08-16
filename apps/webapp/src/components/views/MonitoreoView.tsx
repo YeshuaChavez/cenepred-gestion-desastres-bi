@@ -18,10 +18,10 @@ const MACRO_REGIONS: Record<string, string[]> = {
 
 const MACRO_LABELS: Record<MacroRegion, string> = {
   todas: 'Nacional (25 Regiones)',
-  norte: 'Costa Norte',
-  sierra_sur: 'Sierra Centro / Sur',
-  selva: 'Selva / Amazonía',
-  costa_centro: 'Costa Centro / Sur'
+  norte: 'Costa Norte (5 Regiones)',
+  sierra_sur: 'Sierra Centro / Sur (9 Regiones)',
+  selva: 'Selva / Amazonía (5 Regiones)',
+  costa_centro: 'Costa Centro / Sur (6 Regiones)'
 };
 
 export default function MonitoreoView() {
@@ -50,15 +50,6 @@ export default function MonitoreoView() {
       setSelectedDeptoKey(newFilteredKeys[0]);
     }
   };
-
-  // Aggregated macrorregion metrics
-  const macroDeptos = filteredKeys.map(k => PERU_DEPARTAMENTOS[k]).filter(Boolean);
-  const avgMacroProb = macroDeptos.length > 0 
-    ? Math.round(macroDeptos.reduce((acc, d) => acc + d.prob, 0) / macroDeptos.length) 
-    : 50;
-
-  const avgMacroTag = avgMacroProb >= 65 ? 'CRÍTICO' : avgMacroProb >= 55 ? 'MUY ALTO' : avgMacroProb >= 45 ? 'ALTO' : 'MEDIO';
-  const macroNeedleDeg = Math.round((avgMacroProb - 50) * 1.6);
 
   // Top highest risk departments sorted dynamically
   const sortedDeptos = Object.values(PERU_DEPARTAMENTOS).sort((a, b) => b.prob - a.prob);
@@ -102,19 +93,20 @@ export default function MonitoreoView() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between w-full gap-4 mb-2">
+      {/* Page Title */}
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between w-full gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
-            Monitoreo Nacional de Riesgos de Desastres
+          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Monitoreo Nacional de Riesgos
           </h2>
-          <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-            Visor geocartográfico interactivo para la supervisión del riesgo climático y presupuestal por región. Compara el velocímetro departamental vs el velocímetro macrorregional en tiempo real.
+          <p className="font-body-md text-sm text-slate-600 max-w-3xl mt-1">
+            Explora el mapa interactivo del Perú en tiempo real para consultar las lluvias, el nivel de riesgo y la inversión preventiva en cada región del país.
           </p>
         </div>
         <div className="flex items-center gap-4">
           <button
             onClick={handleExportCSV}
-            className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-lg shadow-xs hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold cursor-pointer active:scale-95"
+            className="px-5 py-2 bg-sky-700 text-white font-label-sm text-xs rounded-xl shadow-xs hover:bg-sky-800 transition-colors flex items-center gap-2 font-semibold cursor-pointer active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px]">download</span> Exportar Reporte CSV
           </button>
@@ -122,40 +114,40 @@ export default function MonitoreoView() {
       </div>
 
       {/* Macrorregion Filter Bar & Layer Selector */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs text-xs font-semibold">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs text-xs font-semibold">
         
-        {/* Macrorregions */}
+        {/* Macrorregions Selector */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
           <span className="text-slate-500 font-bold px-2 flex items-center gap-1 shrink-0">
             <span className="material-symbols-outlined text-sm text-sky-700">filter_alt</span> Macrorregión:
           </span>
           <button
             onClick={() => handleMacroRegionChange('todas')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${macroRegion === 'todas' ? 'bg-sky-700 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'todas' ? 'bg-sky-700 text-white font-bold shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Todas las Regiones (25)
           </button>
           <button
             onClick={() => handleMacroRegionChange('norte')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${macroRegion === 'norte' ? 'bg-sky-700 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'norte' ? 'bg-sky-700 text-white font-bold shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Costa Norte
           </button>
           <button
             onClick={() => handleMacroRegionChange('sierra_sur')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${macroRegion === 'sierra_sur' ? 'bg-sky-700 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'sierra_sur' ? 'bg-sky-700 text-white font-bold shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Sierra Centro / Sur
           </button>
           <button
             onClick={() => handleMacroRegionChange('selva')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${macroRegion === 'selva' ? 'bg-sky-700 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'selva' ? 'bg-sky-700 text-white font-bold shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Selva / Amazonía
           </button>
           <button
             onClick={() => handleMacroRegionChange('costa_centro')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${macroRegion === 'costa_centro' ? 'bg-sky-700 text-white font-bold shadow-2xs' : 'text-slate-600 hover:bg-slate-100'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'costa_centro' ? 'bg-sky-700 text-white font-bold shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Costa Centro / Sur
           </button>
@@ -290,13 +282,13 @@ export default function MonitoreoView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full mt-2">
         
-        {/* Left Side: Department Detail Panel with Dual Gauges */}
+        {/* Left Side: Department Detail Panel with 1 Clean Single Gauge */}
         <div className="lg:col-span-4 flex flex-col gap-6 h-full">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex-1 relative z-10 flex flex-col">
             
             {/* Department Selector Dropdown */}
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
-              <h3 className="font-bold text-base text-slate-900">Análisis Comparativo</h3>
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200">
+              <h3 className="font-bold text-base text-slate-900">Análisis Regional</h3>
               <div className="relative">
                 <select
                   value={selectedDeptoKey}
@@ -313,63 +305,35 @@ export default function MonitoreoView() {
               </div>
             </div>
 
-            {/* DUAL GAUGES CONTAINER */}
-            <div className="grid grid-cols-2 gap-3 py-3 border-b border-slate-200">
-              
-              {/* GAUGE 1: Departmental Gauge */}
-              <div className="flex flex-col items-center justify-center p-2 bg-slate-50 rounded-xl border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-2 text-center truncate w-full">
-                  {deptoData.name}
-                </span>
-                
-                <div className="relative w-28 h-14 overflow-hidden mb-1">
-                  <div className="absolute top-0 left-0 w-28 h-28 rounded-full bg-slate-200/80"></div>
-                  <div className="absolute top-0 left-0 w-28 h-28 rounded-full border-[12px] border-transparent border-t-red-500 border-l-red-500 border-r-slate-200 border-b-slate-200 rotate-45 transform origin-center opacity-90" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 50%, 0 50%)' }}></div>
-                  <div className="absolute bottom-0 left-1/2 w-1 h-12 bg-slate-900 origin-bottom -translate-x-1/2 rounded-t-full shadow-md transition-transform duration-700" style={{ transform: `translate(-50%, 0) rotate(${deptoData.needleDeg}deg)` }}></div>
-                </div>
-
-                <div className="text-center">
-                  <span className="font-extrabold text-xl text-red-600 block leading-none">{deptoData.prob}%</span>
-                  <span className="text-[9px] text-slate-500 font-semibold">{deptoData.tag}</span>
-                </div>
+            {/* SINGLE CLEAN PROMINENT DEPARTMENT GAUGE */}
+            <div className="flex flex-col items-center justify-center py-4 border-b border-slate-200">
+              <div className="relative w-48 h-24 overflow-hidden mb-2">
+                <div className="absolute top-0 left-0 w-48 h-48 rounded-full bg-slate-100"></div>
+                <div className="absolute top-0 left-0 w-48 h-48 rounded-full border-[20px] border-transparent border-t-red-500 border-l-red-500 border-r-slate-100 border-b-slate-100 rotate-45 transform origin-center opacity-90" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 50%, 0 50%)' }}></div>
+                <div className="absolute bottom-0 left-1/2 w-1.5 h-20 bg-slate-800 origin-bottom -translate-x-1/2 rounded-t-full shadow-md transition-transform duration-700" style={{ transform: `translate(-50%, 0) rotate(${deptoData.needleDeg}deg)` }}></div>
               </div>
-
-              {/* GAUGE 2: Macrorregional Gauge */}
-              <div className="flex flex-col items-center justify-center p-2 bg-slate-50 rounded-xl border border-slate-200">
-                <span className="text-[10px] font-bold text-sky-800 uppercase tracking-wider mb-2 text-center truncate w-full" title={MACRO_LABELS[macroRegion]}>
-                  {macroRegion === 'todas' ? 'Nacional' : MACRO_LABELS[macroRegion]}
-                </span>
-                
-                <div className="relative w-28 h-14 overflow-hidden mb-1">
-                  <div className="absolute top-0 left-0 w-28 h-28 rounded-full bg-slate-200/80"></div>
-                  <div className="absolute top-0 left-0 w-28 h-28 rounded-full border-[12px] border-transparent border-t-sky-600 border-l-sky-600 border-r-slate-200 border-b-slate-200 rotate-45 transform origin-center opacity-90" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 50%, 0 50%)' }}></div>
-                  <div className="absolute bottom-0 left-1/2 w-1 h-12 bg-sky-900 origin-bottom -translate-x-1/2 rounded-t-full shadow-md transition-transform duration-700" style={{ transform: `translate(-50%, 0) rotate(${macroNeedleDeg}deg)` }}></div>
-                </div>
-
-                <div className="text-center">
-                  <span className="font-extrabold text-xl text-sky-700 block leading-none">{avgMacroProb}%</span>
-                  <span className="text-[9px] text-slate-500 font-semibold">Promed. {avgMacroTag}</span>
-                </div>
+              <div className="text-center">
+                <span className="font-display-lg text-3xl font-bold text-red-600 block leading-none mb-1">{deptoData.prob}%</span>
+                <span className="font-label-sm text-xs text-slate-500 uppercase tracking-widest font-semibold">Nivel de Riesgo — {deptoData.name} ({deptoData.tag})</span>
               </div>
-
             </div>
 
             {/* Quick Metrics Box */}
             <div className="grid grid-cols-2 gap-3 my-4 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
               <div>
-                <span className="text-slate-500 block">Emergencias SINPAD:</span>
+                <span className="text-slate-500 block">Emergencias Registradas:</span>
                 <span className="font-bold text-slate-800 text-sm">{deptoData.emergencias?.toLocaleString()}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Afectados Totales:</span>
+                <span className="text-slate-500 block">Población Afectada:</span>
                 <span className="font-bold text-slate-800 text-sm">{deptoData.afectados?.toLocaleString()}</span>
               </div>
               <div>
-                <span className="text-slate-500 block">PIM MEF (Millones):</span>
+                <span className="text-slate-500 block">Presupuesto Asignado:</span>
                 <span className="font-bold text-slate-800 text-sm">S/ {deptoData.pimM}M</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Avance Presupuestal:</span>
+                <span className="text-slate-500 block">Inversión Ejecutada:</span>
                 <span className="font-bold text-slate-800 text-sm">{deptoData.pctEjecucion}%</span>
               </div>
             </div>
@@ -400,7 +364,7 @@ export default function MonitoreoView() {
 
         {/* Right Side: Interactive Map */}
         <div className="lg:col-span-8 bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col min-h-[500px]">
-          <div className="flex justify-between items-center mb-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div className="flex justify-between items-center mb-3 bg-slate-50 p-3 rounded-xl border border-slate-200 flex-wrap gap-2">
             <div>
               <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -408,8 +372,14 @@ export default function MonitoreoView() {
               </h3>
               <span className="text-[10px] text-slate-500">Haz clic en los marcadores del mapa para seleccionar una región</span>
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-sky-700">
-              <span className="material-symbols-outlined text-sm">map</span> Capa Activa: <strong className="uppercase">{mapMode}</strong>
+            
+            <div className="flex items-center gap-3 text-xs font-semibold">
+              <span className="px-3 py-1 bg-sky-100 text-sky-900 rounded-full font-bold text-[11px] border border-sky-200">
+                {MACRO_LABELS[macroRegion]}
+              </span>
+              <span className="text-sky-700 flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">map</span> Capa: <strong className="uppercase">{mapMode}</strong>
+              </span>
             </div>
           </div>
 
@@ -419,6 +389,7 @@ export default function MonitoreoView() {
               selectedDeptoKey={selectedDeptoKey}
               onSelectDepto={(key) => setSelectedDeptoKey(key)}
               mapMode={mapMode}
+              macroRegion={macroRegion}
             />
           </div>
         </div>

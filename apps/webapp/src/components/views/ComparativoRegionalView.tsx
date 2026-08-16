@@ -89,10 +89,10 @@ export default function ComparativoRegionalView() {
         </div>
       )}
 
-      <div className="flex flex-col gap-1 border-b border-slate-200 pb-3">
-        <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Comparativo Regional y Matriz Estacional</h2>
-        <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Confrontación directa de indicadores clímaticos y presupuestales entre departamentos, junto a la matriz de recurrencia estacional por mes.
+      <div className="flex flex-col gap-1 border-b border-slate-200 pb-2">
+        <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Comparativo Regional y Matriz Estacional</h2>
+        <p className="font-body-md text-sm text-slate-600 max-w-3xl mt-1">
+          Compara lado a lado dos departamentos para evaluar su nivel de riesgo, lluvias registradas y el uso del presupuesto preventivo.
         </p>
       </div>
 

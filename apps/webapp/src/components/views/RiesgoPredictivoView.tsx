@@ -152,9 +152,9 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
       {/* Page Title & dedicated Action Button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200">
         <div className="flex flex-col space-y-1">
-          <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo e Inferencia de Escenarios</h2>
-          <p className="font-body-md text-sm text-slate-600 max-w-2xl">
-            Análisis de estimación y simulación de escenarios de riesgo climático en el territorio nacional.
+          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Simulador e Inferencia de Riesgo</h2>
+          <p className="font-body-md text-sm text-slate-600 max-w-2xl mt-1">
+            Simula escenarios climáticos ajustando lluvias y humedad para evaluar el impacto proyectado y los factores de riesgo en tu región.
           </p>
         </div>
         

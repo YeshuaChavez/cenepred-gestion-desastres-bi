@@ -21,16 +21,32 @@ interface PeruInteractiveMapProps {
   selectedDeptoKey: string;
   onSelectDepto: (key: string) => void;
   mapMode?: MapLayerMode;
+  macroRegion?: string;
 }
 
-function MapResizer({ selectedDeptoKey }: { selectedDeptoKey: string }) {
+const MACRO_CENTERS: Record<string, { center: [number, number]; zoom: number }> = {
+  todas: { center: [-9.19, -75.015], zoom: 5 },
+  norte: { center: [-5.8, -79.2], zoom: 7 },
+  sierra_sur: { center: [-14.5, -72.0], zoom: 6.5 },
+  selva: { center: [-5.5, -74.5], zoom: 6 },
+  costa_centro: { center: [-13.5, -76.5], zoom: 6.5 }
+};
+
+function MapViewController({ macroRegion, selectedDeptoKey }: { macroRegion: string; selectedDeptoKey: string }) {
   const map = useMap();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       map.invalidateSize();
     }, 200);
     return () => clearTimeout(timer);
   }, [map, selectedDeptoKey]);
+
+  useEffect(() => {
+    const config = MACRO_CENTERS[macroRegion] || MACRO_CENTERS.todas;
+    map.flyTo(config.center, config.zoom, { duration: 1.2 });
+  }, [map, macroRegion]);
+
   return null;
 }
 
@@ -66,7 +82,8 @@ export default function PeruInteractiveMap({
   departamentos,
   selectedDeptoKey,
   onSelectDepto,
-  mapMode = 'riesgo'
+  mapMode = 'riesgo',
+  macroRegion = 'todas'
 }: PeruInteractiveMapProps) {
   const centerPeru: [number, number] = [-9.19, -75.015];
 
@@ -104,7 +121,7 @@ export default function PeruInteractiveMap({
         className="w-full h-full"
         style={{ height: '480px', width: '100%', background: '#f8fafc' }}
       >
-        <MapResizer selectedDeptoKey={selectedDeptoKey} />
+        <MapViewController macroRegion={macroRegion} selectedDeptoKey={selectedDeptoKey} />
 
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap'
