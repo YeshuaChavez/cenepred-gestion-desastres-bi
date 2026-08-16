@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../../data/mockData';
 
 export default function RiesgoPredictivoView() {
@@ -8,21 +8,7 @@ export default function RiesgoPredictivoView() {
   const [scope, setScope] = useState<'national' | 'regional'>('national');
   const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>('ancash');
   
-  // Slider Controls
-  const [precipSlider, setPrecipSlider] = useState<number>(20);
-  const [humedadSlider, setHumedadSlider] = useState<number>(15);
-  
   const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
-  
-  // Dynamic Simulation Calculation starting from actual department baseline risk
-  const [simulatedImpact, setSimulatedImpact] = useState<number>(deptoData.prob);
-
-  useEffect(() => {
-    const baseline = deptoData.prob;
-    const delta = Math.round(precipSlider * 0.3 + humedadSlider * 0.2);
-    const calculated = Math.min(99, Math.max(10, baseline + delta));
-    setSimulatedImpact(calculated);
-  }, [selectedDeptoKey, precipSlider, humedadSlider, deptoData]);
 
   // Modal State for Confusion Matrix
   const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
@@ -33,13 +19,6 @@ export default function RiesgoPredictivoView() {
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
 
   const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
-
-  const handleSimulate = () => {
-    const baseline = deptoData.prob;
-    const delta = Math.round(precipSlider * 0.3 + humedadSlider * 0.2);
-    const calculated = Math.min(99, Math.max(10, baseline + delta));
-    setSimulatedImpact(calculated);
-  };
 
   const round1 = (val: number) => Math.round(val * 10) / 10;
 
@@ -152,9 +131,9 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
       {/* Page Title & dedicated Action Button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex flex-col space-y-1">
-          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Simulador e Inferencia de Riesgo</h2>
+          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Inferencia y Diagnóstico de Riesgo</h2>
           <p className="font-body-md text-sm text-slate-600 dark:text-slate-400 max-w-2xl mt-1">
-            Simula escenarios climáticos ajustando lluvias y humedad para evaluar el impacto proyectado y los factores de riesgo en tu región.
+            Evaluación analítica del riesgo de desastres basada en modelos de Machine Learning, interpretabilidad SHAP y generación de diagnósticos ejecutivos.
           </p>
         </div>
         
@@ -247,138 +226,141 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
       </div>
 
-      {/* Main Grid: SHAP Interpretability + Scenario Simulator */}
+      {/* Main Grid: Full-Width SHAP Interpretability + Selected Region Detail */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* SHAP Feature Importance */}
+        {/* SHAP Feature Importance (2 cols) */}
         <div className="lg:col-span-2 flex flex-col space-y-6">
-          <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col min-h-[450px] transition-colors">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave</h3>
-                <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de variables a la probabilidad de riesgo</p>
+          <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col min-h-[420px] transition-colors justify-between">
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave (SHAP)</h3>
+                  <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de cada variable a la predicción del modelo</p>
+                </div>
+
+                {/* Scope Switcher: National vs Regional */}
+                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                  <button
+                    onClick={() => setScope('national')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      scope === 'national' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Nacional
+                  </button>
+                  <button
+                    onClick={() => setScope('regional')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      scope === 'regional' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Por Región
+                  </button>
+                </div>
               </div>
 
-              {/* Scope Switcher: National vs Regional */}
-              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                <button
-                  onClick={() => setScope('national')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'national' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Nacional
-                </button>
-                <button
-                  onClick={() => setScope('regional')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'regional' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  Por Región
-                </button>
+              {/* If regional scope is selected */}
+              {scope === 'regional' && (
+                <div className="mb-6 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 flex items-center justify-between animate-fade-in">
+                  <span className="text-xs font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
+                  </span>
+                  <select
+                    value={selectedDeptoKey}
+                    onChange={(e) => setSelectedDeptoKey(e.target.value)}
+                    className="bg-white dark:bg-[#0c1833] border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs"
+                  >
+                    {departmentKeys.map((key) => (
+                      <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">
+                        {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="space-y-5">
+                {shapItemsToRender.map((item, idx) => (
+                  <div key={idx} className="group">
+                    <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                      <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 font-medium">{item.name}</span>
+                      <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
+                    </div>
+                    <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${item.pct}%`, backgroundColor: item.color }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* If regional scope is selected */}
-            {scope === 'regional' && (
-              <div className="mb-6 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 flex items-center justify-between animate-fade-in">
-                <span className="text-xs font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
-                </span>
-                <select
-                  value={selectedDeptoKey}
-                  onChange={(e) => setSelectedDeptoKey(e.target.value)}
-                  className="bg-white dark:bg-[#0c1833] border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs"
-                >
-                  {departmentKeys.map((key) => (
-                    <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">
-                      {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <div className="space-y-5 flex-1 justify-center flex flex-col">
-              {shapItemsToRender.map((item, idx) => (
-                <div key={idx} className="group">
-                  <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
-                    <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 font-medium">{item.name}</span>
-                    <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
-                  </div>
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${item.pct}%`, backgroundColor: item.color }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex justify-between">
+              <span>Modelo: XGBoost Classifier v2.4</span>
+              <span>Explicabilidad: TreeSHAP Kernel</span>
             </div>
           </div>
         </div>
 
-        {/* Scenario Simulator */}
+        {/* Selected Region Summary Card (1 col) */}
         <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between space-y-6 transition-colors">
           <div>
-            <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white mb-1">Simulador de Escenarios What-If</h3>
-            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 mb-6">Ajusta precipitaciones y humedad para simular el impacto en tiempo real sobre <b>{deptoData.name}</b> (Base: {deptoData.prob}%)</p>
-
-            <div className="space-y-6">
+            <div className="flex justify-between items-start mb-4">
               <div>
-                <div className="flex justify-between text-xs font-bold mb-2">
-                  <span className="text-slate-700 dark:text-slate-300">Precipitación Adicional (+mm)</span>
-                  <span className="text-sky-600 dark:text-sky-400 font-bold">+{precipSlider} mm/24h</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={precipSlider}
-                  onChange={(e) => setPrecipSlider(Number(e.target.value))}
-                  className="w-full accent-sky-600 cursor-pointer"
-                />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+                  Resumen Departamental
+                </span>
+                <h3 className="font-bold text-xl text-slate-900 dark:text-white flex items-center gap-1.5 mt-0.5">
+                  <span className="material-symbols-outlined text-sky-600">location_on</span>
+                  {deptoData.name}
+                </h3>
+              </div>
+              <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
+                deptoData.prob >= 65 ? 'bg-red-600' : deptoData.prob >= 55 ? 'bg-orange-500' : deptoData.prob >= 45 ? 'bg-amber-500' : 'bg-sky-600'
+              }`}>
+                {deptoData.prob >= 65 ? 'CRÍTICO' : deptoData.prob >= 55 ? 'MUY ALTO' : deptoData.prob >= 45 ? 'ALTO' : 'MEDIO'}
+              </span>
+            </div>
+
+            <div className="space-y-4 my-6">
+              <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 block uppercase tracking-wider mb-1">
+                  Probabilidad de Riesgo
+                </span>
+                <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
+                  {deptoData.prob}%
+                </span>
+                <span className="text-[10px] text-slate-400 block mt-1">
+                  Zona {deptoData.tag}
+                </span>
               </div>
 
-              <div>
-                <div className="flex justify-between text-xs font-bold mb-2">
-                  <span className="text-slate-700 dark:text-slate-300">Incremento de Humedad (%)</span>
-                  <span className="text-sky-600 dark:text-sky-400 font-bold">+{humedadSlider}%</span>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Lluvias 24h</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">{deptoData.precipitacionMm} mm</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
-                  value={humedadSlider}
-                  onChange={(e) => setHumedadSlider(Number(e.target.value))}
-                  className="w-full accent-sky-600 cursor-pointer"
-                />
+                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Focos Calor</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">{deptoData.focosCalor} focos</span>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Presupuesto MEF</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">S/ {deptoData.pimM}M</span>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Ejecución PP0068</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">{deptoData.pctEjecucion}%</span>
+                </div>
               </div>
-
-              <button
-                onClick={handleSimulate}
-                className="w-full py-3 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2"
-              >
-                <span className="material-symbols-outlined text-sm">tune</span>
-                Recalcular Inferencia Simulado
-              </button>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
-            <div className="flex justify-between items-center text-xs font-bold text-slate-600 dark:text-slate-400">
-              <span className="uppercase tracking-wider">Score Simulado • {deptoData.name}</span>
-              <span className="text-slate-400 dark:text-slate-500 font-normal">(Base: {deptoData.prob}%)</span>
-            </div>
-            <div className="flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{simulatedImpact}%</span>
-              <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
-                simulatedImpact >= 65 ? 'bg-red-600' : simulatedImpact >= 55 ? 'bg-orange-500' : simulatedImpact >= 45 ? 'bg-amber-500' : 'bg-sky-600'
-              }`}>
-                {simulatedImpact >= 65 ? 'CRÍTICO' : simulatedImpact >= 55 ? 'MUY ALTO' : simulatedImpact >= 45 ? 'ALTO' : 'MEDIO'}
-              </span>
-            </div>
+          <div className="p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 text-[11px] text-sky-900 dark:text-sky-300 font-medium">
+            💡 Datos sincronizados automáticamente con el Data Lakehouse.
           </div>
         </div>
 
