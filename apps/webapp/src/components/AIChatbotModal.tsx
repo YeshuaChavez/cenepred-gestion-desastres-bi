@@ -192,11 +192,7 @@ He analizado tu consulta sobre '${query}'. Nuestro modelo predictivo procesa tel
                 <span className="material-symbols-outlined text-[18px]">smart_toy</span>
               </div>
               <div>
-                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">CENEPRED Assistant</h4>
-                <span className="font-label-sm text-[10px] text-sky-700 font-semibold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Intelligence RAG & Voice Active
-                </span>
+                <h4 className="font-label-sm text-sm font-bold text-slate-900 leading-tight">Asistente CENEPRED</h4>
               </div>
             </div>
             <button
