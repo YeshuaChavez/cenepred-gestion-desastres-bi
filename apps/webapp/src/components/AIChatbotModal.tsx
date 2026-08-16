@@ -154,17 +154,17 @@ Puedes consultar por el riesgo de cualquier departamento o el avance del presupu
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="fixed bottom-5 right-5 z-[9999] font-sans pointer-events-none flex flex-col items-end">
       
       {/* Modern UI Assistant Window Container (Compact size) */}
       <div
         className={`
-          w-[310px] sm:w-[340px] h-[440px] bg-white rounded-[2rem]
-          shadow-[0_16px_50px_rgba(15,23,42,0.22)] border border-slate-200/90
-          flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right relative
+          w-[310px] sm:w-[340px] h-[430px] bg-white rounded-[2rem]
+          shadow-[0_20px_60px_rgba(15,23,42,0.3)] border border-slate-200/90
+          flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right pointer-events-auto
           ${isOpen
-            ? 'scale-100 opacity-100 translate-y-0 pointer-events-auto'
-            : 'scale-75 opacity-0 translate-y-8 pointer-events-none absolute bottom-0 right-0'
+            ? 'scale-100 opacity-100 translate-y-0'
+            : 'scale-75 opacity-0 translate-y-8 pointer-events-none hidden'
           }
         `}
       >
@@ -303,22 +303,19 @@ Puedes consultar por el riesgo de cualquier departamento o el avance del presupu
 
       </div>
 
-      {/* Original Floating Avatar Trigger (FAB Button) */}
+      {/* Floating Avatar Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`
-          w-14 h-14 bg-gradient-to-r from-sky-700 to-sky-900 text-white rounded-full
-          shadow-[0_6px_22px_rgba(2,132,199,0.45)] hover:shadow-[0_8px_28px_rgba(2,132,199,0.65)]
-          flex items-center justify-center hover:scale-110 transition-all duration-300
-          cursor-pointer origin-center
-          ${isOpen
-            ? 'scale-0 opacity-0 pointer-events-none absolute bottom-0 right-0'
-            : 'scale-100 opacity-100 pointer-events-auto'
-          }
+          w-12 h-12 bg-sky-700 hover:bg-sky-800 text-white rounded-full
+          shadow-[0_4px_20px_rgba(2,132,199,0.45)] hover:shadow-[0_6px_25px_rgba(2,132,199,0.65)]
+          flex items-center justify-center hover:scale-105 transition-all duration-300
+          cursor-pointer pointer-events-auto shrink-0 border border-white/20
+          ${isOpen ? 'scale-0 opacity-0 pointer-events-none hidden' : 'scale-100 opacity-100'}
         `}
         title="Abrir Asistente CENEPRED"
       >
-        <span className="material-symbols-outlined text-[26px]">smart_toy</span>
+        <span className="material-symbols-outlined text-2xl">smart_toy</span>
       </button>
 
     </div>
