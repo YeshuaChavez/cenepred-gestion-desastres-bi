@@ -384,19 +384,19 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
       </div>
 
-      {/* GENERADOR DE REPORTES EJECUTIVOS */}
+      {/* GENERADOR DE REPORTES DE INTELIGENCIA PREDICTIVA (GEMINI AI) */}
       <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 md:p-8 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 space-y-6 mt-2 transition-colors">
         
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="space-y-1">
             <h3 className="font-headline-lg text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-xs">
-                <span className="material-symbols-outlined text-lg">description</span>
+                <span className="material-symbols-outlined text-lg">auto_awesome</span>
               </div>
-              Generador de Diagnóstico Ejecutivo de Riesgo
+              Generador de Reportes de Inteligencia Predictiva (Gemini AI)
             </h3>
             <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">
-              Generación de informe técnico-ejecutivo oficial basado en telemetría satelital, emergencias registradas y ejecución presupuestal
+              Generación de diagnósticos analíticos estructurados utilizando inteligencia artificial avanzada (API Gemini protegida server-side)
             </p>
           </div>
 
@@ -416,17 +416,17 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             <button
               onClick={handleGenerateReport}
               disabled={isGeneratingReport}
-              className="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
             >
               {isGeneratingReport ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Generando Informe...
+                  Generando Diagnóstico...
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined text-sm">article</span>
-                  Generar Diagnóstico Ejecutivo
+                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                  Generar Diagnóstico Gemini
                 </>
               )}
             </button>
@@ -438,8 +438,10 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
           <div className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 animate-fade-in">
             <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span className="font-bold text-xs text-slate-800 dark:text-slate-200">Diagnóstico Oficial CENEPRED • {reportDeptoData.name}</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="font-bold text-xs text-slate-800 dark:text-slate-200">
+                  Diagnóstico Oficial CENEPRED • {reportDeptoData.name}
+                </span>
               </div>
               
               <button
