@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"src\\\\components\\\\views\\\\MonitoreoView.tsx -> ../PeruInteractiveMap":{"id":9222,"files":["static/css/d3e383b9ef67ddcb.css","static/chunks/d0deef33.bd75b11a952a2d3d.js","static/chunks/222.a968b9e401c9d715.js"]}}';
+self.__REACT_LOADABLE_MANIFEST='{"src\\\\components\\\\views\\\\MonitoreoView.tsx -> ../PeruInteractiveMap":{"id":9222,"files":["static/css/d3e383b9ef67ddcb.css","static/chunks/d0deef33.bd75b11a952a2d3d.js","static/chunks/222.6241548a1c376ffd.js"]}}';

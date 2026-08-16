@@ -14,13 +14,15 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+export type MapLayerMode = 'riesgo' | 'precip' | 'focos' | 'mef';
+
 interface PeruInteractiveMapProps {
   departamentos: Record<string, RegionData>;
   selectedDeptoKey: string;
   onSelectDepto: (key: string) => void;
+  mapMode?: MapLayerMode;
 }
 
-// Controller to trigger map invalidateSize() after render
 function MapResizer({ selectedDeptoKey }: { selectedDeptoKey: string }) {
   const map = useMap();
   useEffect(() => {
@@ -32,7 +34,6 @@ function MapResizer({ selectedDeptoKey }: { selectedDeptoKey: string }) {
   return null;
 }
 
-// Coordinates map for the 25 departments of Peru
 const DEPT_COORDS: Record<string, [number, number]> = {
   "piura": [-5.1945, -80.6328],
   "tumbes": [-3.5669, -80.4515],
@@ -52,7 +53,7 @@ const DEPT_COORDS: Record<string, [number, number]> = {
   "huanuco": [-9.9306, -76.2422],
   "ica": [-14.0678, -75.7286],
   "moquegua": [-17.1983, -70.9357],
-  "tacna": [-18.0066, -70.2463],
+  "tacna": [-18.0066, -70.2443],
   "ucayali": [-8.3791, -74.5539],
   "pasco": [-10.6675, -76.2561],
   "huancavelica": [-12.7826, -74.9727],
@@ -61,16 +62,37 @@ const DEPT_COORDS: Record<string, [number, number]> = {
   "callao": [-12.0565, -77.1181]
 };
 
-export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, onSelectDepto }: PeruInteractiveMapProps) {
-  // Center of Peru map
+export default function PeruInteractiveMap({
+  departamentos,
+  selectedDeptoKey,
+  onSelectDepto,
+  mapMode = 'riesgo'
+}: PeruInteractiveMapProps) {
   const centerPeru: [number, number] = [-9.19, -75.015];
 
-  const getColorByProb = (prob: number) => {
-    if (prob >= 78) return '#dc2626'; // Red
-    if (prob >= 65) return '#ea580c'; // Orange
-    if (prob >= 50) return '#d97706'; // Amber
-    if (prob >= 35) return '#0284c7'; // Sky Blue
-    return '#10b981'; // Emerald Green
+  const getMarkerProps = (data: RegionData) => {
+    const precip = data.precipitacionMm || 0;
+    const focos = data.focosCalor || 0;
+    const pct = data.pctEjecucion || 0;
+
+    if (mapMode === 'precip') {
+      const radius = Math.max(10, Math.min(28, Math.round(precip / 5)));
+      return { color: '#0284c7', radius, label: `${precip} mm 24h` };
+    }
+    if (mapMode === 'focos') {
+      const radius = Math.max(10, Math.min(28, Math.round(focos / 4)));
+      return { color: '#ea580c', radius, label: `${focos} focos` };
+    }
+    if (mapMode === 'mef') {
+      const radius = Math.max(10, Math.min(28, Math.round(pct / 4)));
+      const color = pct >= 75 ? '#10b981' : pct >= 60 ? '#0284c7' : '#eab308';
+      return { color, radius, label: `${pct}% devengado` };
+    }
+    // Default mode: riesgo SAT
+    const prob = data.prob;
+    const color = prob >= 65 ? '#dc2626' : prob >= 55 ? '#ea580c' : prob >= 45 ? '#d97706' : prob >= 35 ? '#0284c7' : '#10b981';
+    const radius = Math.max(12, Math.min(26, Math.round(prob / 3.2)));
+    return { color, radius, label: `${prob}% riesgo` };
   };
 
   return (
@@ -84,7 +106,6 @@ export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, on
       >
         <MapResizer selectedDeptoKey={selectedDeptoKey} />
 
-        {/* CartoDB Voyager Light Tiles (Clean, modern light map) */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -94,19 +115,18 @@ export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, on
         {Object.entries(departamentos).map(([key, data]) => {
           const coords = DEPT_COORDS[key] || centerPeru;
           const isSelected = key === selectedDeptoKey;
-          const color = getColorByProb(data.prob);
-          const radius = Math.max(12, Math.min(26, Math.round(data.prob / 3.8)));
+          const { color, radius } = getMarkerProps(data);
 
           return (
             <CircleMarker
               key={key}
               center={coords}
-              radius={isSelected ? radius + 4 : radius}
+              radius={isSelected ? radius + 5 : radius}
               pathOptions={{
                 fillColor: color,
                 fillOpacity: isSelected ? 0.95 : 0.75,
                 color: isSelected ? '#0f172a' : '#ffffff',
-                weight: isSelected ? 3 : 1.8
+                weight: isSelected ? 3.5 : 1.8
               }}
               eventHandlers={{
                 click: () => onSelectDepto(key)
@@ -143,7 +163,7 @@ export default function PeruInteractiveMap({ departamentos, selectedDeptoKey, on
                   </div>
                   <button
                     onClick={() => onSelectDepto(key)}
-                    className="w-full py-1 text-[11px] bg-slate-900 text-white rounded font-semibold hover:bg-sky-700 transition-colors mt-1"
+                    className="w-full py-1.5 text-[11px] bg-slate-900 text-white rounded-md font-semibold hover:bg-sky-700 transition-colors mt-1 cursor-pointer"
                   >
                     Ver Informe Regional
                   </button>
