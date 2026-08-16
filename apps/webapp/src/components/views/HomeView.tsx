@@ -399,17 +399,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-slate-900 text-slate-400 py-12 px-6 md:px-16 border-t border-slate-800 text-xs font-medium">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-white uppercase text-sm">CENEPRED</span>
-            <span>© 2026 Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres • UNMSM BI</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <span>Portal Institucional</span>
-            <span>Transparencia de Datos</span>
-            <span>SIAF MEF</span>
-          </div>
+      <footer className="w-full bg-slate-900 text-slate-400 py-6 px-6 md:px-16 border-t border-slate-800 text-xs font-medium">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <span className="font-bold text-white uppercase text-sm">CENEPRED</span>
+          <span className="text-slate-400 text-xs font-semibold">2026</span>
         </div>
       </footer>
 
