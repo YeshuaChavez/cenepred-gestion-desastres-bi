@@ -183,7 +183,6 @@ Puedes consultar por el riesgo de cualquier departamento o el avance del presupu
           {/* Central Bot Avatar Ring */}
           <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-md relative my-0.5 group">
             <span className="material-symbols-outlined text-white text-2xl group-hover:scale-110 transition-transform">smart_toy</span>
-            <span className="absolute top-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-indigo-900 rounded-full animate-pulse"></span>
           </div>
 
           <h4 className="text-xs sm:text-sm font-extrabold tracking-tight text-white mt-0.5">Asistente Virtual CENEPRED</h4>
