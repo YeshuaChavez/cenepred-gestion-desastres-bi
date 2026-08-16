@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CENEPRED — Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres',
+  title: 'CENEPRED — Gestión del Riesgo',
   description: 'Plataforma Ejecutiva de Decision Intelligence para la estimación de riesgo dinámico ante emergencias climáticas en el Perú. CENEPRED.',
   icons: {
     icon: '/images/logo_cenepred.svg',
