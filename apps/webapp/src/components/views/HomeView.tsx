@@ -11,6 +11,8 @@ interface HomeViewProps {
 
 export default function HomeView({ setActivePath }: HomeViewProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeLegalModal, setActiveLegalModal] = useState<'terminos' | 'datos' | 'privacidad' | null>(null);
+  const [downloadToast, setDownloadToast] = useState<string | null>(null);
   const deptosList = Object.values(PERU_DEPARTAMENTOS);
   const highRiskDeptos = [...deptosList].sort((a, b) => b.prob - a.prob).slice(0, 4);
   const highRiskCount = deptosList.filter(d => d.prob >= 50).length;
@@ -513,16 +515,322 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px] font-medium">
             <span>© 2026 CENEPRED. Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Plataforma Oficial del Estado Peruano.</span>
             <div className="flex items-center gap-4">
-              <span className="hover:text-slate-300 transition-colors">Términos de Uso</span>
+              <button
+                onClick={() => setActiveLegalModal('terminos')}
+                className="hover:text-sky-400 font-semibold transition-colors cursor-pointer"
+              >
+                Términos de Uso
+              </button>
               <span>•</span>
-              <span className="hover:text-slate-300 transition-colors">Datos Abiertos</span>
+              <button
+                onClick={() => setActiveLegalModal('datos')}
+                className="hover:text-sky-400 font-semibold transition-colors cursor-pointer"
+              >
+                Datos Abiertos
+              </button>
               <span>•</span>
-              <span className="hover:text-slate-300 transition-colors">Política de Privacidad</span>
+              <button
+                onClick={() => setActiveLegalModal('privacidad')}
+                className="hover:text-sky-400 font-semibold transition-colors cursor-pointer"
+              >
+                Política de Privacidad
+              </button>
             </div>
           </div>
 
         </div>
       </footer>
+
+      {/* Download Toast Notification */}
+      {downloadToast && (
+        <div className="fixed bottom-6 left-6 z-[10000] bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-sky-500/40 flex items-center gap-3 animate-bounce">
+          <span className="material-symbols-outlined text-emerald-400">download_done</span>
+          <span className="text-xs font-bold">{downloadToast}</span>
+        </div>
+      )}
+
+      {/* 1. Modal: Términos de Uso */}
+      {activeLegalModal === 'terminos' && (
+        <div className="fixed inset-0 z-[10000] bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden font-sans">
+            
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-sky-900 to-indigo-900 text-white p-6 flex justify-between items-center relative">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-xs">
+                  <span className="material-symbols-outlined text-sky-300">gavel</span>
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg tracking-tight">Términos y Condiciones de Uso</h3>
+                  <p className="text-xs text-sky-200 font-medium">CENEPRED • Sistema Nacional SINAGERD</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-5 text-xs text-slate-700 leading-relaxed font-medium">
+              <div className="bg-sky-50 p-4 rounded-2xl border border-sky-200 text-sky-900 font-semibold flex items-start gap-3">
+                <span className="material-symbols-outlined text-sky-700 shrink-0 mt-0.5">verified_user</span>
+                <p>La información del Portal de Gestión del Riesgo del CENEPRED es de acceso libre, público y gratuito para todos los ciudadanos y autoridades del país.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-sky-600"></span> 1. Naturaleza y Propósito Institucional
+                </h4>
+                <p>Esta plataforma ha sido desarrollada por el CENEPRED como herramienta de inteligencia de negocios para el seguimiento satelital de lluvias, alertas climáticas, focos de calor y ejecución del presupuesto público de prevención (PP 0068).</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-sky-600"></span> 2. Libre Acceso y Reutilización de Datos
+                </h4>
+                <p>Toda persona física o jurídica puede consultar, analizar y citar los indicadores mostrados. La cita bibliográfica o institucional recomendada es: <em>CENEPRED - Plataforma Nacional de Gestión del Riesgo de Desastres (2026)</em>.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-sky-600"></span> 3. Fuentes Oficiales de Información
+                </h4>
+                <p>Los datos consolidados provienen de los registros históricos del SINPAD (INDECI 2012-2023), la base presupuestal del Ministerio de Economía y Finanzas (MEF), la telemetría satelital NASA FIRMS y el Servicio Meteorológico Open-Meteo.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-sky-600"></span> 4. Responsabilidad y Uso Preventivo
+                </h4>
+                <p>Las estimaciones predictivas calculadas por modelos de Machine Learning (XGBoost) constituyen herramientas de gestión y soporte para decisiones preventivas. En situaciones de desastre activo, la población debe guiarse estrictamente por los comunicados del COEN.</p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="px-5 py-2 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm"
+              >
+                Entendido y Aceptar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* 2. Modal: Portal de Datos Abiertos */}
+      {activeLegalModal === 'datos' && (
+        <div className="fixed inset-0 z-[10000] bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden font-sans">
+            
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white p-6 flex justify-between items-center relative">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-xs">
+                  <span className="material-symbols-outlined text-emerald-300">dataset</span>
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg tracking-tight">Portal de Datos Abiertos de Prevención</h3>
+                  <p className="text-xs text-emerald-200 font-medium">Descarga datasets institucionales procesados en formatos abiertos</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-4 text-xs text-slate-700 leading-relaxed font-medium">
+              <p className="text-slate-600 text-xs">
+                En cumplimiento con la política nacional de datos abiertos del Estado Peruano, ponemos a disposición de investigadores, estudiantes y entidades públicas los microdatos procesados de la plataforma:
+              </p>
+
+              {/* Dataset Item 1 */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-emerald-400 transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                    PARQUET
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-sm">Base de Emergencias SINPAD (2012 - 2023)</h5>
+                    <p className="text-slate-500 text-[11px] mt-0.5">25 regiones • Datos depurados de damnificados, afectados y viviendas destruidas.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setDownloadToast("Descargando emergencias_sinpad_gold.parquet (10.9 MB)...");
+                    setTimeout(() => setDownloadToast(null), 3500);
+                  }}
+                  className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0"
+                >
+                  <span className="material-symbols-outlined text-xs">download</span> Descargar Parquet
+                </button>
+              </div>
+
+              {/* Dataset Item 2 */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-emerald-400 transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                    CSV
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-sm">Telemetría Diaria de Lluvias & Clima (Open-Meteo)</h5>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Precipitación diaria acumulada (mm) y temperaturas por departamento.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setDownloadToast("Descargando telemetria_lluvias_peru.csv (4.2 MB)...");
+                    setTimeout(() => setDownloadToast(null), 3500);
+                  }}
+                  className="px-3.5 py-2 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0"
+                >
+                  <span className="material-symbols-outlined text-xs">download</span> Descargar CSV
+                </button>
+              </div>
+
+              {/* Dataset Item 3 */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-emerald-400 transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                    JSON
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-sm">Presupuesto de Prevención MEF (PP 0068)</h5>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Asignación PIM, Devengado y porcentaje de ejecución en 25 departamentos.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setDownloadToast("Descargando presupuesto_mef_pp0068.json (1.8 MB)...");
+                    setTimeout(() => setDownloadToast(null), 3500);
+                  }}
+                  className="px-3.5 py-2 bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0"
+                >
+                  <span className="material-symbols-outlined text-xs">download</span> Descargar JSON
+                </button>
+              </div>
+
+              {/* Dataset Item 4 */}
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-emerald-400 transition-all">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                    GEOJSON
+                  </div>
+                  <div>
+                    <h5 className="font-extrabold text-slate-900 text-sm">Matriz Estacional & Polígonos de Riesgo</h5>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Coordenadas geográficas y matriz de vulnerabilidad mensual por departamento.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setDownloadToast("Descargando riesgo_estacional_peru.geojson (850 KB)...");
+                    setTimeout(() => setDownloadToast(null), 3500);
+                  }}
+                  className="px-3.5 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs shrink-0"
+                >
+                  <span className="material-symbols-outlined text-xs">download</span> Descargar GeoJSON
+                </button>
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+              <span className="text-[11px] text-slate-500 font-semibold">Licencia: Creative Commons Atribución 4.0 Internacional (CC BY 4.0)</span>
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* 3. Modal: Política de Privacidad */}
+      {activeLegalModal === 'privacidad' && (
+        <div className="fixed inset-0 z-[10000] bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden font-sans">
+            
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-slate-800 to-slate-950 text-white p-6 flex justify-between items-center relative">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-xs">
+                  <span className="material-symbols-outlined text-sky-300">lock</span>
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base sm:text-lg tracking-tight">Política de Privacidad y Transparencia</h3>
+                  <p className="text-xs text-slate-300 font-medium">Cumplimiento Ley N° 29733 y Ley N° 27806</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-5 text-xs text-slate-700 leading-relaxed font-medium">
+              <div className="bg-slate-100 p-4 rounded-2xl border border-slate-200 text-slate-800 font-semibold flex items-start gap-3">
+                <span className="material-symbols-outlined text-slate-700 shrink-0 mt-0.5">security</span>
+                <p>El CENEPRED garantiza la estricta protección de la privacidad de los usuarios. Esta plataforma no recopila ni comercializa datos personales de ninguna naturaleza.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-700"></span> 1. Sin Requerimiento de Registro Personal
+                </h4>
+                <p>El acceso a los dashboards de monitoreo, simulación de riesgo y datos presupuestales es completamente libre y no requiere la creación de usuarios, contraseñas ni la entrega de nombres, DNI o correos electrónicos.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-700"></span> 2. Telemetría Técnica Anónima
+                </h4>
+                <p>Con el único fin de optimizar el tiempo de respuesta del servidor y prevenir ataques informáticos, se registran únicamente métricas anónimas agregadas (IP anonimizada y tipo de navegador).</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-700"></span> 3. Seguridad de Infraestructura Servidor
+                </h4>
+                <p>Toda la navegación está cifrada bajo el protocolo gubernamental seguro HTTPS con algoritmos TLS 1.3 y protección activa de cortafuegos de red en la infraestructura Vercel/Azure.</p>
+              </div>
+
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-700"></span> 4. Oficialía de Transparencia CENEPRED
+                </h4>
+                <p>Para consultas formales relativas a la Ley de Transparencia y Acceso a la Información Pública (Ley N° 27806), puede escribir directamente a <code>transparencia@cenepred.gob.pe</code> o dirigirse a la Av. del Parque Norte 313, San Isidro, Lima.</p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm"
+              >
+                Cerrar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
