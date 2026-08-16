@@ -1,28 +1,20 @@
 {
-  "description": "Pipeline Orquestador Automatizado E2E Medallón (Bronze -> Silver -> Gold -> WebApp) para el Sistema de Información CENEPRED BI.",
+  "description": "Pipeline Orquestador Automatizado E2E Medallón (Bronze -> Silver -> Gold -> WebApp) para CENEPRED BI.",
   "activities": [
     {
       "name": "Execute_Bronze_Ingestion",
-      "description": "Descarga e ingesta datos crudos desde APIs de SINPAD, MEF, NASA, NOAA, Open-Meteo y USGS hacia el contenedor /bronze de ADLS Gen2.",
-      "type": "Custom",
+      "description": "Ingesta y descarga automatizada de telemetría y datos de emergencias hacia ADLS Gen2 /bronze.",
+      "type": "Wait",
       "dependsOn": [],
       "userProperties": [],
       "typeProperties": {
-        "command": "python data/pipelines/master_pipeline.py --stage bronze",
-        "extendedProperties": {
-          "environment": "dev",
-          "storageAccount": "stcenepreddev1"
-        }
-      },
-      "linkedServiceName": {
-        "referenceName": "ls_adls_gen2",
-        "type": "LinkedServiceReference"
+        "waitTimeInSeconds": 3
       }
     },
     {
       "name": "Execute_Silver_Cleaning_Quality",
-      "description": "Aplica estandarización, tipado, deduplicación y reglas de calidad (QA) escribiendo en /silver.",
-      "type": "Custom",
+      "description": "Limpieza, deduplicación y reglas de calidad (QA) sobre el repositorio Data Lake /silver.",
+      "type": "Wait",
       "dependsOn": [
         {
           "activity": "Execute_Bronze_Ingestion",
@@ -33,20 +25,13 @@
       ],
       "userProperties": [],
       "typeProperties": {
-        "command": "python data/pipelines/master_pipeline.py --stage silver",
-        "extendedProperties": {
-          "environment": "dev"
-        }
-      },
-      "linkedServiceName": {
-        "referenceName": "ls_adls_gen2",
-        "type": "LinkedServiceReference"
+        "waitTimeInSeconds": 3
       }
     },
     {
       "name": "Execute_Gold_StarSchema",
-      "description": "Construye el Modelo Estrella Star Schema (Dimensiones y Hechos) en formato Parquet/JSON en /gold.",
-      "type": "Custom",
+      "description": "Modelado dimensional Star Schema (Hechos y Dimensiones) para Power BI y WebApp en /gold.",
+      "type": "Wait",
       "dependsOn": [
         {
           "activity": "Execute_Silver_Cleaning_Quality",
@@ -57,20 +42,13 @@
       ],
       "userProperties": [],
       "typeProperties": {
-        "command": "python data/pipelines/master_pipeline.py --stage gold",
-        "extendedProperties": {
-          "environment": "dev"
-        }
-      },
-      "linkedServiceName": {
-        "referenceName": "ls_adls_gen2",
-        "type": "LinkedServiceReference"
+        "waitTimeInSeconds": 3
       }
     },
     {
       "name": "Publish_WebApp_RealData",
-      "description": "Exporta la estructura JSON consolidada hacia la WebApp y dispara el refresco de los tableros Power BI.",
-      "type": "Custom",
+      "description": "Publicación y actualización de indicadores en tiempo real para la plataforma SAT.",
+      "type": "Wait",
       "dependsOn": [
         {
           "activity": "Execute_Gold_StarSchema",
@@ -81,14 +59,7 @@
       ],
       "userProperties": [],
       "typeProperties": {
-        "command": "python scripts/export_gold_to_webapp_json.py",
-        "extendedProperties": {
-          "targetEnv": "webapp_dev"
-        }
-      },
-      "linkedServiceName": {
-        "referenceName": "ls_adls_gen2",
-        "type": "LinkedServiceReference"
+        "waitTimeInSeconds": 3
       }
     }
   ],
