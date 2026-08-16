@@ -231,8 +231,3 @@ terraform apply
 └── README.md                   # Documentación principal del sistema
 ```
 
----
-
-## 12. Licencia
-
-Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
