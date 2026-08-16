@@ -328,7 +328,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       {/* 5. Executive CTA Section */}
       <section className="w-full px-6 md:px-16 py-20 bg-slate-50">
         <ScrollReveal>
-          <div className="max-w-6xl mx-auto bg-gradient-to-r from-sky-900 via-sky-950 to-slate-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+          <div className="max-w-6xl mx-auto bg-gradient-to-r from-sky-900 via-sky-900 to-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
