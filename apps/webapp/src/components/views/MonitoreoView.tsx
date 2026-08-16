@@ -191,9 +191,11 @@ export default function MonitoreoView() {
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-red-500 rounded-full"></span>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Regiones en Alto Riesgo</h3>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-red-700 transition-colors">Regiones en Alto Riesgo</h3>
             </div>
-            <span className="material-symbols-outlined text-red-500">warning</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+              <span className="material-symbols-outlined text-base">warning</span>
+            </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
             <span className="font-display-lg text-4xl font-extrabold text-red-600">{highRiskDeptos.length}</span>
@@ -228,9 +230,11 @@ export default function MonitoreoView() {
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-sky-500 rounded-full"></span>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Lluvia Max 24h — {deptoData.name}</h3>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700 transition-colors">Lluvia Max 24h — {deptoData.name}</h3>
             </div>
-            <span className="material-symbols-outlined text-sky-600">water_drop</span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center group-hover:bg-sky-700 group-hover:text-white transition-all duration-300">
+              <span className="material-symbols-outlined text-base">water_drop</span>
+            </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
             <span className="font-display-lg text-4xl font-extrabold text-slate-900">{deptoData.precipitacionMm}</span>
@@ -247,9 +251,11 @@ export default function MonitoreoView() {
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-amber-500 rounded-full"></span>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Focos Calor — {deptoData.name}</h3>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-amber-700 transition-colors">Focos Calor — {deptoData.name}</h3>
             </div>
-            <span className="material-symbols-outlined text-amber-500">local_fire_department</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
+              <span className="material-symbols-outlined text-base">local_fire_department</span>
+            </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
             <span className="font-display-lg text-4xl font-extrabold text-slate-900">{deptoData.focosCalor}</span>
@@ -266,9 +272,11 @@ export default function MonitoreoView() {
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
-              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold">Ejecución MEF — {deptoData.name}</h3>
+              <h3 className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-emerald-700 transition-colors">Ejecución MEF — {deptoData.name}</h3>
             </div>
-            <span className="material-symbols-outlined text-emerald-600">account_balance</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+              <span className="material-symbols-outlined text-base">account_balance</span>
+            </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
             <span className="font-display-lg text-4xl font-extrabold text-slate-900">{deptoData.pctEjecucion}<span className="text-2xl text-slate-400">%</span></span>
