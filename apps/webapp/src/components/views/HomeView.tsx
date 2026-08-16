@@ -71,12 +71,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto my-auto animate-fade-in-up">
           
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-sky-300 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-lg">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Plataforma Nacional de Prevención CENEPRED
-          </div>
-
-          <h1 className="font-display-lg text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-8">
+          <h1 className="font-display-lg text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-8 pt-6 sm:pt-8">
             Gestión del Riesgo de Desastres <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent drop-shadow-md">
               en el Perú
