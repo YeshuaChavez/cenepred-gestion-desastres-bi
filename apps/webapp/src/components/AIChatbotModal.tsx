@@ -5,10 +5,10 @@ import { ChatMessage } from '../types';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../data/mockData';
 
 const QUICK_SUGGESTIONS = [
-  '⚡ Regiones en Riesgo',
-  '💰 Presupuesto MEF',
-  '🌧️ Lluvia Max 24h',
-  '📊 Riesgo Predictivo'
+  { label: 'Regiones en Riesgo', icon: 'bolt', prompt: 'Regiones en Riesgo' },
+  { label: 'Presupuesto MEF', icon: 'account_balance_wallet', prompt: 'Presupuesto MEF' },
+  { label: 'Lluvia Max 24h', icon: 'water_drop', prompt: 'Lluvia Max 24h' },
+  { label: 'Riesgo Predictivo', icon: 'analytics', prompt: 'Riesgo Predictivo' }
 ];
 
 export default function AIChatbotModal() {
@@ -196,19 +196,6 @@ Puedes consultar por el riesgo de cualquier departamento o el avance del presupu
         {/* Curved Card Content Body Overlay */}
         <div className="-mt-4 flex-1 bg-slate-50 rounded-t-[1.5rem] flex flex-col overflow-hidden relative z-10">
           
-          {/* Quick Suggestion Chips */}
-          <div className="px-3 py-2 bg-white/80 backdrop-blur-xs border-b border-slate-200/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-            {QUICK_SUGGESTIONS.map((suggestion, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSend(suggestion)}
-                className="whitespace-nowrap px-2.5 py-1 text-[10px] font-bold bg-sky-50/80 text-sky-800 hover:text-white hover:bg-sky-700 border border-sky-200/80 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-
           {/* Message Feed */}
           <div className="flex-1 p-3 overflow-y-auto flex flex-col gap-2.5 text-[11px] leading-relaxed">
             {messages.map((msg, idx) => (
@@ -255,6 +242,20 @@ Puedes consultar por el riesgo de cualquier departamento o el avance del presupu
             )}
 
             <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Suggestion Chips (Base of the chat above input box) */}
+          <div className="px-2.5 py-1.5 bg-slate-100/90 border-t border-slate-200/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            {QUICK_SUGGESTIONS.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSend(item.prompt)}
+                className="whitespace-nowrap px-2.5 py-1 text-[10px] font-bold bg-white text-sky-900 hover:text-white hover:bg-sky-700 border border-sky-200/90 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sky-600 text-xs">{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
 
           {/* Bottom Input Box Area */}
