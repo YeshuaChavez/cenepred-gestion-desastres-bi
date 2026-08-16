@@ -403,7 +403,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* Professional Institutional Footer */}
-      <footer className="w-full bg-slate-950 text-slate-400 pt-16 pb-8 px-6 md:px-16 border-t border-slate-800/80 text-xs font-sans">
+      <footer className="w-full bg-gradient-to-br from-sky-900 via-[#0c365a] to-sky-950 text-sky-100 pt-16 pb-8 px-6 md:px-16 border-t border-sky-800/60 text-xs font-sans">
         <div className="max-w-7xl mx-auto flex flex-col gap-12">
           
           {/* Main 4 Column Grid */}
@@ -412,50 +412,50 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Col 1: Institutional Identity */}
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-sky-700 text-white flex items-center justify-center font-black text-lg shadow-md">
+                <div className="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center font-black text-lg shadow-md">
                   <span className="material-symbols-outlined text-2xl">shield_with_heart</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-extrabold text-white text-base tracking-tight leading-none">CENEPRED</span>
-                  <span className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase mt-1">Gobierno del Perú</span>
+                  <span className="text-[10px] text-sky-300 font-semibold tracking-wider uppercase mt-1">Gobierno del Perú</span>
                 </div>
               </div>
-              <p className="text-slate-400 text-xs leading-relaxed font-medium">
+              <p className="text-sky-100/90 text-xs leading-relaxed font-medium">
                 Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Organismo público ejecutor adscrito al Ministerio de Defensa (MINDEF) y ente rector del SINAGERD.
               </p>
             </div>
 
             {/* Col 2: Useful Navigation */}
             <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-slate-800 pb-2">Secciones de la Plataforma</h4>
+              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Secciones de la Plataforma</h4>
               <ul className="flex flex-col gap-2.5 text-xs font-medium">
                 <li>
-                  <button onClick={() => setActivePath('monitoreo-diario')} className="hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-500">space_dashboard</span>
+                  <button onClick={() => setActivePath('monitoreo-diario')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm text-sky-300">space_dashboard</span>
                     Monitoreo Diario & Telemetría Satelital
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActivePath('historico-tendencias')} className="hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-500">show_chart</span>
+                  <button onClick={() => setActivePath('historico-tendencias')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm text-sky-300">show_chart</span>
                     Histórico & Tendencias Nacionales
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActivePath('riesgo-predictivo')} className="hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-500">psychology</span>
+                  <button onClick={() => setActivePath('riesgo-predictivo')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm text-sky-300">psychology</span>
                     Modelo Predictivo XGBoost & SHAP
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActivePath('presupuesto-mef')} className="hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-500">account_balance</span>
+                  <button onClick={() => setActivePath('presupuesto-mef')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm text-sky-300">account_balance</span>
                     Presupuesto de Prevención MEF
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActivePath('comparativo-regional')} className="hover:text-sky-400 transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-500">bar_chart</span>
+                  <button onClick={() => setActivePath('comparativo-regional')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm text-sky-300">bar_chart</span>
                     Comparativo Regional 25 Departamentos
                   </button>
                 </li>
@@ -464,22 +464,22 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
             {/* Col 3: National Emergency Hotlines */}
             <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-slate-800 pb-2">Líneas de Emergencia Nacional</h4>
+              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Líneas de Emergencia Nacional</h4>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col gap-0.5">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase">Bomberos</span>
+                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
+                  <span className="text-[10px] text-sky-200 font-bold uppercase">Bomberos</span>
                   <span className="text-red-400 font-extrabold text-sm">116</span>
                 </div>
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col gap-0.5">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase">Policía Nacional</span>
-                  <span className="text-sky-400 font-extrabold text-sm">105</span>
+                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
+                  <span className="text-[10px] text-sky-200 font-bold uppercase">Policía Nacional</span>
+                  <span className="text-sky-300 font-extrabold text-sm">105</span>
                 </div>
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col gap-0.5">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase">SAMU Salud</span>
+                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
+                  <span className="text-[10px] text-sky-200 font-bold uppercase">SAMU Salud</span>
                   <span className="text-emerald-400 font-extrabold text-sm">106</span>
                 </div>
-                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 flex flex-col gap-0.5">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase">INDECI Alerta</span>
+                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
+                  <span className="text-[10px] text-sky-200 font-bold uppercase">INDECI Alerta</span>
                   <span className="text-amber-400 font-extrabold text-sm">115</span>
                 </div>
               </div>
@@ -487,22 +487,22 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
             {/* Col 4: Sede Central & Contact */}
             <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-slate-800 pb-2">Sede Central & Atención</h4>
-              <ul className="flex flex-col gap-2.5 text-xs text-slate-400 font-medium">
+              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Sede Central & Atención</h4>
+              <ul className="flex flex-col gap-2.5 text-xs text-sky-100/90 font-medium">
                 <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-500 shrink-0 mt-0.5">location_on</span>
+                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0 mt-0.5">location_on</span>
                   <span>Av. del Parque Norte 313, San Isidro, Lima - Perú</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-500 shrink-0">call</span>
+                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">call</span>
                   <span>Central Telefónica: (01) 201-3550</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-500 shrink-0">mail</span>
+                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">mail</span>
                   <span>consultas@cenepred.gob.pe</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-500 shrink-0">schedule</span>
+                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">schedule</span>
                   <span>Lun - Vie: 08:30 a.m. - 05:00 p.m.</span>
                 </li>
               </ul>
@@ -511,19 +511,19 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px] font-medium">
+          <div className="pt-6 border-t border-sky-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-sky-200 text-[11px] font-medium">
             <span>© 2026 CENEPRED. Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Plataforma Oficial del Estado Peruano.</span>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setActiveLegalModal('terminos')}
-                className="hover:text-sky-400 font-semibold transition-colors cursor-pointer"
+                className="hover:text-white font-semibold transition-colors cursor-pointer"
               >
                 Términos de Uso
               </button>
               <span>•</span>
               <button
                 onClick={() => setActiveLegalModal('privacidad')}
-                className="hover:text-sky-400 font-semibold transition-colors cursor-pointer"
+                className="hover:text-white font-semibold transition-colors cursor-pointer"
               >
                 Política de Privacidad
               </button>
