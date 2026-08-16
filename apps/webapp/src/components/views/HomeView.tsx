@@ -12,7 +12,8 @@ interface HomeViewProps {
 export default function HomeView({ setActivePath }: HomeViewProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const deptosList = Object.values(PERU_DEPARTAMENTOS);
-  const highRiskDeptos = deptosList.filter(d => d.prob >= 65);
+  const highRiskDeptos = [...deptosList].sort((a, b) => b.prob - a.prob).slice(0, 4);
+  const highRiskCount = deptosList.filter(d => d.prob >= 50).length;
 
   const faqList = [
     {
@@ -142,9 +143,9 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 </span>
               </div>
               <div className="font-headline-lg text-4xl font-extrabold text-red-600 mb-2">
-                {highRiskDeptos.length} Regiones
+                {highRiskCount} Regiones
               </div>
-              <p className="font-body-md text-xs text-slate-500 font-medium">Departamentos con riesgo superior al 65% (Piura, Tumbes...)</p>
+              <p className="font-body-md text-xs text-slate-500 font-medium">Departamentos con riesgo superior al 50%</p>
             </div>
           </ScrollReveal>
 

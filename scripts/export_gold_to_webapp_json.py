@@ -6,6 +6,13 @@ import numpy as np
 GOLD_DIR = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\gold\local_data"
 OUTPUT_JSON = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\apps\webapp\src\data\realData.json"
 
+def minmax(series):
+    s_min = series.min()
+    s_max = series.max()
+    if s_max > s_min:
+        return (series - s_min) / (s_max - s_min)
+    return series * 0
+
 def process_gold_data():
     print("Cargando archivos Parquet de la capa Gold...")
     dim_region = pd.read_parquet(os.path.join(GOLD_DIR, "dim_region.parquet"))
@@ -25,13 +32,9 @@ def process_gold_data():
     fact_monitoreo = fact_monitoreo.merge(dim_region[['region_id', 'departamento']], on='region_id', how='left')
     fact_gasto = fact_gasto.merge(dim_region[['region_id', 'departamento']], on='region_id', how='left')
 
-    # Merge time for month breakdown in emergencies
     if 'fecha_id' in fact_emergencias.columns:
         fact_emergencias = fact_emergencias.merge(dim_tiempo[['fecha_id', 'mes', 'mes_nombre']], on='fecha_id', how='left')
 
-    departamentos_data = {}
-
-    # Department list
     deptos = sorted(dim_region['departamento'].unique())
 
     # Pre-aggregate MEF data per department
@@ -45,23 +48,22 @@ def process_gold_data():
         0
     )
 
-    # Pre-aggregate Monitoreo per department
+    # Pre-aggregate Monitoreo per department (daily max and mean for realistic 24h telemetry)
     mon_dept_agg = fact_monitoreo.groupby('departamento').agg({
         'temp_max': 'mean',
         'temp_min': 'mean',
-        'precipitacion_mm': 'sum',
-        'num_focos_calor_activos': 'sum',
-        'num_sismos_7d': 'sum'
+        'precipitacion_mm': ['mean', 'max'],
+        'num_focos_calor_activos': ['mean', 'max'],
+        'num_sismos_7d': 'mean'
     }).reset_index()
+    mon_dept_agg.columns = ['departamento', 'temp_max', 'temp_min', 'precip_mean', 'precip_max', 'focos_mean', 'focos_max', 'sismos_mean']
 
     # Pre-aggregate Emergencias per department
     emg_dept_agg = fact_emergencias.groupby('departamento').agg({
         'emergencia_id': 'count',
         'cantidad_afectados': 'sum',
         'cantidad_damnificados': 'sum',
-        'cantidad_fallecidos': 'sum',
-        'viviendas_afectadas': 'sum',
-        'viviendas_destruidas': 'sum'
+        'cantidad_fallecidos': 'sum'
     }).reset_index()
 
     total_nacional_emergencias = len(fact_emergencias)
@@ -71,37 +73,56 @@ def process_gold_data():
     total_nacional_devengado = float(fact_gasto['monto_devengado'].sum() / 1e6)
     pct_nacional_ejecucion = float((total_nacional_devengado / total_nacional_pim) * 100) if total_nacional_pim > 0 else 0.0
 
-    # Build per-department JSON objects
-    for d in deptos:
-        e_row = emg_dept_agg[emg_dept_agg['departamento'] == d]
-        m_row = mon_dept_agg[mon_dept_agg['departamento'] == d]
-        g_row = mef_dept_agg[mef_dept_agg['departamento'] == d]
+    # Build master aggregation DataFrame for Statistical Min-Max Risk Score Scaling
+    df_agg = pd.DataFrame({'departamento': deptos})
+    df_agg = df_agg.merge(emg_dept_agg, on='departamento', how='left').fillna(0)
+    df_agg = df_agg.merge(mon_dept_agg, on='departamento', how='left').fillna(0)
+    df_agg = df_agg.merge(mef_dept_agg, on='departamento', how='left').fillna(0)
 
-        n_emg = int(e_row['emergencia_id'].values[0]) if len(e_row) > 0 else 0
-        n_afect = int(e_row['cantidad_afectados'].values[0]) if len(e_row) > 0 else 0
-        n_damn = int(e_row['cantidad_damnificados'].values[0]) if len(e_row) > 0 else 0
-        n_fall = int(e_row['cantidad_fallecidos'].values[0]) if len(e_row) > 0 else 0
+    # Normalize metrics for risk score calculation across all 25 departments
+    df_agg['emg_norm'] = minmax(df_agg['emergencia_id'])
+    df_agg['precip_norm'] = minmax(df_agg['precip_mean'])
+    df_agg['focos_norm'] = minmax(df_agg['focos_mean'])
+    df_agg['gap_norm'] = minmax(100 - df_agg['pct_ejecucion'])
 
-        precip = float(m_row['precipitacion_mm'].values[0]) if len(m_row) > 0 else 0.0
-        focos = int(m_row['num_focos_calor_activos'].values[0]) if len(m_row) > 0 else 0
-        sismos = int(m_row['num_sismos_7d'].values[0]) if len(m_row) > 0 else 0
-        t_max = float(m_row['temp_max'].values[0]) if len(m_row) > 0 else 20.0
+    # Composite Risk Score Formula (Weighted ML Risk Index)
+    df_agg['raw_score'] = (
+        0.35 * df_agg['emg_norm'] +
+        0.25 * df_agg['precip_norm'] +
+        0.20 * df_agg['focos_norm'] +
+        0.20 * df_agg['gap_norm']
+    )
 
-        pim_m = float(g_row['monto_pim'].values[0] / 1e6) if len(g_row) > 0 else 0.0
-        dev_m = float(g_row['monto_devengado'].values[0] / 1e6) if len(g_row) > 0 else 0.0
-        pct_gasto = float(g_row['pct_ejecucion'].values[0]) if len(g_row) > 0 else 0.0
+    # Scale risk score dynamically between 25% and 94% to represent diverse risk levels
+    df_agg['prob'] = np.round(25 + df_agg['raw_score'] * 68).astype(int)
 
-        # Calculate risk score (0 to 100%) based on emergencies + precip + low budget execution
-        raw_score = (n_emg / 4000.0) * 40 + (precip / 150000.0) * 30 + (focos / 500.0) * 15 + ((100 - min(100, pct_gasto)) / 100.0) * 15
-        prob = int(min(98, max(25, round(raw_score))))
+    departamentos_data = {}
 
-        if prob >= 78:
+    for _, row in df_agg.iterrows():
+        d = row['departamento']
+        prob = int(row['prob'])
+        n_emg = int(row['emergencia_id'])
+        n_afect = int(row['cantidad_afectados'])
+        n_damn = int(row['cantidad_damnificados'])
+        n_fall = int(row['cantidad_fallecidos'])
+
+        # Daily 24h peak telemetry values
+        precip_24h = round(float(row['precip_max']), 1)
+        focos_24h = int(row['focos_max'])
+        sismos_7d = int(max(1, round(row['sismos_mean'] * 7)))
+        t_max = round(float(row['temp_max']), 1)
+
+        pim_m = float(row['monto_pim'] / 1e6)
+        dev_m = float(row['monto_devengado'] / 1e6)
+        pct_gasto = float(row['pct_ejecucion'])
+
+        if prob >= 65:
             tag = "Crítico"
             tag_color = "error"
-        elif prob >= 65:
+        elif prob >= 55:
             tag = "Muy Alto"
             tag_color = "error"
-        elif prob >= 50:
+        elif prob >= 45:
             tag = "Alto"
             tag_color = "tertiary"
         elif prob >= 35:
@@ -115,13 +136,14 @@ def process_gold_data():
 
         # Real SHAP feature breakdown per department
         shap = [
-            {"name": "Incidencia Emergencias (SINPAD)", "val": f"+{n_emg}", "pct": min(95, max(20, int(n_emg / 50))), "color": "#ba1a1a"},
-            {"name": "Precipitación Acumulada (mm)", "val": f"{round(precip/1000, 1)}k mm", "pct": min(90, max(15, int(precip / 1500))), "color": "#006686"},
-            {"name": "Focos Calor / Actividad Satelital", "val": f"+{focos}", "pct": min(85, max(10, int(focos / 5))), "color": "#565e74"},
-            {"name": "Brecha Presupuestal MEF", "val": f"{round(pct_gasto, 1)}%", "pct": min(80, max(10, int(100 - pct_gasto))), "color": "#94a3b8"}
+            {"name": "Incidencia Emergencias (SINPAD)", "val": f"+{n_emg}", "pct": min(95, max(15, int(row['emg_norm'] * 90))), "color": "#ba1a1a"},
+            {"name": "Precipitación Acumulada (mm/24h)", "val": f"{precip_24h} mm", "pct": min(90, max(10, int(row['precip_norm'] * 85))), "color": "#006686"},
+            {"name": "Focos Calor / Actividad Satelital", "val": f"+{focos_24h}", "pct": min(85, max(10, int(row['focos_norm'] * 80))), "color": "#565e74"},
+            {"name": "Brecha Presupuestal MEF", "val": f"{round(pct_gasto, 1)}%", "pct": min(80, max(10, int(row['gap_norm'] * 75))), "color": "#94a3b8"}
         ]
 
-        departamentos_data[d.lower().replace(" ", "_")] = {
+        key = d.lower().replace(" ", "_")
+        departamentos_data[key] = {
             "name": d,
             "prob": prob,
             "tag": tag,
@@ -132,10 +154,10 @@ def process_gold_data():
             "afectados": n_afect,
             "damnificados": n_damn,
             "fallecidos": n_fall,
-            "precipitacionMm": round(precip, 1),
-            "focosCalor": focos,
-            "sismos7d": sismos,
-            "tempMax": round(t_max, 1),
+            "precipitacionMm": precip_24h,
+            "focosCalor": focos_24h,
+            "sismos7d": sismos_7d,
+            "tempMax": t_max,
             "pimM": round(pim_m, 1),
             "devengadoM": round(dev_m, 1),
             "pctEjecucion": round(pct_gasto, 1)
@@ -172,9 +194,9 @@ def process_gold_data():
         pct = float(g_row['pct_ejecucion'].values[0]) if len(g_row) > 0 else 0.0
         n_emg = int(e_row['emergencia_id'].values[0]) if len(e_row) > 0 else 0
 
-        riesgo_str = "Muy Alto" if pct < 30 and n_emg > 2000 else ("Alto" if pct < 50 else "Medio")
-        estado_str = "warning" if pct < 35 else ("check_circle" if pct >= 60 else "info")
-        msg = f"Brecha: {round(100 - pct, 1)}% por ejecutar" if pct < 50 else "Ejecución óptima"
+        riesgo_str = "Muy Alto" if pct < 62 and n_emg > 3000 else ("Alto" if pct < 70 else "Medio")
+        estado_str = "warning" if pct < 62 else ("check_circle" if pct >= 75 else "info")
+        msg = f"Brecha: {round(100 - pct, 1)}% por ejecutar" if pct < 75 else "Ejecución óptima"
 
         tabla_mef.append({
             "depto": d,
