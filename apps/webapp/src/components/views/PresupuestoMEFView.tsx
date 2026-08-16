@@ -5,7 +5,7 @@ import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES, NATIONAL_META, PERU_DEPART
 
 export default function PresupuestoMEFView() {
   const [selectedPliego, setSelectedPliego] = useState<string | null>(null);
-  const [executionFilter, setExecutionFilter] = useState<'all' | 'high' | 'low' | 'critical'>('all');
+  const [executionFilter, setExecutionFilter] = useState<'all' | 'high_assigned' | 'high' | 'low' | 'critical'>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRegionDetail, setSelectedRegionDetail] = useState<typeof TABLAS_MEF_DEPARTAMENTO[0] | null>(null);
   const [exportToast, setExportToast] = useState<boolean>(false);
@@ -21,6 +21,7 @@ export default function PresupuestoMEFView() {
       return false;
     }
     // 3. Execution / Risk status filter
+    if (executionFilter === 'high_assigned' && parsePim(r.pim) < 500) return false;
     if (executionFilter === 'high' && r.pct < 50) return false;
     if (executionFilter === 'low' && r.pct >= 50) return false;
     if (executionFilter === 'critical' && r.riesgo !== 'Muy Alto') return false;
@@ -149,18 +150,15 @@ export default function PresupuestoMEFView() {
       {/* Interactive Metric Cards (Acts as instant Table Filters) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         
-        {/* Card 1: All Budget */}
+        {/* Card 1: High Assigned Budget Filter */}
         <div
-          onClick={() => {
-            setExecutionFilter('all');
-            setSelectedPliego(null);
-          }}
+          onClick={() => setExecutionFilter(executionFilter === 'high_assigned' ? 'all' : 'high_assigned')}
           className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
-            executionFilter === 'all' && !selectedPliego
+            executionFilter === 'high_assigned'
               ? 'bg-sky-50/80 border-sky-400 ring-2 ring-sky-500/20 shadow-md -translate-y-0.5'
               : 'bg-white border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5'
           }`}
-          title="Haz clic para ver todas las regiones"
+          title="Haz clic para filtrar regiones con presupuesto asignado > S/ 500M"
         >
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700 transition-colors">Presupuesto Asignado</span>
@@ -170,21 +168,21 @@ export default function PresupuestoMEFView() {
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalPimMillones}M</span>
-            <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
-              <span className="material-symbols-outlined text-xs">arrow_upward</span> Fondos de Prevención Nacional
+            <span className="text-xs font-semibold text-sky-700 flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">filter_list</span> Filtrar Asignación &gt; S/ 500M
             </span>
           </div>
         </div>
 
         {/* Card 2: High Execution Filter */}
         <div
-          onClick={() => setExecutionFilter('high')}
+          onClick={() => setExecutionFilter(executionFilter === 'high' ? 'all' : 'high')}
           className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
             executionFilter === 'high'
               ? 'bg-emerald-50/80 border-emerald-400 ring-2 ring-emerald-500/20 shadow-md -translate-y-0.5'
               : 'bg-white border-slate-200/90 hover:border-emerald-300 hover:shadow-md hover:-translate-y-0.5'
           }`}
-          title="Haz clic para filtrar regiones con avance >50%"
+          title="Haz clic para filtrar regiones con avance > 50%"
         >
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-emerald-700 transition-colors">Inversión Ejecutada</span>
@@ -194,7 +192,7 @@ export default function PresupuestoMEFView() {
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
-            <span className="text-xs font-semibold text-slate-600">{NATIONAL_META.pctEjecucionNacional}% Avance Nacional</span>
+            <span className="text-xs font-semibold text-emerald-700 font-bold">Filtrar Avance &gt; 50%</span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-1.5 mt-1 overflow-hidden">
             <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
@@ -203,13 +201,13 @@ export default function PresupuestoMEFView() {
 
         {/* Card 3: Low / Pending Budget Filter */}
         <div
-          onClick={() => setExecutionFilter('low')}
+          onClick={() => setExecutionFilter(executionFilter === 'low' ? 'all' : 'low')}
           className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
             executionFilter === 'low'
               ? 'bg-red-50/80 border-red-400 ring-2 ring-red-500/20 shadow-md -translate-y-0.5'
               : 'bg-white border-slate-200/90 hover:border-red-300 hover:shadow-md hover:-translate-y-0.5'
           }`}
-          title="Haz clic para filtrar regiones con avance pendiente (<50%)"
+          title="Haz clic para filtrar regiones con avance pendiente (< 50%)"
         >
           <div className="flex justify-between items-start">
             <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-red-700 transition-colors">Fondo Pendiente</span>
@@ -221,13 +219,13 @@ export default function PresupuestoMEFView() {
             <span className="font-display-lg text-3xl font-extrabold text-red-600">
               S/ {roundNum(NATIONAL_META.totalPimMillones - NATIONAL_META.totalDevengadoMillones)}M
             </span>
-            <span className="text-xs font-medium text-slate-500">Filtrar saldo pendiente por ejecutar</span>
+            <span className="text-xs font-semibold text-red-700">Filtrar Avance Pendiente (&lt; 50%)</span>
           </div>
         </div>
 
         {/* Card 4: Critical Risk Filter */}
         <div
-          onClick={() => setExecutionFilter('critical')}
+          onClick={() => setExecutionFilter(executionFilter === 'critical' ? 'all' : 'critical')}
           className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
             executionFilter === 'critical'
               ? 'bg-purple-50/80 border-purple-400 ring-2 ring-purple-500/20 shadow-md -translate-y-0.5'
@@ -243,7 +241,7 @@ export default function PresupuestoMEFView() {
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">{NATIONAL_META.totalDepartamentos}</span>
-            <span className="text-xs font-semibold text-purple-700">Filtrar Riesgo Muy Alto</span>
+            <span className="text-xs font-semibold text-purple-700 font-bold">Filtrar Riesgo Muy Alto</span>
           </div>
         </div>
 
@@ -442,4 +440,8 @@ export default function PresupuestoMEFView() {
 
 function roundNum(num: number): string {
   return (Math.round(num * 10) / 10).toFixed(1);
+}
+
+function parsePim(pimStr: string): number {
+  return parseFloat(pimStr.replace("S/", "").replace("M", "").trim()) || 0;
 }
