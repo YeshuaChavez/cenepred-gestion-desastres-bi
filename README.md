@@ -207,14 +207,32 @@ terraform apply
 
 ---
 
-## 10. Integración y Despliegue Continuo (CI/CD)
+## 11. Estructura del Proyecto
 
-El repositorio cuenta con flujos de trabajo automatizados en **GitHub Actions** (`.github/workflows/azure_adf_ci_cd.yml`):
-- **Calidad de Código y Pruebas**: Ejecución automatizada de Ruff y Pytest en cada Pull Request y Push a `main`.
-- **Despliegue Automático en Azure**: Validación de plantillas ARM y despliegue del pipeline e infraestructura en Azure Data Factory mediante Azure Service Principal.
+```text
+.
+├── .github/
+│   └── workflows/              # Workflows automatizados de CI/CD para GitHub Actions
+├── apps/
+│   └── webapp/                 # Aplicación Web SAT (Next.js 14, React 18, TailwindCSS)
+├── data/
+│   ├── bronze/                 # Capa Bronze: Ingesta cruda e inmutable (JSON/CSV)
+│   ├── silver/                 # Capa Silver: Datos estandarizados, limpios y validados (Parquet)
+│   ├── gold/                   # Capa Gold: Modelo dimensional Star Schema (Parquet)
+│   └── pipelines/              # Orquestador del pipeline maestro de ingesta y transformación
+├── docs/                       # Documentación técnica, guías de arquitectura y manuales
+├── infra/
+│   ├── azure_data_factory/     # Definiciones JSON de pipelines, triggers y linked services ADF
+│   └── environments/           # Infraestructura como Código (IaC con Terraform)
+├── notebooks/                  # Cuadernos de experimentación ML, EDA y explicabilidad SHAP
+├── scripts/                    # Utilerías de exportación y sincronización de datos
+├── tests/                      # Suite automatizada de pruebas unitarias (Pytest)
+├── requirements.txt            # Dependencias del proyecto en Python
+└── README.md                   # Documentación principal del sistema
+```
 
 ---
 
-## 11. Licencia
+## 12. Licencia
 
 Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
