@@ -9,64 +9,93 @@ interface HeaderProps {
   setActivePath?: (path: ActivePath) => void;
 }
 
-const NAV_ITEMS: { path: ActivePath; label: string }[] = [
-  { path: 'home', label: 'Overview' },
-  { path: 'monitoreo-diario', label: 'Monitoreo Diario' },
-  { path: 'historico-tendencias', label: 'Histórico & Tendencias' },
-  { path: 'riesgo-predictivo', label: 'Riesgo Predictivo' },
-  { path: 'comparativo-regional', label: 'Comparativo Regional' },
-  { path: 'presupuesto-mef', label: 'Presupuesto MEF' },
-];
-
 export default function Header({ activePath = 'home', setActivePath }: HeaderProps) {
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-md border-b border-slate-200">
-      <div className="h-16 w-full px-6 md:px-10 flex items-center justify-between">
+    <header className="fixed top-0 w-full z-50 bg-surface-container-lowest/70 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20">
+      <div className="h-20 w-full px-6 md:px-12 flex items-center justify-between">
         
         {/* Brand Logo & Title */}
         <div
           onClick={() => setActivePath && setActivePath('home')}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-4 cursor-pointer"
         >
           <img
             alt="CENEPRED Logo"
-            className="h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            className="h-10 w-auto object-contain"
             src={LOGO_CENEPRED}
           />
           <div className="flex flex-col">
-            <span className="text-[15px] tracking-tight text-slate-800 leading-tight font-bold uppercase">
+            <span className="font-headline-lg text-lg tracking-tight text-primary leading-tight font-bold uppercase">
               CENEPRED
             </span>
-            <span className="text-[9px] text-slate-400 uppercase tracking-[0.15em] font-medium">
+            <span className="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold">
               Centro Nacional de Prevención de Desastres
             </span>
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1">
-          {NAV_ITEMS.map((item) => {
-            const isActive = activePath === item.path;
-            return (
-              <button
-                key={item.path}
-                onClick={() => setActivePath && setActivePath(item.path)}
-                className={`
-                  relative px-3 py-2 text-[11px] uppercase tracking-[0.08em] font-semibold
-                  rounded-md transition-all duration-200 cursor-pointer
-                  ${isActive
-                    ? 'text-sky-600 bg-sky-50'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-                  }
-                `}
-              >
-                {item.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-sky-500 rounded-full" />
-                )}
-              </button>
-            );
-          })}
+        {/* Center & Right Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-8">
+          <button
+            onClick={() => setActivePath && setActivePath('home')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'home'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('monitoreo-diario')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'monitoreo-diario'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Monitoreo Diario
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('historico-tendencias')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'historico-tendencias'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Histórico & Tendencias
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('riesgo-predictivo')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'riesgo-predictivo'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Riesgo Predictivo
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('comparativo-regional')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'comparativo-regional'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Comparativo Regional
+          </button>
+          <button
+            onClick={() => setActivePath && setActivePath('presupuesto-mef')}
+            className={`font-label-sm text-xs uppercase tracking-widest transition-colors cursor-pointer ${
+              activePath === 'presupuesto-mef'
+                ? 'text-primary font-bold border-b-2 border-primary py-1'
+                : 'text-on-secondary-container hover:text-primary font-semibold'
+            }`}
+          >
+            Presupuesto MEF
+          </button>
         </nav>
 
       </div>
