@@ -8,8 +8,9 @@ export function useTheme() {
 
   useEffect(() => {
     setMounted(true);
+    // Predeterminado siempre en Modo Día ('light') a menos que el usuario haya seleccionado 'dark'
     const savedTheme = localStorage.getItem('cenepred_theme') as Theme | null;
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (savedTheme === 'dark') {
       setTheme('dark');
       document.documentElement.classList.add('dark');
     } else {

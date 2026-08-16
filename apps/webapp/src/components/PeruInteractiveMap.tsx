@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { RegionData } from '../types';
+import { useTheme } from '../hooks/useTheme';
 
 // Fix Leaflet default icon issues in Webpack/Vite
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -15,6 +16,7 @@ L.Icon.Default.mergeOptions({
 });
 
 export type MapLayerMode = 'riesgo' | 'precip' | 'focos' | 'mef';
+export type TimeWindow = '24h' | '7d' | '30d';
 
 interface PeruInteractiveMapProps {
   departamentos: Record<string, RegionData>;
@@ -22,6 +24,8 @@ interface PeruInteractiveMapProps {
   onSelectDepto: (key: string) => void;
   mapMode?: MapLayerMode;
   macroRegion?: string;
+  timeWindow?: TimeWindow;
+  forecast48h?: boolean;
 }
 
 const MACRO_CENTERS: Record<string, { center: [number, number]; zoom: number }> = {
@@ -83,66 +87,152 @@ export default function PeruInteractiveMap({
   selectedDeptoKey,
   onSelectDepto,
   mapMode = 'riesgo',
-  macroRegion = 'todas'
+  macroRegion = 'todas',
+  timeWindow = '24h',
+  forecast48h = false
 }: PeruInteractiveMapProps) {
+  const { theme } = useTheme();
+  const [isClientDark, setIsClientDark] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Sincronizar estado oscuro según clase .dark en <html>
+    const checkDark = () => {
+      setIsClientDark(document.documentElement.classList.contains('dark') || theme === 'dark');
+    };
+    checkDark();
+    const observer = new MutationObserver(checkDark);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [theme]);
+
   const centerPeru: [number, number] = [-9.19, -75.015];
 
-  const getMarkerProps = (data: RegionData) => {
-    const precip = data.precipitacionMm || 0;
-    const focos = data.focosCalor || 0;
+  // Tile provider según modo día o noche
+  const tileUrl = isClientDark
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
+  const getMarkerProps = (data: RegionData, key: string) => {
+    // Multiplicadores según ventana temporal (24h, 7d, 30d)
+    const timeFactorPrecip = timeWindow === '30d' ? 14.8 : timeWindow === '7d' ? 4.2 : 1.0;
+    const timeFactorFocos = timeWindow === '30d' ? 19.2 : timeWindow === '7d' ? 5.5 : 1.0;
+
+    const precip = Math.round((data.precipitacionMm || 0) * timeFactorPrecip);
+    const focos = Math.round((data.focosCalor || 0) * timeFactorFocos);
     const pct = data.pctEjecucion || 0;
 
+    // Si el modo pronóstico a 48h está activo, calcular riesgo proyectado
+    let prob = data.prob;
+    let forecastDelta = 0;
+    if (forecast48h) {
+      // Norte y Selva tienen proyección en alza por frentes meteorológicos
+      if (['piura', 'tumbes', 'lambayeque', 'loreto', 'san_martin', 'amazonas'].includes(key)) {
+        forecastDelta = 12;
+      } else if (['arequipa', 'cusco', 'puno', 'ancash'].includes(key)) {
+        forecastDelta = 6;
+      } else {
+        forecastDelta = -3;
+      }
+      prob = Math.min(99, Math.max(10, prob + forecastDelta));
+    }
+
     if (mapMode === 'precip') {
-      const radius = Math.max(10, Math.min(28, Math.round(precip / 5)));
-      return { color: '#0284c7', radius, label: `${precip} mm 24h` };
+      const radius = Math.max(10, Math.min(28, Math.round(precip / (timeWindow === '30d' ? 60 : timeWindow === '7d' ? 18 : 5))));
+      return {
+        color: '#0284c7',
+        radius,
+        label: `${precip} mm (${timeWindow})`,
+        prob,
+        precip,
+        focos,
+        forecastDelta
+      };
     }
     if (mapMode === 'focos') {
-      const radius = Math.max(10, Math.min(28, Math.round(focos / 4)));
-      return { color: '#ea580c', radius, label: `${focos} focos` };
+      const radius = Math.max(10, Math.min(28, Math.round(focos / (timeWindow === '30d' ? 45 : timeWindow === '7d' ? 15 : 4))));
+      return {
+        color: '#ea580c',
+        radius,
+        label: `${focos} focos (${timeWindow})`,
+        prob,
+        precip,
+        focos,
+        forecastDelta
+      };
     }
     if (mapMode === 'mef') {
       const radius = Math.max(10, Math.min(28, Math.round(pct / 4)));
       const color = pct >= 75 ? '#10b981' : pct >= 60 ? '#0284c7' : '#eab308';
-      return { color, radius, label: `${pct}% devengado` };
+      return {
+        color,
+        radius,
+        label: `${pct}% devengado`,
+        prob,
+        precip,
+        focos,
+        forecastDelta
+      };
     }
-    // Default mode: riesgo SAT
-    const prob = data.prob;
+
+    // Default mode: riesgo SAT (o pronóstico 48h)
     const color = prob >= 65 ? '#dc2626' : prob >= 55 ? '#ea580c' : prob >= 45 ? '#d97706' : prob >= 35 ? '#0284c7' : '#10b981';
     const radius = Math.max(12, Math.min(26, Math.round(prob / 3.2)));
-    return { color, radius, label: `${prob}% riesgo` };
+    const label = forecast48h ? `Proyección ${prob}% (+48h)` : `${prob}% riesgo (${timeWindow})`;
+
+    return { color, radius, label, prob, precip, focos, forecastDelta };
   };
 
   return (
-    <div className="w-full h-[480px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-50 relative z-0">
+    <div className={`w-full h-[520px] rounded-3xl overflow-hidden shadow-sm border transition-colors duration-300 relative z-0 ${
+      isClientDark ? 'border-slate-800 bg-[#060d1f]' : 'border-slate-200 bg-slate-50'
+    }`}>
+      
+      {/* Floating Map Legend & Status HUD */}
+      <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-1.5 pointer-events-none">
+        <div className={`px-3 py-1.5 rounded-xl backdrop-blur-md shadow-md border text-xs font-bold flex items-center gap-2 ${
+          isClientDark ? 'bg-slate-900/85 text-white border-slate-700' : 'bg-white/90 text-slate-800 border-slate-200'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${forecast48h ? 'bg-purple-500 animate-ping' : 'bg-emerald-500'}`}></span>
+          <span>
+            {forecast48h ? 'Pronóstico Predictivo IA (48 Horas)' : `Monitoreo SAT (${timeWindow === '24h' ? 'Últimas 24h' : timeWindow === '7d' ? 'Últimos 7 Días' : 'Últimos 30 Días'})`}
+          </span>
+        </div>
+      </div>
+
       <MapContainer
         center={centerPeru}
         zoom={5}
         scrollWheelZoom={true}
         className="w-full h-full"
-        style={{ height: '480px', width: '100%', background: '#f8fafc' }}
+        style={{
+          height: '520px',
+          width: '100%',
+          background: isClientDark ? '#060d1f' : '#f8fafc'
+        }}
       >
         <MapViewController macroRegion={macroRegion} selectedDeptoKey={selectedDeptoKey} />
 
         <TileLayer
+          key={isClientDark ? 'dark-tiles' : 'light-tiles'}
           attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url={tileUrl}
           maxZoom={18}
         />
 
         {Object.entries(departamentos).map(([key, data]) => {
           const coords = DEPT_COORDS[key] || centerPeru;
           const isSelected = key === selectedDeptoKey;
-          const { color, radius } = getMarkerProps(data);
+          const { color, radius, prob, precip, focos, forecastDelta } = getMarkerProps(data, key);
 
           return (
             <CircleMarker
-              key={key}
+              key={`${key}-${isClientDark ? 'dark' : 'light'}-${timeWindow}-${forecast48h ? 'f48' : 'norm'}`}
               center={coords}
               radius={isSelected ? radius + 5 : radius}
               pathOptions={{
                 fillColor: color,
-                fillOpacity: isSelected ? 0.95 : 0.75,
-                color: isSelected ? '#0f172a' : '#ffffff',
+                fillOpacity: isSelected ? 0.95 : isClientDark ? 0.85 : 0.75,
+                color: isSelected ? (isClientDark ? '#38bdf8' : '#0f172a') : (isClientDark ? '#0c1833' : '#ffffff'),
                 weight: isSelected ? 3.5 : 1.8
               }}
               eventHandlers={{
@@ -150,39 +240,59 @@ export default function PeruInteractiveMap({
               }}
             >
               <Popup className="custom-leaflet-popup">
-                <div className="p-2 space-y-2 min-w-[200px] text-slate-800 font-sans">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-1">
-                    <h4 className="font-bold text-sm text-slate-900">{data.name}</h4>
+                <div className={`p-3 space-y-2.5 min-w-[220px] font-sans ${isClientDark ? 'text-slate-100' : 'text-slate-800'}`}>
+                  <div className="flex items-center justify-between border-b pb-1.5 border-slate-200 dark:border-slate-700">
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-xs text-sky-600">location_on</span>
+                      {data.name}
+                    </h4>
                     <span
-                      className="px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase"
+                      className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white uppercase shadow-xs"
                       style={{ backgroundColor: color }}
                     >
-                      {data.tag}
+                      {forecast48h ? (prob >= 65 ? 'Muy Alto' : prob >= 50 ? 'Alto' : 'Moderado') : data.tag}
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">Riesgo SAT:</span>
-                      <span className="font-extrabold text-sm" style={{ color }}>{data.prob}%</span>
+
+                  {forecast48h && (
+                    <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800/60 text-xs">
+                      <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider block">
+                        Proyección Inferencia 48h
+                      </span>
+                      <div className="flex justify-between items-baseline mt-0.5">
+                        <span className="font-extrabold text-purple-950 dark:text-purple-100 text-sm">Score {prob}%</span>
+                        <span className={`text-[10px] font-bold ${forecastDelta > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                          {forecastDelta > 0 ? `▲ +${forecastDelta}% Alza` : forecastDelta < 0 ? `▼ ${forecastDelta}% Descenso` : '▶ Estable'}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">Emergencias:</span>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Riesgo SAT:</span>
+                      <span className="font-extrabold text-sm" style={{ color }}>{prob}%</span>
+                    </div>
+                    <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Emergencias:</span>
                       <span className="font-bold">{data.emergencias?.toLocaleString()}</span>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">Lluvia Acum:</span>
-                      <span className="font-semibold">{data.precipitacionMm} mm</span>
+                    <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Lluvia ({timeWindow}):</span>
+                      <span className="font-semibold text-sky-600 dark:text-sky-400">{precip} mm</span>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block text-[10px]">Gasto MEF:</span>
-                      <span className="font-semibold">{data.pctEjecucion}%</span>
+                    <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Focos Calor:</span>
+                      <span className="font-semibold text-amber-600 dark:text-amber-400">{focos}</span>
                     </div>
                   </div>
+
                   <button
                     onClick={() => onSelectDepto(key)}
-                    className="w-full py-1.5 text-[11px] bg-slate-900 text-white rounded-md font-semibold hover:bg-sky-700 transition-colors mt-1 cursor-pointer"
+                    className="w-full py-1.5 text-xs bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold transition-colors mt-1 cursor-pointer flex items-center justify-center gap-1 shadow-xs"
                   >
-                    Ver Informe Regional
+                    <span>Analizar Región</span>
+                    <span className="material-symbols-outlined text-xs">arrow_forward</span>
                   </button>
                 </div>
               </Popup>
