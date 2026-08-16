@@ -70,6 +70,9 @@ def download_limites(output_dir: Path = OUTPUT_DIR) -> Path:
 
     output_dir.mkdir(parents=True, exist_ok=True)
     dest_path = output_dir / "inei_departamentos_limites.zip"
+    if dest_path.exists() and dest_path.stat().st_size > 1024:
+        return dest_path
+
     dest_path.write_bytes(response.content)
 
     manifest_path = output_dir / "inei_departamentos_limites.manifest.json"

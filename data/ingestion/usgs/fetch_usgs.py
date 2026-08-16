@@ -53,6 +53,12 @@ def count_eventos(start_date: str, end_date: str) -> int:
 
 
 def download_sismos(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = output_dir / f"usgs_{start_date}_{end_date}.geojson"
+    if dest_path.exists() and dest_path.stat().st_size > 1024:
+        print(f"OK (existente) -> {dest_path}")
+        return dest_path
+
     total = count_eventos(start_date, end_date)
     if total > MAX_RESULTS_PER_REQUEST:
         raise RuntimeError(

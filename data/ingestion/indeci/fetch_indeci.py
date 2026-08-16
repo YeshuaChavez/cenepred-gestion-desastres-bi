@@ -87,6 +87,9 @@ def download_resource(resource: IndeciResource, output_dir: Path = OUTPUT_DIR) -
     extension = resource.url.rsplit(".", 1)[-1]
     dest_path = output_dir / f"indeci_{resource.year}.{extension}"
 
+    if dest_path.exists() and dest_path.stat().st_size > 1024:
+        return dest_path
+
     response = requests.get(resource.url, headers=REQUEST_HEADERS, timeout=60)
     response.raise_for_status()
     dest_path.write_bytes(response.content)

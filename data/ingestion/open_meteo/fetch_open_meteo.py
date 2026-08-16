@@ -1,23 +1,15 @@
 """Descarga clima histórico diario (Open-Meteo) para las 25 regiones del Perú hacia Bronze.
 
 Usa la API de archivo histórico de Open-Meteo (ERA5, sin necesidad de API key para uso no
-comercial), consultando las 25 regiones en una sola petición batched (Open-Meteo acepta listas
-de lat/lon separadas por coma). Los puntos de cada región son la capital de su departamento,
+comercial), consultando las 25 regiones en peticiones batched. Los puntos de cada región son la capital de su departamento,
 resueltos previamente en regiones_coordenadas.json (ver geocode_regiones.py).
-
-Uso local (antes de tener Azure Functions desplegado):
-    python fetch_open_meteo.py [--start 2012-01-01] [--end 2023-12-31]
-
-Escribe la respuesta cruda en ../../bronze/open_meteo/local_data/ (ignorado por git, representa
-localmente el contenedor /bronze/clima de ADLS Gen2), junto con un manifiesto de metadatos de
-ingesta. Cuando exista la infraestructura de Azure (infra/), la función `download_clima` es el
-punto de reemplazo para escribir a ADLS Gen2 /bronze/clima en vez de disco local.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -43,7 +35,15 @@ def load_regiones() -> list[dict]:
     return json.loads(COORDENADAS_PATH.read_text(encoding="utf-8"))
 
 
-def download_clima(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR) -> Path:
+def download_clima(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR, force: bool = False) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = output_dir / f"open_meteo_{start_date}_{end_date}.json"
+
+    # Si ya existe en Bronze y no es forzado, reusar dataset existente
+    if dest_path.exists() and dest_path.stat().st_size > 1024 and not force:
+        print(f"OK (existente) -> {dest_path}")
+        return dest_path
+
     regiones = load_regiones()
 
     params = {
@@ -54,9 +54,23 @@ def download_clima(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR
         "daily": DAILY_VARIABLES,
         "timezone": TIMEZONE,
     }
-    response = requests.get(ARCHIVE_API_URL, params=params, timeout=120)
-    response.raise_for_status()
-    resultados = response.json()
+
+    # Reintentos con backoff exponencial
+    response = None
+    for attempt in range(3):
+        try:
+            response = requests.get(ARCHIVE_API_URL, params=params, timeout=180)
+            response.raise_for_status()
+            break
+        except Exception as e:
+            if attempt == 2:
+                if dest_path.exists() and dest_path.stat().st_size > 1024:
+                    print(f"Aviso: Timeout en Open-Meteo, usando datos en caché de Bronze -> {dest_path}")
+                    return dest_path
+                raise e
+            time.sleep(3 * (attempt + 1))
+
+    resultados = response.json() if response else []
 
     # La API no siempre incluye "location_id" en el primer elemento (es implícitamente 0);
     # lo completamos aquí para poder mapear cada resultado a su región por posición.
@@ -64,8 +78,6 @@ def download_clima(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR
         resultado.setdefault("location_id", idx)
         resultado["region"] = regiones[idx]["region"]
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    dest_path = output_dir / f"open_meteo_{start_date}_{end_date}.json"
     dest_path.write_text(json.dumps(resultados, ensure_ascii=False, indent=2), encoding="utf-8")
 
     manifest_path = output_dir / f"open_meteo_{start_date}_{end_date}.manifest.json"
@@ -92,9 +104,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--start", default=DEFAULT_START, help="Fecha inicial (YYYY-MM-DD)")
     parser.add_argument("--end", default=DEFAULT_END, help="Fecha final (YYYY-MM-DD)")
+    parser.add_argument("--force", action="store_true", help="Forzar re-descarga aunque el archivo exista")
     args = parser.parse_args()
 
-    dest_path = download_clima(args.start, args.end)
+    dest_path = download_clima(args.start, args.end, force=args.force)
     print(f"OK -> {dest_path}")
 
 

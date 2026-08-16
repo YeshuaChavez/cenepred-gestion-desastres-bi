@@ -16,7 +16,7 @@ import sys
 import os
 import subprocess
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Asegurar codificación UTF-8 en consola Windows
 if hasattr(sys.stdout, 'reconfigure'):
@@ -61,7 +61,7 @@ def main():
     logging.info("=" * 80)
     logging.info("🔥 CENEPRED BI DATA PIPELINE — EJECUCIÓN AUTOMATIZADA MASTER 🔥")
     logging.info(f"Directorio Raíz: {PROJECT_ROOT}")
-    logging.info(f"Marca de Tiempo: {datetime.utcnow().isoformat()} UTC")
+    logging.info(f"Marca de Tiempo: {datetime.now(timezone.utc).isoformat()} UTC")
     logging.info("=" * 80)
 
     # -------------------------------------------------------------------------

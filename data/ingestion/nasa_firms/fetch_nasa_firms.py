@@ -78,6 +78,11 @@ def download_focos_calor(
     output_dir.mkdir(parents=True, exist_ok=True)
     dest_path = output_dir / f"nasa_firms_{start_date}_{end_date}.csv"
 
+    # Si el archivo ya existe y tiene datos, reusar en ejecuciones diarias
+    if dest_path.exists() and dest_path.stat().st_size > 1024:
+        print(f"OK (existente) -> {dest_path}")
+        return dest_path
+
     header_written = False
     total_filas = 0
     total_peticiones = 0
