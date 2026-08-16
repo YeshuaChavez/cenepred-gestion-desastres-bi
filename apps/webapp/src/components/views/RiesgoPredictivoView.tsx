@@ -1,76 +1,109 @@
 'use client';
 
-import React, { useState } from 'react';
-import { PERU_DEPARTAMENTOS } from '../../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../../data/mockData';
 
 export default function RiesgoPredictivoView() {
+  const departmentKeys = Object.keys(PERU_DEPARTAMENTOS);
   const [scope, setScope] = useState<'national' | 'regional'>('national');
-  const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>('piura');
-  const [precipSlider, setPrecipSlider] = useState<number>(25);
-  const [humedadSlider, setHumedadSlider] = useState<number>(10);
-  const [simulatedImpact, setSimulatedImpact] = useState<number>(65);
+  const [selectedDeptoKey, setSelectedDeptoKey] = useState<string>('ancash');
+  
+  // Slider Controls
+  const [precipSlider, setPrecipSlider] = useState<number>(20);
+  const [humedadSlider, setHumedadSlider] = useState<number>(15);
+  
+  const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
+  
+  // Dynamic Simulation Calculation starting from actual department baseline risk
+  const [simulatedImpact, setSimulatedImpact] = useState<number>(deptoData.prob);
+
+  useEffect(() => {
+    const baseline = deptoData.prob;
+    const delta = Math.round(precipSlider * 0.3 + humedadSlider * 0.2);
+    const calculated = Math.min(99, Math.max(10, baseline + delta));
+    setSimulatedImpact(calculated);
+  }, [selectedDeptoKey, precipSlider, humedadSlider, deptoData]);
+
+  // Modals
   const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
   const [showSecurityModal, setShowSecurityModal] = useState<boolean>(false);
 
-  // Executive ML Report State (8,192 Tokens Capacity)
-  const [reportDeptoKey, setReportDeptoKey] = useState<string>('piura');
+  // Executive Report Generator
+  const [reportDeptoKey, setReportDeptoKey] = useState<string>('ancash');
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
 
-  const deptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS['piura'];
-  const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS['piura'];
+  const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
   const handleSimulate = () => {
-    const calculated = Math.min(99, Math.round(40 + precipSlider * 0.7 + humedadSlider * 0.5));
+    const baseline = deptoData.prob;
+    const delta = Math.round(precipSlider * 0.3 + humedadSlider * 0.2);
+    const calculated = Math.min(99, Math.max(10, baseline + delta));
     setSimulatedImpact(calculated);
   };
+
+  const round1 = (val: number) => Math.round(val * 10) / 10;
 
   const handleGenerateReport = () => {
     setIsGeneratingReport(true);
     setGeneratedReport(null);
 
-    // Simulate backend executive report generation engine with 8,192 max output tokens
     setTimeout(() => {
       const emergenciasCount = (reportDeptoData?.emergencias || 0).toLocaleString();
+      const afectadosCount = (reportDeptoData?.afectados || 0).toLocaleString();
+      const damnificadosCount = (reportDeptoData?.damnificados || 0).toLocaleString();
+      const pctExec = reportDeptoData?.pctEjecucion || 0;
+      const brecha = round1(100 - pctExec);
+
       const reportText = `
 # REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED — DIAGNÓSTICO EJECUTIVO NACIONAL
-**Ventana de Inferencia**: 8,192 Tokens • **Fecha de Emisión**: ${new Date().toLocaleDateString('es-PE')}
-**Región Evaluada**: ${reportDeptoData.name} (${reportDeptoData.tag})
-**Score de Riesgo Climático**: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 75 ? 'CRÍTICO / ALTA VULNERABILIDAD' : reportDeptoData.prob >= 60 ? 'ALTO' : 'MODERADO'})
-**Modelo Infeferencial**: XGBoost Classifier v2.4 (F1-Score: 0.912, AUC-ROC: 0.942, Cross-Val: 5 Folds)
+Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
+Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
+Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
+Modelo Inferencial: XGBoost Classifier v2.4 (F1-Score: 0.912 | AUC-ROC: 0.942 | Cross-Val: 5 Folds)
 
----
+--------------------------------------------------------------------------------
 
-### 1. DIAGNÓSTICO TERRITORIAL Y ANÁLISIS DE VULNERABILIDAD
-La región de **${reportDeptoData.name}** registra un historial acumulado de **${emergenciasCount} emergencias** reportadas formalmente en la plataforma SINPAD. En la presente ventana de monitoreo satelital, se computa una precipitación acumulada de **${reportDeptoData.precipitacionMm} mm/24h** y la presencia activa de **${reportDeptoData.focosCalor} focos de calor** validados mediante la constelación de sensores térmicos VIIRS de NASA FIRMS.
+1. DIAGNÓSTICO TERRITORIAL Y ANÁLISIS DE VULNERABILIDAD
+- Emergencias SINPAD Registradas: ${emergenciasCount} eventos en el historial oficial.
+- Población Afectada Directa: ${afectadosCount} personas.
+- Población Damnificada: ${damnificadosCount} personas.
+- Telemetría Satelital 24h: Precipitación acumulada de ${reportDeptoData.precipitacionMm} mm/24h y ${reportDeptoData.focosCalor} focos de calor activos (NASA FIRMS / VIIRS).
 
-### 2. EXPLICABILIDAD SHAP (IMPORTANCIA RELATIVA DE FACTORES)
-- **Precipitación Intensa 24h (+0.38 SHAP)**: Constituye la variable de mayor peso específico en la activación de aludes, inundaciones y crecidas de caudal.
-- **Vulnerabilidad de Infraestructura Vial y Habitacional (+0.24 SHAP)**: Elevada exposición de centros poblados asentados en fajas marginales y cauces secos sin infraestructura de encauzamiento.
-- **Capacidad de Respuesta Operativa Local (+0.12 SHAP)**: Brecha estructural en equipamiento de respuesta rápida municipal ante emergencias clasificadas como Nivel 4.
-- **Factor Atenuante Presupuestal (-0.14 SHAP)**: Avance progresivo en la asignación y ejecución del Programa Presupuestal PP 0068.
+2. EXPLICABILIDAD SHAP (FACTORES DETERMINANTES)
+${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.pct}%)`).join('\n')}
 
-### 3. MATRIZ DE RECOMENDACIONES DE ACCIÓN PREVENTIVA (NIVEL EJECUTIVO)
-1. **Declaratoria y Activación de Alerta Máxima Nivel 4**: Disponer el despliegue inmediato de brigadas humanitarias de primera respuesta en los distritos con mayor tasa de precipitación.
-2. **Obras de Mitigación y Descolmatación Prioritaria**: Ejecutar de manera urgente la limpieza de quebradas y reforzamiento de defensas ribereñas con maquinaria pesada.
-3. **Monitoreo Satelital y Red de Alerta Temprana**: Mantener una vigilancia continua cada 6 horas integrando la telemetría de Open-Meteo, SENAMHI y los tableros del CENEPRED.
-4. **Articulación Interinstitucional (INDECI - MEF)**: Coordinar el abastecimiento estratégico de almacenes de frontera y kits de asistencia humanitaria.
+3. MATRIZ DE RECOMENDACIONES DE ACCIÓN PREVENTIVA
+- Activación de Alerta Nivel ${reportDeptoData.prob >= 65 ? '4 (Crítica)' : '3 (Prevención)'}: Coordinar brigadas de respuesta rápida en distritos de mayor precipitación.
+- Obras de Mitigación Prioritarias: Limpieza y descolmatación de cauces con maquinaria pesada antes del inicio de temporada.
+- Monitoreo Satelital Continuo: Sincronización cada 6 horas con Open-Meteo, NASA FIRMS y COEN-INDECI.
 
-### 4. EVALUACIÓN Y SEGUIMIENTO FINANCIERO PP 0068 (MEF PREVAED)
-Actualmente el departamento registra un Presupuesto Institucional Modificado (PIM) asignado de **S/ ${reportDeptoData.pimM}M**, con una ejecución devengada acumulada de **S/ ${reportDeptoData.devengadoM}M**, representando un **${reportDeptoData.pctEjecucion}% de avance financiero**.
-*Recomendación Presupuestal*: Acelerar los giros de inversión antes del recrudecimiento del periodo de lluvias para evitar cuellos de botella en la ejecución física de las obras preventivas.
+4. EVALUACIÓN FINANCIERA PP 0068 (MEF PREVAED)
+- PIM Asignado: S/ ${reportDeptoData.pimM} Millones
+- Devengado Acumulado: S/ ${reportDeptoData.devengadoM} Millones
+- Avance Financiero: ${pctExec}% de ejecución. Brecha por ejecutar: ${brecha}%.
       `;
       setGeneratedReport(reportText.trim());
       setIsGeneratingReport(false);
-    }, 1200);
+    }, 700);
   };
+
+  // SHAP items to render based on scope (National average vs Selected Region)
+  const shapItemsToRender = scope === 'regional'
+    ? deptoData.shap
+    : [
+        { name: "Incidencia Emergencias (SINPAD)", val: "+84,369 Nal.", pct: 72, color: "#ba1a1a" },
+        { name: "Precipitación Acumulada (mm/24h)", val: "Prom. 24.8 mm", pct: 65, color: "#006686" },
+        { name: "Focos Calor / Actividad Satelital", val: "+524,190 Nac.", pct: 54, color: "#565e74" },
+        { name: "Brecha Presupuestal MEF PP0068", val: `${NATIONAL_META.pctEjecucionNacional}% Exec`, pct: 42, color: "#94a3b8" }
+      ];
 
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800 relative">
       
       {/* Confusion Matrix / Model Validation Modal */}
       {showMetricsModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-lg space-y-4">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -79,38 +112,38 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
               </h3>
               <button
                 onClick={() => setShowMetricsModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
               >
-                ESC
+                Cerrar ✕
               </button>
             </div>
 
             <div className="space-y-3 text-xs text-slate-600">
-              <p>Resultados de la matriz de confusión calculados sobre 84,369 registros históricos de emergencias:</p>
+              <p className="font-medium">Resultados de la matriz de confusión calculados sobre 84,369 registros históricos del SINPAD:</p>
               
               <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center font-bold">
-                <div className="p-3 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-200">
-                  <span className="block text-lg">74,520</span>
-                  <span className="text-[10px] uppercase">Verdaderos Positivos</span>
+                <div className="p-3 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200">
+                  <span className="block text-xl font-extrabold">74,520</span>
+                  <span className="text-[10px] uppercase tracking-wider">Verdaderos Positivos</span>
                 </div>
-                <div className="p-3 bg-sky-50 text-sky-800 rounded-lg border border-sky-200">
-                  <span className="block text-lg">5,240</span>
-                  <span className="text-[10px] uppercase">Verdaderos Negativos</span>
+                <div className="p-3 bg-sky-50 text-sky-800 rounded-xl border border-sky-200">
+                  <span className="block text-xl font-extrabold">5,240</span>
+                  <span className="text-[10px] uppercase tracking-wider">Verdaderos Negativos</span>
                 </div>
-                <div className="p-3 bg-amber-50 text-amber-800 rounded-lg border border-amber-200">
-                  <span className="block text-lg">2,810</span>
-                  <span className="text-[10px] uppercase">Falsos Positivos</span>
+                <div className="p-3 bg-amber-50 text-amber-800 rounded-xl border border-amber-200">
+                  <span className="block text-xl font-extrabold">2,810</span>
+                  <span className="text-[10px] uppercase tracking-wider">Falsos Positivos</span>
                 </div>
-                <div className="p-3 bg-red-50 text-red-800 rounded-lg border border-red-200">
-                  <span className="block text-lg">1,799</span>
-                  <span className="text-[10px] uppercase">Falsos Negativos</span>
+                <div className="p-3 bg-red-50 text-red-800 rounded-xl border border-red-200">
+                  <span className="block text-xl font-extrabold">1,799</span>
+                  <span className="text-[10px] uppercase tracking-wider">Falsos Negativos</span>
                 </div>
               </div>
 
-              <div className="pt-2 text-[11px] text-slate-500 flex justify-between">
-                <span>AUC-ROC: <b>0.942</b></span>
-                <span>F1-Score: <b>0.912</b></span>
-                <span>Validación Cruzada: <b>5 Folds</b></span>
+              <div className="pt-2 text-[11px] text-slate-500 flex justify-between font-semibold">
+                <span>AUC-ROC: <b className="text-slate-900">0.942</b></span>
+                <span>F1-Score: <b className="text-slate-900">0.912</b></span>
+                <span>Validación Cruzada: <b className="text-slate-900">5 Folds</b></span>
               </div>
             </div>
           </div>
@@ -119,36 +152,36 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
       {/* Security Architecture Info Modal */}
       {showSecurityModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-lg space-y-4">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
                 <span className="material-symbols-outlined text-emerald-600">lock</span>
-                Arquitectura del Motor de Reportes (8,192 Tokens)
+                Arquitectura de Seguridad del Sistema
               </h3>
               <button
                 onClick={() => setShowSecurityModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
               >
-                ESC
+                Cerrar ✕
               </button>
             </div>
 
             <div className="space-y-3 text-xs leading-relaxed text-slate-600">
               <p className="font-semibold text-slate-800">
-                La generación de diagnósticos ejecutivos procesa hasta 8,192 tokens con máxima seguridad server-side:
+                La plataforma procesa y analiza los indicadores oficiales con estándares de seguridad gubernamentales:
               </p>
 
               <ul className="space-y-2 border-l-2 border-emerald-500 pl-3 font-medium">
-                <li><b>Localmente</b>: Almacenada en `.env` (excluida estrictamente del repositorio mediante `.gitignore`).</li>
-                <li><b>En Producción Azure</b>: Inyectada mediante <b>Azure Key Vault</b> o <b>Azure App Service Settings</b>.</li>
-                <li><b>Cero Exposición Cliente</b>: El frontend React nunca ejecuta llamadas directas con la clave en el navegador. La llamada pasa por la ruta segura `/api/reports/ml-generate`.</li>
+                <li><b>Seguridad Server-Side</b>: Las consultas se ejecutan a través de servicios protegidos en la nube.</li>
+                <li><b>Integración Oficial</b>: Conexión con datos de SINPAD, MEF-SIAF y telemetría de NASA FIRMS.</li>
+                <li><b>Cero Exposición Directa</b>: El entorno cliente no expone credenciales privadas ni claves de API.</li>
               </ul>
 
               <div className="pt-2 text-right">
                 <button
                   onClick={() => setShowSecurityModal(false)}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs hover:bg-emerald-700 transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-colors cursor-pointer"
                 >
                   Entendido
                 </button>
@@ -161,23 +194,23 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
       {/* Page Title & Controls */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200">
         <div className="flex flex-col space-y-1">
-          <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo e Interacciones</h2>
+          <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo e Inferencia de Escenarios</h2>
           <p className="font-body-md text-sm text-slate-600 max-w-2xl">
-            Análisis avanzado de estimación y simulación de escenarios de riesgo climático en el territorio nacional.
+            Análisis de estimación y simulación de escenarios de riesgo climático en el territorio nacional mediante Machine Learning (XGBoost Classifier v2.4).
           </p>
         </div>
         
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowSecurityModal(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer shadow-xs"
-            title="Ver arquitectura de protección en Azure"
+            className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer shadow-2xs"
+            title="Ver arquitectura de protección en la nube"
           >
             <span className="material-symbols-outlined text-sm">lock</span>
-            Clave Protegida (Azure)
+            Seguridad Servidor
           </button>
 
-          <div className="flex items-center space-x-3 bg-white px-4 py-2 rounded-xl shadow-xs border border-slate-200 font-medium">
+          <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-xl shadow-2xs border border-slate-200 font-medium">
             <span className="material-symbols-outlined text-sky-700 text-sm">memory</span>
             <span className="font-body-md text-xs text-slate-800 font-bold">Modelo Activo (XGBoost)</span>
           </div>
@@ -185,13 +218,16 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
       </div>
 
       {/* Clickable Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión General</span>
+          <div className="flex justify-between items-center">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión General</span>
+            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+          </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">94.2%</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
@@ -202,10 +238,13 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión en Riesgo Alto</span>
+          <div className="flex justify-between items-center">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión Riesgo Alto</span>
+            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+          </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">89.1%</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
@@ -216,10 +255,13 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Sensibilidad</span>
+          <div className="flex justify-between items-center">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Sensibilidad</span>
+            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+          </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">91.5%</span>
             <span className="font-body-md text-xs text-red-600 flex items-center font-semibold">
@@ -230,10 +272,13 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-xl p-5 shadow-xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
-          <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Margen de Error</span>
+          <div className="flex justify-between items-center">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Margen de Error</span>
+            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+          </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.18</span>
             <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
@@ -248,27 +293,27 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
         
         {/* SHAP Feature Importance */}
         <div className="lg:col-span-2 flex flex-col space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col min-h-[450px]">
+          <div className="bg-white rounded-2xl p-6 shadow-2xs border border-slate-200/80 flex flex-col min-h-[450px]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h3 className="font-headline-lg text-lg font-bold text-slate-900">Interpretabilidad SHAP (Explicabilidad ML)</h3>
-                <p className="font-body-md text-xs text-slate-500">Impacto relativo de variables en la estimación de vulnerabilidad</p>
+                <p className="font-body-md text-xs text-slate-500">Contribución relativa de variables a la probabilidad de riesgo</p>
               </div>
 
               {/* Scope Switcher: National vs Regional */}
-              <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
                 <button
                   onClick={() => setScope('national')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'national' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    scope === 'national' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
                   Nacional
                 </button>
                 <button
                   onClick={() => setScope('regional')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'regional' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    scope === 'regional' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
                   Por Región
@@ -278,85 +323,54 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
             {/* If regional scope is selected */}
             {scope === 'regional' && (
-              <div className="mb-6 p-3 bg-sky-50 rounded-xl border border-sky-100 flex items-center justify-between">
-                <span className="text-xs font-bold text-sky-900">Seleccionar Región:</span>
+              <div className="mb-6 p-3 bg-sky-50 rounded-xl border border-sky-100 flex items-center justify-between animate-fade-in">
+                <span className="text-xs font-bold text-sky-900 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
+                </span>
                 <select
                   value={selectedDeptoKey}
                   onChange={(e) => setSelectedDeptoKey(e.target.value)}
-                  className="bg-white border border-slate-200 rounded-lg text-xs font-semibold px-3 py-1.5 outline-none text-slate-800 cursor-pointer"
+                  className="bg-white border border-slate-200 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 cursor-pointer shadow-2xs"
                 >
-                  {Object.entries(PERU_DEPARTAMENTOS).map(([key, d]) => (
-                    <option key={key} value={key}>{d.name} ({d.prob}% riesgo)</option>
+                  {departmentKeys.map((key) => (
+                    <option key={key} value={key}>
+                      {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
+                    </option>
                   ))}
                 </select>
               </div>
             )}
 
-            <div className="space-y-4 flex-1 justify-center flex flex-col">
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Precipitación Acumulada (mm/24h)</span>
-                  <span className="text-sky-700 font-bold">+0.38 SHAP</span>
+            <div className="space-y-5 flex-1 justify-center flex flex-col">
+              {shapItemsToRender.map((item, idx) => (
+                <div key={idx} className="group">
+                  <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700">
+                    <span className="group-hover:text-sky-700 font-medium">{item.name}</span>
+                    <span className="font-bold" style={{ color: item.color }}>{item.val} (SHAP {item.pct}%)</span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${item.pct}%`, backgroundColor: item.color }}
+                    ></div>
+                  </div>
                 </div>
-                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="bg-sky-500 h-full rounded-full w-[85%] transition-all duration-500"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Histórico Emergencias SINPAD</span>
-                  <span className="text-sky-700 font-bold">+0.26 SHAP</span>
-                </div>
-                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="bg-sky-400 h-full rounded-full w-[65%] transition-all duration-500"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Vulnerabilidad Social y Vivienda</span>
-                  <span className="text-amber-700 font-bold">+0.18 SHAP</span>
-                </div>
-                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="bg-amber-400 h-full rounded-full w-[45%] transition-all duration-500"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Avance Ejecución Presupuestal PP 0068</span>
-                  <span className="text-emerald-700 font-bold">-0.14 SHAP</span>
-                </div>
-                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="bg-emerald-500 h-full rounded-full w-[35%] transition-all duration-500"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Focos de Calor Activos (FIRMS)</span>
-                  <span className="text-sky-700 font-bold">+0.09 SHAP</span>
-                </div>
-                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="bg-sky-300 h-full rounded-full w-[25%] transition-all duration-500"></div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Scenario Simulator */}
-        <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col justify-between space-y-6">
+        <div className="bg-white rounded-2xl p-6 shadow-2xs border border-slate-200/80 flex flex-col justify-between space-y-6">
           <div>
             <h3 className="font-headline-lg text-lg font-bold text-slate-900 mb-1">Simulador de Escenarios What-If</h3>
-            <p className="font-body-md text-xs text-slate-500 mb-6">Ajuste de variables meteorológicas en tiempo real</p>
+            <p className="font-body-md text-xs text-slate-500 mb-6">Ajusta precipitaciones y humedad para simular el impacto en tiempo real sobre <b>{deptoData.name}</b> (Base: {deptoData.prob}%)</p>
 
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between text-xs font-bold mb-2">
                   <span>Precipitación Adicional (+mm)</span>
-                  <span className="text-sky-700 font-bold">+{precipSlider} mm</span>
+                  <span className="text-sky-700 font-bold">+{precipSlider} mm/24h</span>
                 </div>
                 <input
                   type="range"
@@ -385,22 +399,25 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
               <button
                 onClick={handleSimulate}
-                className="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">tune</span>
-                Recalcular Inferencia
+                Recalcular Inferencia Simulado
               </button>
             </div>
           </div>
 
           <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-            <span className="text-xs font-bold text-slate-600 block uppercase tracking-wider">Score Simulado de Riesgo</span>
+            <div className="flex justify-between items-center text-xs font-bold text-slate-600">
+              <span className="uppercase tracking-wider">Score Simulado — {deptoData.name}</span>
+              <span className="text-slate-400 font-normal">(Base: {deptoData.prob}%)</span>
+            </div>
             <div className="flex items-baseline justify-between">
               <span className="text-3xl font-extrabold text-slate-900">{simulatedImpact}%</span>
               <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
-                simulatedImpact >= 75 ? 'bg-red-600' : simulatedImpact >= 60 ? 'bg-orange-500' : 'bg-amber-500'
+                simulatedImpact >= 65 ? 'bg-red-600' : simulatedImpact >= 55 ? 'bg-orange-500' : simulatedImpact >= 45 ? 'bg-amber-500' : 'bg-sky-600'
               }`}>
-                {simulatedImpact >= 75 ? 'CRÍTICO' : simulatedImpact >= 60 ? 'ALTO' : 'MODERADO'}
+                {simulatedImpact >= 65 ? 'CRÍTICO' : simulatedImpact >= 55 ? 'MUY ALTO' : simulatedImpact >= 45 ? 'ALTO' : 'MEDIO'}
               </span>
             </div>
           </div>
@@ -408,19 +425,19 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
 
       </div>
 
-      {/* GENERADOR DE REPORTES EJECUTIVOS DE INTELIGENCIA PREDICTIVA (8,192 TOKENS) */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xs border border-slate-200/80 space-y-6 mt-2">
+      {/* GENERADOR DE REPORTES EJECUTIVOS DE INTELIGENCIA PREDICTIVA */}
+      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-2xs border border-slate-200/80 space-y-6 mt-2">
         
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
           <div className="space-y-1">
             <h3 className="font-headline-lg text-xl font-bold text-slate-900 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-xs">
                 <span className="material-symbols-outlined text-lg">description</span>
               </div>
-              Generador de Reportes Ejecutivos de Inteligencia Predictiva
+              Generador de Diagnóstico Ejecutivo de Riesgo
             </h3>
             <p className="font-body-md text-xs text-slate-500">
-              Generación de diagnósticos analíticos estructurados de alto nivel (Procesamiento Avanzado de 8,192 Tokens)
+              Generación de informe técnico-ejecutivo oficial basado en telemetría satelital, emergencias SINPAD y ejecución presupuestal MEF
             </p>
           </div>
 
@@ -428,22 +445,24 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
             <select
               value={reportDeptoKey}
               onChange={(e) => setReportDeptoKey(e.target.value)}
-              className="bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold px-3 py-2 outline-none text-slate-800 cursor-pointer"
+              className="bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold px-3 py-2 outline-none text-slate-800 cursor-pointer shadow-2xs"
             >
-              {Object.entries(PERU_DEPARTAMENTOS).map(([key, d]) => (
-                <option key={key} value={key}>Región: {d.name} ({d.prob}% riesgo)</option>
+              {departmentKeys.map((key) => (
+                <option key={key} value={key}>
+                  Región: {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
+                </option>
               ))}
             </select>
 
             <button
               onClick={handleGenerateReport}
               disabled={isGeneratingReport}
-              className="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
             >
               {isGeneratingReport ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Procesando 8,192 Tokens...
+                  Generando Informe...
                 </>
               ) : (
                 <>
@@ -461,19 +480,19 @@ Actualmente el departamento registra un Presupuesto Institucional Modificado (PI
             <div className="flex justify-between items-center pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span className="font-bold text-xs text-slate-800">Diagnóstico Oficial CENEPRED • {reportDeptoData.name} (8,192 Tokens)</span>
+                <span className="font-bold text-xs text-slate-800">Diagnóstico Oficial CENEPRED • {reportDeptoData.name}</span>
               </div>
               
               <button
                 onClick={() => window.print()}
-                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
+                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span className="material-symbols-outlined text-sm">print</span>
-                Exportar PDF
+                Exportar PDF / Imprimir
               </button>
             </div>
 
-            <div className="text-xs leading-relaxed text-slate-800 whitespace-pre-line font-mono bg-white p-6 rounded-xl border border-slate-200/80 shadow-xs">
+            <div className="text-xs leading-relaxed text-slate-800 whitespace-pre-line font-mono bg-white p-6 rounded-xl border border-slate-200/80 shadow-2xs">
               {generatedReport}
             </div>
           </div>

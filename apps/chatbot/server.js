@@ -108,7 +108,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// ML Executive Report Generation Endpoint (8,192 Tokens Capacity)
+// Executive Report Generation Endpoint
 app.post('/api/reports/ml-generate', async (req, res) => {
   try {
     const { region } = req.body;
