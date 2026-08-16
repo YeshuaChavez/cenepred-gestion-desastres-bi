@@ -10,34 +10,34 @@ interface HomeViewProps {
 }
 
 export default function HomeView({ setActivePath }: HomeViewProps) {
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const deptosList = Object.values(PERU_DEPARTAMENTOS);
   const highRiskDeptos = deptosList.filter(d => d.prob >= 65);
 
   const faqList = [
     {
-      q: '¿Qué es la Plataforma Nacional de Inteligencia CENEPRED?',
-      a: 'Es un centro analítico ejecutivo que integra telemetría satelital en tiempo real (NASA FIRMS, Open-Meteo, USGS), el registro histórico del SINPAD (84,369 emergencias) y la ejecución presupuestal del MEF (Programa PP 0068) para la estimación y reducción del riesgo de desastres en las 25 regiones del Perú.'
+      q: '¿Para qué sirve esta plataforma del CENEPRED?',
+      a: 'Permite consultar de forma libre y en tiempo real el nivel de riesgo de desastres en las 25 regiones del Perú, el historial de emergencias registradas y el uso del presupuesto del Estado destinado a prevenir desastres.'
     },
     {
-      q: '¿Con qué frecuencia se actualizan los indicadores e información satelital?',
-      a: 'Los monitoreos meteorológicos (precipitaciones y temperaturas) y focos de calor satelitales se actualizan automáticamente cada 24 horas. Los registros históricos de emergencias del SINPAD y los datos de ejecución presupuestal del SIAF-MEF se sincronizan diariamente.'
+      q: '¿Cómo puedo saber si mi región o departamento está en riesgo de desastre?',
+      a: 'Ingresa a la sección "Monitoreo Diario" o "Riesgo Predictivo" en el menú superior. Ahí podrás ver el mapa interactivo del Perú con el nivel de riesgo de cada departamento (bajo, medio, alto o crítico) basado en lluvias, clima e historial de la zona.'
     },
     {
-      q: '¿Cómo calcula el modelo de Machine Learning (XGBoost) el nivel de riesgo regional?',
-      a: 'El modelo evalúa múltiples dimensiones climáticas y territoriales: volumen de lluvias acumuladas (mm/24h), anomalías térmicas del Océano Pacífico (Índice ONI / El Niño), eventos sísmicos recientes y el historial de vulnerabilidad física para generar una probabilidad de riesgo calibrada (F1-score: 0.912, AUC-ROC: 0.942).'
+      q: '¿Con qué frecuencia se actualiza la información del portal?',
+      a: 'La información del clima, precipitaciones y focos de calor satelitales se actualiza automáticamente cada 24 horas. Los datos sobre emergencias ocurridas y presupuestos ejecutados por el Estado se sincronizan diariamente.'
     },
     {
-      q: '¿Qué información proporciona el Programa Presupuestal PP 0068 (PREVAED)?',
-      a: 'Visualiza la asignación del Presupuesto Institucional Modificado (PIM) y el avance devengado (S/ 1,014M ejecutados de S/ 1,420M PIM a nivel nacional). Permite auditar el cumplimiento financiero por pliego ejecutor en cada departamento.'
+      q: '¿Qué información puedo consultar sobre el presupuesto del Estado?',
+      a: 'En la sección "Presupuesto MEF" puedes ver cuánto dinero se ha asignado a cada departamento para obras de prevención de desastres (como limpieza de ríos y construcción de defensas) y cuánto de ese dinero se ha ejecutado hasta la fecha.'
     },
     {
-      q: '¿Cómo utilizar el Asistente Analítico con Inteligencia Artificial?',
-      a: 'Puedes interactuar con el asistente haciendo clic en el botón flotante con el icono de robot en la esquina inferior derecha. El asistente responde consultas en lenguaje natural sobre cualquier región, montos presupuestales o alertas de emergencia en tiempo real.'
+      q: '¿Cómo puedo usar el Asistente Virtual para hacer preguntas?',
+      a: 'En la esquina inferior derecha encontrarás un botón flotante con el icono de un robot o asistente. Haz clic en él y podrás escribir o hablar por micrófono para preguntar sobre cualquier región, presupuesto o emergencia en lenguaje sencillo.'
     },
     {
-      q: '¿Es libre el acceso a la plataforma o requiere inicio de sesión?',
-      a: 'La plataforma es de acceso público, libre y transparente para la ciudadanía, investigadores, medios de comunicación y gestores de riesgo. No requiere creación de cuenta ni contraseña para explorar la totalidad de sus indicadores y mapas.'
+      q: '¿Es necesario registrarse o crear una cuenta para usar la plataforma?',
+      a: 'No. La plataforma es totalmente libre, gratuita y de acceso público para cualquier ciudadano, estudiante, autoridad o investigador sin necesidad de registrarse ni iniciar sesión.'
     }
   ];
 
@@ -355,16 +355,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         <div className="max-w-5xl mx-auto">
           
           <ScrollReveal>
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="font-label-sm text-xs font-bold text-primary uppercase tracking-[0.2em] px-4 py-1.5 bg-sky-100/80 text-sky-800 rounded-full inline-block mb-4 border border-sky-200">
-                Centro de Ayuda & Transparencia
-              </span>
-              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight mb-4">
-                Preguntas Frecuentes & Respuestas
+            <div className="text-center max-w-3xl mx-auto mb-14">
+              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+                Preguntas Frecuentes
               </h2>
-              <p className="font-body-md text-slate-600 text-sm md:text-base">
-                Respuestas claras y detalladas sobre el funcionamiento analítico, los modelos de Machine Learning y la telemetría del CENEPRED.
-              </p>
             </div>
           </ScrollReveal>
 
