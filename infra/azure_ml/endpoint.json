@@ -1,0 +1,11 @@
+{
+  "$schema": "https://azuremlschemas.azureedge.net/latest/managedOnlineEndpoint.schema.json",
+  "name": "ep-cenepred-ml-risk",
+  "description": "Endpoint gestionado online en tiempo real para predicción de riesgo climático e inferencia XGBoost/SHAP de CENEPRED.",
+  "auth_mode": "key",
+  "tags": {
+    "Environment": "dev",
+    "Project": "CENEPRED",
+    "Model": "XGBoost"
+  }
+}

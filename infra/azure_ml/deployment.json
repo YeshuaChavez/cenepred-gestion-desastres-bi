@@ -1,0 +1,13 @@
+{
+  "$schema": "https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json",
+  "name": "blue",
+  "endpoint_name": "ep-cenepred-ml-risk",
+  "model": "azureml:xgboost_risk_model:1",
+  "code_configuration": {
+    "code": "../../data/ml",
+    "scoring_script": "score.py"
+  },
+  "environment": "azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu:1",
+  "instance_type": "Standard_DS2_v2",
+  "instance_count": 1
+}

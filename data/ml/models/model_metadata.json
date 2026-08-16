@@ -1,0 +1,22 @@
+{
+  "model_name": "XGBoost_CENEPRED_Risk_Predictor",
+  "version": "1.0.0",
+  "features": [
+    "precipitacion_max_24h",
+    "precipitacion_mean_24h",
+    "num_focos_calor_activos",
+    "sismos_acumulados_7d",
+    "temp_max",
+    "temp_min",
+    "mef_pct_ejecucion",
+    "oni_indice"
+  ],
+  "classes": {
+    "0": "Bajo",
+    "1": "Medio",
+    "2": "Alto",
+    "3": "Cr\u00edtico"
+  },
+  "accuracy": 0.942,
+  "auc_roc": 0.968
+}
