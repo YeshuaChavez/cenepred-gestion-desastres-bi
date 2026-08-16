@@ -52,7 +52,7 @@ export default function ComparativoRegionalView() {
                 onClick={() => setSelectedCell(null)}
                 className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
               >
-                Cerrar ✕
+                ✕
               </button>
             </div>
 

@@ -113,7 +113,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
                 onClick={() => setShowMetricsModal(false)}
                 className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
               >
-                Cerrar ✕
+                ✕
               </button>
             </div>
 

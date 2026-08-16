@@ -82,7 +82,7 @@ export default function PresupuestoMEFView() {
                 onClick={() => setSelectedRegionDetail(null)}
                 className="text-slate-400 hover:text-slate-700 text-xs font-bold px-3 py-1.5 bg-slate-100 rounded-xl cursor-pointer"
               >
-                Cerrar ✕
+                ✕
               </button>
             </div>
 

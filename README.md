@@ -131,7 +131,6 @@ La infraestructura en Microsoft Azure está definida mediante Terraform (`infra/
 │   ├── silver/                 # Capa Silver: Datos limpios y estandarizados (Parquet)
 │   ├── gold/                   # Capa Gold: Modelo dimensional Star Schema (Parquet)
 │   └── pipelines/              # Scripts orquestadores del pipeline
-├── docs/                       # Documentación técnica y manuales
 ├── infra/
 │   ├── azure_data_factory/     # Definiciones JSON de pipelines y triggers ADF
 │   └── environments/           # Infraestructura como Código (Terraform)
