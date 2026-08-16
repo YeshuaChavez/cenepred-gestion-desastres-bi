@@ -1491,7 +1491,7 @@
     {
       "depto": "AMAZONAS",
       "pim": "S/ 290.3M",
-      "ejec": "83.6%",
+      "ejec": "S/ 242.8M",
       "pct": 83.6,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1500,7 +1500,7 @@
     {
       "depto": "ANCASH",
       "pim": "S/ 1764.1M",
-      "ejec": "52.3%",
+      "ejec": "S/ 923.3M",
       "pct": 52.3,
       "riesgo": "Muy Alto",
       "estado": "warning",
@@ -1509,7 +1509,7 @@
     {
       "depto": "APURIMAC",
       "pim": "S/ 470.5M",
-      "ejec": "87.8%",
+      "ejec": "S/ 413.2M",
       "pct": 87.8,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1518,7 +1518,7 @@
     {
       "depto": "AREQUIPA",
       "pim": "S/ 902.4M",
-      "ejec": "68.6%",
+      "ejec": "S/ 619.3M",
       "pct": 68.6,
       "riesgo": "Alto",
       "estado": "info",
@@ -1527,7 +1527,7 @@
     {
       "depto": "AYACUCHO",
       "pim": "S/ 778.2M",
-      "ejec": "71.7%",
+      "ejec": "S/ 558.0M",
       "pct": 71.7,
       "riesgo": "Medio",
       "estado": "info",
@@ -1536,7 +1536,7 @@
     {
       "depto": "CAJAMARCA",
       "pim": "S/ 686.6M",
-      "ejec": "78.8%",
+      "ejec": "S/ 540.9M",
       "pct": 78.8,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1545,7 +1545,7 @@
     {
       "depto": "CALLAO",
       "pim": "S/ 458.5M",
-      "ejec": "81.5%",
+      "ejec": "S/ 373.5M",
       "pct": 81.5,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1554,7 +1554,7 @@
     {
       "depto": "CUSCO",
       "pim": "S/ 1520.6M",
-      "ejec": "80.1%",
+      "ejec": "S/ 1218.3M",
       "pct": 80.1,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1563,7 +1563,7 @@
     {
       "depto": "HUANCAVELICA",
       "pim": "S/ 648.4M",
-      "ejec": "61.6%",
+      "ejec": "S/ 399.2M",
       "pct": 61.6,
       "riesgo": "Muy Alto",
       "estado": "warning",
@@ -1572,7 +1572,7 @@
     {
       "depto": "HUANUCO",
       "pim": "S/ 485.6M",
-      "ejec": "72.7%",
+      "ejec": "S/ 352.9M",
       "pct": 72.7,
       "riesgo": "Medio",
       "estado": "info",
@@ -1581,7 +1581,7 @@
     {
       "depto": "ICA",
       "pim": "S/ 1504.9M",
-      "ejec": "64.6%",
+      "ejec": "S/ 972.4M",
       "pct": 64.6,
       "riesgo": "Alto",
       "estado": "info",
@@ -1590,7 +1590,7 @@
     {
       "depto": "JUNIN",
       "pim": "S/ 647.1M",
-      "ejec": "77.9%",
+      "ejec": "S/ 504.2M",
       "pct": 77.9,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1599,7 +1599,7 @@
     {
       "depto": "LA LIBERTAD",
       "pim": "S/ 1358.8M",
-      "ejec": "65.9%",
+      "ejec": "S/ 894.9M",
       "pct": 65.9,
       "riesgo": "Alto",
       "estado": "info",
@@ -1608,7 +1608,7 @@
     {
       "depto": "LAMBAYEQUE",
       "pim": "S/ 1158.5M",
-      "ejec": "61.0%",
+      "ejec": "S/ 706.3M",
       "pct": 61.0,
       "riesgo": "Alto",
       "estado": "warning",
@@ -1617,7 +1617,7 @@
     {
       "depto": "LIMA",
       "pim": "S/ 10539.2M",
-      "ejec": "76.8%",
+      "ejec": "S/ 8094.0M",
       "pct": 76.8,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1626,7 +1626,7 @@
     {
       "depto": "LORETO",
       "pim": "S/ 268.3M",
-      "ejec": "80.8%",
+      "ejec": "S/ 216.9M",
       "pct": 80.8,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1635,7 +1635,7 @@
     {
       "depto": "MADRE DE DIOS",
       "pim": "S/ 118.9M",
-      "ejec": "63.7%",
+      "ejec": "S/ 75.7M",
       "pct": 63.7,
       "riesgo": "Alto",
       "estado": "info",
@@ -1644,7 +1644,7 @@
     {
       "depto": "MOQUEGUA",
       "pim": "S/ 277.5M",
-      "ejec": "78.9%",
+      "ejec": "S/ 218.9M",
       "pct": 78.9,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1653,7 +1653,7 @@
     {
       "depto": "PASCO",
       "pim": "S/ 281.2M",
-      "ejec": "75.3%",
+      "ejec": "S/ 211.8M",
       "pct": 75.3,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1662,7 +1662,7 @@
     {
       "depto": "PIURA",
       "pim": "S/ 3900.7M",
-      "ejec": "60.6%",
+      "ejec": "S/ 2362.5M",
       "pct": 60.6,
       "riesgo": "Muy Alto",
       "estado": "warning",
@@ -1671,7 +1671,7 @@
     {
       "depto": "PUNO",
       "pim": "S/ 639.1M",
-      "ejec": "87.0%",
+      "ejec": "S/ 556.1M",
       "pct": 87.0,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1680,7 +1680,7 @@
     {
       "depto": "SAN MARTIN",
       "pim": "S/ 633.9M",
-      "ejec": "80.8%",
+      "ejec": "S/ 512.1M",
       "pct": 80.8,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1689,7 +1689,7 @@
     {
       "depto": "TACNA",
       "pim": "S/ 315.5M",
-      "ejec": "77.6%",
+      "ejec": "S/ 244.7M",
       "pct": 77.6,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1698,7 +1698,7 @@
     {
       "depto": "TUMBES",
       "pim": "S/ 1196.7M",
-      "ejec": "67.1%",
+      "ejec": "S/ 803.4M",
       "pct": 67.1,
       "riesgo": "Alto",
       "estado": "info",
@@ -1707,7 +1707,7 @@
     {
       "depto": "UCAYALI",
       "pim": "S/ 170.5M",
-      "ejec": "79.4%",
+      "ejec": "S/ 135.3M",
       "pct": 79.4,
       "riesgo": "Medio",
       "estado": "check_circle",
@@ -1716,34 +1716,34 @@
   ],
   "pliegosEjecutores": [
     {
-      "nombre": "GOBIERNO REGIONAL DE PIURA",
-      "monto": "S/ 1,480.5M (74.2%)",
-      "pct": 74.2,
+      "nombre": "MINDEF - Ejército del Perú (Gestión de Riesgos)",
+      "monto": "S/ 540M (84%)",
+      "pct": 84,
       "color": "bg-emerald-500"
     },
     {
-      "nombre": "GOBIERNO REGIONAL DE ANCASH",
-      "monto": "S/ 1,120.8M (68.6%)",
-      "pct": 68.6,
-      "color": "bg-sky-600"
-    },
-    {
-      "nombre": "GOBIERNO REGIONAL DE CUSCO",
-      "monto": "S/ 980.4M (82.1%)",
-      "pct": 82.1,
+      "nombre": "MINSA - DIGESA (Atención de Emergencias)",
+      "monto": "S/ 310M (78%)",
+      "pct": 78,
       "color": "bg-emerald-500"
     },
     {
-      "nombre": "GOBIERNO REGIONAL DE AREQUIPA",
-      "monto": "S/ 850.2M (79.4%)",
-      "pct": 79.4,
-      "color": "bg-emerald-500"
+      "nombre": "MTC - Provías Nacional (Infraestructura)",
+      "monto": "S/ 820M (64%)",
+      "pct": 64,
+      "color": "bg-secondary"
     },
     {
-      "nombre": "GOBIERNO REGIONAL DE LIMA",
-      "monto": "S/ 902.4M (68.6%)",
-      "pct": 68.6,
-      "color": "bg-amber-500",
+      "nombre": "Autoridad Nacional del Agua (ANA)",
+      "monto": "S/ 190M (48%)",
+      "pct": 48,
+      "color": "bg-tertiary"
+    },
+    {
+      "nombre": "INDECI (Respuesta ante Desastres)",
+      "monto": "S/ 240M (32%)",
+      "pct": 32,
+      "color": "bg-error",
       "isAlert": true
     }
   ]

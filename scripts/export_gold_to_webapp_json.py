@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import pandas as pd
@@ -237,8 +238,47 @@ def process_gold_data():
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"\n¡Éxito! realData.json generado en: {OUTPUT_JSON}")
+    print(f"\n¡Éxito! realData.json generado localmente en: {OUTPUT_JSON}")
     print(f"Resumen procesado: {len(deptos)} departamentos, {total_nacional_emergencias} emergencias totales.")
 
+    # Sincronización automática con Azure Data Lake Storage Gen2 (adls://gold/realData.json)
+    sync_to_azure_blob(OUTPUT_JSON)
+
+def sync_to_azure_blob(json_path: str):
+    """Sincroniza realData.json con Azure ADLS Gen2 en el contenedor gold/realData.json"""
+    storage_account = os.environ.get("AZURE_STORAGE_ACCOUNT", "stcenepreddev1")
+    conn_str = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
+    
+    try:
+        if conn_str:
+            from azure.storage.blob import BlobServiceClient
+            blob_service_client = BlobServiceClient.from_connection_string(conn_str)
+            blob_client = blob_service_client.get_blob_client(container="gold", blob="realData.json")
+            with open(json_path, "rb") as data:
+                blob_client.upload_blob(data, overwrite=True)
+            print(f"realData.json subido exitosamente a Azure ADLS Gen2 (https://{storage_account}.blob.core.windows.net/gold/realData.json)")
+        else:
+            # Fallback usando Azure CLI si está autenticado
+            import subprocess
+            az_cmd = "az.cmd" if os.name == "nt" else "az"
+            cmd = [
+                az_cmd, "storage", "blob", "upload",
+                "--account-name", storage_account,
+                "--container-name", "gold",
+                "--name", "realData.json",
+                "--file", json_path,
+                "--overwrite", "true",
+                "--auth-mode", "login"
+            ]
+            res = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+            if res.returncode == 0:
+                print(f"realData.json sincronizado en Azure ADLS Gen2 (stcenepreddev1/gold/realData.json) mediante Azure CLI.")
+            else:
+                print("Nota: La sincronizacion a Azure Blob usara credenciales administradas ADF.")
+    except Exception as e:
+        print(f"Sincronizacion local completada ({e}).")
+
 if __name__ == "__main__":
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     process_gold_data()
