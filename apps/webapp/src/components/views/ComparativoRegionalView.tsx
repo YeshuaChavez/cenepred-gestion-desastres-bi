@@ -46,7 +46,7 @@ export default function ComparativoRegionalView() {
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
                 <span className="material-symbols-outlined text-sky-700">calendar_month</span>
-                {selectedCell.depto} — {selectedCell.month}
+                {selectedCell.depto} • {selectedCell.month}
               </h3>
               <button
                 onClick={() => setSelectedCell(null)}

@@ -55,7 +55,7 @@ export default function RiesgoPredictivoView() {
       const brecha = round1(100 - pctExec);
 
       const reportText = `
-# REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED — DIAGNÓSTICO EJECUTIVO NACIONAL
+# REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED: DIAGNÓSTICO EJECUTIVO NACIONAL
 Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
 Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
 Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
@@ -368,7 +368,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
           <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
             <div className="flex justify-between items-center text-xs font-bold text-slate-600">
-              <span className="uppercase tracking-wider">Score Simulado — {deptoData.name}</span>
+              <span className="uppercase tracking-wider">Score Simulado • {deptoData.name}</span>
               <span className="text-slate-400 font-normal">(Base: {deptoData.prob}%)</span>
             </div>
             <div className="flex items-baseline justify-between">

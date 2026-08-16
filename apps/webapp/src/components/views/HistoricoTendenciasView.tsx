@@ -43,7 +43,7 @@ export default function HistoricoTendenciasView() {
     { anio: 2014, emergencias: 5980, afectados: 398000, damnificados: 41000, viviendasDestruidas: 3800, eventoClave: "Sismo Parinacochas" },
     { anio: 2015, emergencias: 6850, afectados: 580000, damnificados: 64000, viviendasDestruidas: 5900, eventoClave: "Fase Previa El Niño" },
     { anio: 2016, emergencias: 7210, afectados: 620000, damnificados: 71000, viviendasDestruidas: 6800, eventoClave: "Déficit Hídrico y Heladas" },
-    { anio: 2017, emergencias: 12450, afectados: 1680000, damnificados: 295000, viviendasDestruidas: 28400, eventoClave: "El Niño Costero — Pico Histórico" },
+    { anio: 2017, emergencias: 12450, afectados: 1680000, damnificados: 295000, viviendasDestruidas: 28400, eventoClave: "El Niño Costero - Pico Histórico" },
     { anio: 2018, emergencias: 7450, afectados: 540000, damnificados: 58000, viviendasDestruidas: 5100, eventoClave: "Huaycos en Chosica y Piura" },
     { anio: 2019, emergencias: 7890, afectados: 610000, damnificados: 62000, viviendasDestruidas: 5400, eventoClave: "Lluvias del Norte y Sur" },
     { anio: 2020, emergencias: 7120, afectados: 480000, damnificados: 45000, viviendasDestruidas: 4100, eventoClave: "Inundaciones en la Selva" },
@@ -315,7 +315,7 @@ export default function HistoricoTendenciasView() {
               <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center">
                 <span className="material-symbols-outlined text-base">bar_chart</span>
               </div>
-              Nivel 1: Evolución Multianual de Emergencias (2012 — 2023)
+              Nivel 1: Evolución Multianual de Emergencias (2012 - 2023)
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">Haz clic sobre cualquier barra para profundizar al nivel de meses</p>
           </div>
@@ -352,7 +352,7 @@ export default function HistoricoTendenciasView() {
                 {/* Floating Tooltip Header */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-12 z-20 pointer-events-none bg-slate-900 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg shadow-xl whitespace-nowrap flex flex-col items-center">
                   <span>{item.emergencias.toLocaleString()} eventos</span>
-                  <span className="text-[9px] text-sky-300 font-normal">{item.eventoClave.split('—')[0]}</span>
+                  <span className="text-[9px] text-sky-300 font-normal">{item.eventoClave.split('-')[0]}</span>
                 </div>
 
                 <div className="w-full flex items-end justify-center h-full px-0.5 sm:px-1">

@@ -511,7 +511,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
 
           {/* Bottom Bar */}
           <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px] font-medium">
-            <span>© 2026 CENEPRED — Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Plataforma Oficial del Estado Peruano.</span>
+            <span>© 2026 CENEPRED. Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Plataforma Oficial del Estado Peruano.</span>
             <div className="flex items-center gap-4">
               <span className="hover:text-slate-300 transition-colors">Términos de Uso</span>
               <span>•</span>
