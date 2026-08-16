@@ -422,10 +422,6 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               <p className="text-slate-400 text-xs leading-relaxed font-medium">
                 Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Organismo público ejecutor adscrito al Ministerio de Defensa (MINDEF) y ente rector del SINAGERD.
               </p>
-              <div className="flex items-center gap-2 text-[11px] text-slate-300 font-semibold mt-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Sistema Nacional SINAGERD Conectado</span>
-              </div>
             </div>
 
             {/* Col 2: Useful Navigation */}
