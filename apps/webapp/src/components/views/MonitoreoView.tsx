@@ -195,7 +195,7 @@ export default function MonitoreoView() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full">
         
         {/* Card 1: High Risk */}
-        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:border-red-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200/90 shadow-2xs">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-red-500 rounded-full"></span>
@@ -232,7 +232,7 @@ export default function MonitoreoView() {
         </div>
 
         {/* Card 2: Precipitation */}
-        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200/90 shadow-2xs">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-sky-500 rounded-full"></span>
@@ -251,7 +251,7 @@ export default function MonitoreoView() {
         </div>
 
         {/* Card 3: Heat Spots */}
-        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:border-amber-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200/90 shadow-2xs">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-amber-500 rounded-full"></span>
@@ -270,7 +270,7 @@ export default function MonitoreoView() {
         </div>
 
         {/* Card 4: MEF Execution */}
-        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-md transition-shadow border border-slate-200/80 shadow-xs">
+        <div className="bg-white rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-slate-200/90 shadow-2xs">
           <div className="flex items-start justify-between mb-4 relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-emerald-500 rounded-full"></span>

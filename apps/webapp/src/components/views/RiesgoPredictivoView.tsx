@@ -221,7 +221,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
+          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
           <div className="flex justify-between items-center">
@@ -238,7 +238,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
+          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
           <div className="flex justify-between items-center">
@@ -255,7 +255,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
+          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
           <div className="flex justify-between items-center">
@@ -272,7 +272,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
 
         <div
           onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs flex flex-col space-y-1 border border-slate-200/80 cursor-pointer hover:shadow-md transition-all group active:scale-98"
+          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
           title="Haz clic para ver la matriz de confusión del modelo"
         >
           <div className="flex justify-between items-center">

@@ -136,10 +136,6 @@ export default function HistoricoTendenciasView() {
       <div className="flex flex-col gap-4 pb-4 border-b border-slate-200">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-sky-600 animate-ping"></span>
-              <span className="text-xs font-bold text-sky-800 uppercase tracking-widest">Base de Datos SINPAD (2012 - 2023)</span>
-            </div>
             <h2 className="font-headline-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
               Histórico Multianual y Explorador Time-Intelligence
             </h2>
