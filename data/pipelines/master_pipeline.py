@@ -106,6 +106,12 @@ def main():
     logging.info("\n--- 4. PUBLICACIÓN WEBAPP & POWER BI ---")
     run_step("Export: Consolidado Gold a WebApp JSON", [sys.executable, "scripts/export_gold_to_webapp_json.py"])
 
+    # -------------------------------------------------------------------------
+    # CAPA 5: DISPATCH DE ALERTAS TEMPRANAS
+    # -------------------------------------------------------------------------
+    logging.info("\n--- 5. DESPACHO DE ALERTAS TEMPRANAS ---")
+    run_step("Alerts: Evaluación y Envío de Alertas Tempranas", [sys.executable, "data/pipelines/alert_dispatcher.py"])
+
     logging.info("\n" + "=" * 80)
     logging.info("🎉 PIPELINE AUTOMATIZADO COMPLETADO CON ÉXITO CERO ERRORES 🎉")
     logging.info("=" * 80)

@@ -4,8 +4,11 @@ import json
 import pandas as pd
 import numpy as np
 
-GOLD_DIR = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\gold\local_data"
-OUTPUT_JSON = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\apps\webapp\src\data\realData.json"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+GOLD_DIR = str(BASE_DIR / "data" / "gold" / "local_data")
+OUTPUT_JSON = str(BASE_DIR / "apps" / "webapp" / "src" / "data" / "realData.json")
 
 def minmax(series):
     s_min = series.min()

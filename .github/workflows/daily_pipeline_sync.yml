@@ -1,0 +1,54 @@
+name: Sincronización y Pipeline Diario CENEPRED
+
+on:
+  schedule:
+    # Ejecución automática diaria a las 02:00 UTC (21:00 Hora Perú)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # Permite ejecutar el pipeline manualmente en cualquier momento desde GitHub Actions
+
+jobs:
+  daily-data-pipeline:
+    name: Ejecución Pipeline Medallón Diario
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Instalar Dependencias del Pipeline
+        run: |
+          pip install -r requirements.txt
+
+      - name: Ejecutar Master Pipeline (Bronze -> Silver -> Gold -> Export -> Alerts)
+        run: |
+          python data/pipelines/master_pipeline.py
+
+      - name: Verificar Integridad de Datos Exportados
+        run: |
+          python -c "
+          import json, os
+          path = 'apps/webapp/src/data/realData.json'
+          assert os.path.exists(path), 'realData.json no fue generado'
+          with open(path, 'r', encoding='utf-8') as f:
+              data = json.load(f)
+          print(f'✅ Validación exitosa: {len(data.get(\"departamentos\", {}))} departamentos sincronizados.')
+          "
+
+      - name: Commit y Push de Datos Diarios Actualizados
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add apps/webapp/src/data/realData.json
+          if git diff --staged --quiet; then
+            echo "Sin cambios en los datos diarios. No se requiere commit."
+          else
+            git commit -m "chore(data): auto-sync daily telemetry and risk scores [skip ci]"
+            git push origin main
+          fi
