@@ -15,7 +15,7 @@ def check_and_dispatch_alerts(target_email: str = DEFAULT_RECIPIENT) -> List[Dic
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8')
         
-    print(f"Escaneando mapa de riesgo para notificaciones automatizadas...")
+    print("Escaneando mapa de riesgo para notificaciones automatizadas...")
     print(f"Destinatario oficial: {target_email}")
     
     if not os.path.exists(REAL_DATA_PATH):

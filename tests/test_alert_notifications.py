@@ -1,4 +1,3 @@
-import os
 import json
 from data.pipelines.alert_dispatcher import check_and_dispatch_alerts
 
