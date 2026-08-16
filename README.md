@@ -1,25 +1,18 @@
-# 🚨 Sistema de Alerta Temprana (SAT) y Gestión Integral del Riesgo de Desastres - CENEPRED
+# Sistema de Alerta Temprana (SAT) y Gestión Integral del Riesgo de Desastres - CENEPRED
 
-[![Azure Data Factory & ETL Pipeline CI/CD](https://github.com/YeshuaChavez/cenepred-gestion-desastres-bi/actions/workflows/azure_adf_ci_cd.yml/badge.svg)](https://github.com/YeshuaChavez/cenepred-gestion-desastres-bi/actions/workflows/azure_adf_ci_cd.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black.svg)](https://nextjs.org/)
-[![Azure ADLS Gen2](https://img.shields.io/badge/Azure-ADLS%20Gen2-0089D6.svg)](https://azure.microsoft.com/)
-[![Azure Data Factory](https://img.shields.io/badge/Azure-Data%20Factory-0089D6.svg)](https://azure.microsoft.com/)
-
-> **Plataforma Integral de Monitoreo en Tiempo Real, Evaluación Predictiva de Riesgo y Asistencia Conversacional IA** para la prevención, reducción y atención de emergencias por fenómenos climáticos y desastres naturales en el territorio nacional peruano.
+> Plataforma Integral de Monitoreo en Tiempo Real, Evaluación Predictiva de Riesgo y Asistencia Conversacional IA para la prevención, reducción y atención de emergencias por fenómenos climáticos y desastres naturales en el territorio nacional peruano.
 
 ---
 
-## 📌 1. Visión General del Sistema
+## 1. Visión General del Sistema
 
 El **Sistema de Alerta Temprana (SAT) CENEPRED** es una plataforma tecnológica avanzada diseñada para complementar la evaluación de riesgo estático tradicional (como geología, pendientes o zonificación) con un enfoque de **riesgo dinámico en tiempo real y capacidad predictiva**.
 
-El sistema procesa e integra continuas transmisiones de datos satelitales, hidrometeorológicos, actividad sísmica y presupuestos de emergencia del Estado, combinándolos con el historial oficial de emergencias de las últimas décadas. Mediante modelos de **Machine Learning explicable (SHAP)** y un **Asistente Virtual basado en Inteligencia Artificial Generativa (RAG con Azure OpenAI)**, el SAT CENEPRED permite a las autoridades, brigadistas y analistas de gestión de riesgos anticipar eventos críticos, priorizar la asignación de recursos presupuestales y tomar decisiones operativas oportunas para salvar vidas.
+El sistema procesa e integra continuas transmisiones de datos satelitales, hidrometeorológicos, actividad sísmica y presupuestos de emergencia del Estado, combinándolos con el historial oficial de emergencias de las últimas décadas. Mediante modelos de **Machine Learning explicable (SHAP)** y un **Asistente Virtual basado en Inteligencia Artificial Generativa (RAG con Azure OpenAI)**, el SAT CENEPRED permite a las autoridades, brigadistas y analistas de gestión de riesgos anticipar eventos críticos, priorizar la asignación de recursos presupuestales y tomar decisiones operativas oportunas.
 
 ---
 
-## 🏗️ 2. Arquitectura del Sistema & Flujo de Datos (Capa Medallón)
+## 2. Arquitectura del Sistema y Flujo de Datos (Capa Medallón)
 
 La arquitectura de datos está construida siguiendo el patrón **Medallion Lakehouse (Bronze → Silver → Gold)** alojada en **Microsoft Azure Data Lake Storage Gen2 (ADLS Gen2)**, orquestada de forma automática mediante **Azure Data Factory** y ejecutada en entornos distribuidos.
 
@@ -70,7 +63,7 @@ La arquitectura de datos está construida siguiendo el patrón **Medallion Lakeh
 
 ---
 
-## 🌐 3. Fuentes de Datos Oficiales Integradas
+## 3. Fuentes de Datos Oficiales Integradas
 
 | Fuente | Tipo de Datos | Frecuencia de Actualización | Función en el Sistema |
 | :--- | :--- | :--- | :--- |
@@ -82,7 +75,7 @@ La arquitectura de datos está construida siguiendo el patrón **Medallion Lakeh
 
 ---
 
-## 📊 4. Modelo de Datos Dimensional (Star Schema - Capa Gold)
+## 4. Modelo de Datos Dimensional (Star Schema - Capa Gold)
 
 La capa Gold organiza la información estratégica mediante las siguientes tablas dimensionales y hechos:
 
@@ -98,7 +91,7 @@ La capa Gold organiza la información estratégica mediante las siguientes tabla
 
 ---
 
-## 🤖 5. Motor Predictivo de Machine Learning & Explicabilidad SHAP
+## 5. Motor Predictivo de Machine Learning y Explicabilidad SHAP
 
 El componente predictivo evalúa constantemente el riesgo relativo de cada departamento para los siguientes 7 días:
 
@@ -106,16 +99,16 @@ El componente predictivo evalúa constantemente el riesgo relativo de cada depar
    - **XGBoost & LightGBM**: Modelos principales entrenados sobre el historial de telemetría climática y registros de emergencias para clasificar el nivel de riesgo (Bajo, Medio, Alto, Crítico).
    - **Random Forest**: Modelo de ensamble alternativo para validación cruzada.
 2. **Deep Learning Temporal**:
-   - **Redes Neuronal LSTM (Long Short-Term Memory)**: Captura dependencias secuenciales multivariadas en las series temporales de precipitación y actividad sísmica.
+   - **Red Neuronal LSTM (Long Short-Term Memory)**: Captura dependencias secuenciales multivariadas en las series temporales de precipitación y actividad sísmica.
 3. **Clustering y Detección de Anomalías**:
    - **K-Means Clustering**: Segmentación no supervisada de departamentos según perfiles de vulnerabilidad estructural y climática.
    - **Isolation Forest**: Identificación en tiempo real de anomalías atípicas en sensores meteorológicos y sísmicos.
 4. **Explicabilidad con SHAP (SHapley Additive exPlanations)**:
-   - Cada predicción de riesgo generada por el sistema incluye el desglose exacto de los factores determinantes (ej. *"+42% debido a lluvias acumuladas > 85mm en 24h", "+28% por focos de calor activos en la última semana"*), permitiendo una auditoría transparente del algoritmo.
+   - Cada predicción de riesgo generada por el sistema incluye el desglose exacto de los factores determinantes (ejemplo: +42% debido a lluvias acumuladas > 85mm en 24h, +28% por focos de calor activos en la última semana), permitiendo una auditoría transparente del algoritmo.
 
 ---
 
-## 💬 6. Asistente Conversacional Inteligente (IA RAG)
+## 6. Asistente Conversacional Inteligente (IA RAG)
 
 El SAT CENEPRED integra un **Asistente Virtual interactivo** basado en arquitectura **RAG (Retrieval-Augmented Generation)**:
 - **Tecnología**: Azure OpenAI Service (GPT-4o) integrado con Azure AI Search.
@@ -126,7 +119,7 @@ El SAT CENEPRED integra un **Asistente Virtual interactivo** basado en arquitect
 
 ---
 
-## 💻 7. Plataforma Web Interactiva (Next.js 14)
+## 7. Plataforma Web Interactiva (Next.js 14)
 
 La aplicación web ofrece una experiencia de usuario fluida, moderna y responsiva construida con **Next.js 14, React 18 y TailwindCSS**:
 
@@ -134,15 +127,15 @@ La aplicación web ofrece una experiencia de usuario fluida, moderna y responsiv
 - **Tablero de Monitoreo Meteorológico y Sísmico**: Métricas diarias de precipitación, focos de calor activos y registro sismológico.
 - **Monitor de Ejecución Presupuestal MEF**: Cuadro comparativo de PIM vs. Devengado por departamento y pliegos ejecutores claves.
 - **Filtros Dinámicos**: Exploración personalizada por departamento, fenómeno natural y ventana temporal.
-- **Modo Oscuro / Claro & Paleta Sky**: Interfaz diseñada para salas de control de mando operativas 24/7.
+- **Modo Oscuro / Claro y Paleta Sky**: Interfaz diseñada para salas de control de mando operativas 24/7.
 
 ---
 
-## ⚙️ 8. Instalación y Configuración Local
+## 8. Instalación y Configuración Local
 
 ### Requisitos Previos:
-- **Python**: Version 3.11 o superior.
-- **Node.js**: Version 18.0 o superior (con `npm`).
+- **Python**: Versión 3.11 o superior.
+- **Node.js**: Versión 18.0 o superior (con `npm`).
 - **Azure CLI**: Para despliegue de infraestructura y ejecución remota.
 
 ### 1. Clonar el Repositorio:
@@ -193,7 +186,7 @@ Accede a la aplicación en tu navegador ingresando a `http://localhost:3000`.
 
 ---
 
-## ☁️ 9. Infraestructura en la Nube (Microsoft Azure & Terraform)
+## 9. Infraestructura en la Nube (Microsoft Azure y Terraform)
 
 El proyecto utiliza **Terraform** para aprovisionar y gestionar la infraestructura como código (IaC) de forma repetible y segura:
 
@@ -214,7 +207,7 @@ terraform apply
 
 ---
 
-## 🧪 10. Integración y Despliegue Continuo (CI/CD)
+## 10. Integración y Despliegue Continuo (CI/CD)
 
 El repositorio cuenta con flujos de trabajo automatizados en **GitHub Actions** (`.github/workflows/azure_adf_ci_cd.yml`):
 - **Calidad de Código y Pruebas**: Ejecución automatizada de Ruff y Pytest en cada Pull Request y Push a `main`.
@@ -222,6 +215,6 @@ El repositorio cuenta con flujos de trabajo automatizados en **GitHub Actions** 
 
 ---
 
-## 📄 11. Licencia
+## 11. Licencia
 
 Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
