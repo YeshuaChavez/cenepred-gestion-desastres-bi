@@ -34,6 +34,7 @@ export default function HistoricoTendenciasView() {
   const [selectedMesIdx, setSelectedMesIdx] = useState<number | null>(null);
   const [selectedDia, setSelectedDia] = useState<number | null>(null);
   const [quarterFilter, setQuarterFilter] = useState<'todos' | 'Q1' | 'Q2' | 'Q3' | 'Q4'>('todos');
+  const [hoveredYear, setHoveredYear] = useState<YearlyTrend | null>(null);
 
   // 1. Multianual Data (2012 - 2023)
   const HISTORICO_ANUAL: YearlyTrend[] = [
@@ -53,16 +54,14 @@ export default function HistoricoTendenciasView() {
 
   const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-  // Helper to generate monthly breakdown for a selected year
   const getMonthlyBreakdown = (anio: number): MonthlyData[] => {
     const isPico = anio === 2017 || anio === 2023;
     const base = isPico ? 1100 : 550;
 
     return MESES.map((mes, idx) => {
-      // Seasonal pattern: higher in Jan-Mar (summer rains) and Jun-Jul (frost)
       let factor = 1.0;
-      if (idx === 0 || idx === 1 || idx === 2) factor = isPico ? 2.4 : 1.7; // Summer rains
-      else if (idx === 5 || idx === 6) factor = 1.3; // Frost
+      if (idx === 0 || idx === 1 || idx === 2) factor = isPico ? 2.4 : 1.7;
+      else if (idx === 5 || idx === 6) factor = 1.3;
       else factor = 0.6;
 
       const emergencias = Math.round(base * factor);
@@ -77,7 +76,6 @@ export default function HistoricoTendenciasView() {
     });
   };
 
-  // Helper to generate daily breakdown for a selected month
   const getDailyBreakdown = (anio: number, mesIdx: number): DailyData[] => {
     const isPicoMonth = (anio === 2017 || anio === 2023) && (mesIdx === 1 || mesIdx === 2);
     const daysCount = mesIdx === 1 ? (anio % 4 === 0 ? 29 : 28) : (mesIdx === 3 || mesIdx === 5 || mesIdx === 8 || mesIdx === 10 ? 30 : 31);
@@ -134,34 +132,48 @@ export default function HistoricoTendenciasView() {
   return (
     <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800">
       
-      {/* Header & Breadcrumb Drill-Down Navigation */}
-      <div className="flex flex-col gap-3 pb-3 border-b border-slate-200">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      {/* Header & Dynamic Breadcrumb Navigation */}
+      <div className="flex flex-col gap-4 pb-4 border-b border-slate-200">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
           <div>
-            <h2 className="font-headline-lg text-2xl font-bold text-slate-900 mb-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-600 animate-ping"></span>
+              <span className="text-xs font-bold text-sky-800 uppercase tracking-widest">Base de Datos SINPAD (2012 - 2023)</span>
+            </div>
+            <h2 className="font-headline-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
               Histórico Multianual y Explorador Time-Intelligence
             </h2>
-            <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-              Navegación jerárquica con drill-down (Año → Trimestre → Mes → Día) sobre 84,369 emergencias históricas de INDECI.
+            <p className="font-body-md text-sm text-slate-600 max-w-3xl mt-1">
+              Desglose jerárquico multinivel con profundización interactiva: <span className="font-semibold text-sky-800">Año ➔ Trimestre ➔ Mes ➔ Día</span>.
             </p>
           </div>
 
-          {/* Breadcrumb Path Bar */}
-          <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 flex-wrap">
+          {/* Interactive Breadcrumb Pill Bar */}
+          <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/90 shadow-2xs flex-wrap text-xs font-bold">
             <button
               onClick={resetAllFilters}
-              className={`hover:text-sky-700 cursor-pointer ${selectedAnio === 'todos' ? 'text-sky-700 font-extrabold' : ''}`}
+              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                selectedAnio === 'todos'
+                  ? 'bg-gradient-to-r from-sky-700 to-sky-900 text-white shadow-md'
+                  : 'text-slate-600 hover:text-sky-800 hover:bg-white/80'
+              }`}
             >
-              Nacional Multianual
+              <span className="material-symbols-outlined text-sm">public</span>
+              Nacional (2012-2023)
             </button>
 
             {selectedAnio !== 'todos' && (
               <>
-                <span>/</span>
+                <span className="material-symbols-outlined text-slate-400 text-xs">chevron_right</span>
                 <button
                   onClick={() => { setSelectedMesIdx(null); setSelectedDia(null); }}
-                  className={`hover:text-sky-700 cursor-pointer ${selectedMesIdx === null ? 'text-sky-700 font-extrabold' : ''}`}
+                  className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                    selectedMesIdx === null
+                      ? 'bg-gradient-to-r from-sky-700 to-sky-900 text-white shadow-md'
+                      : 'text-slate-600 hover:text-sky-800 hover:bg-white/80'
+                  }`}
                 >
+                  <span className="material-symbols-outlined text-sm">calendar_today</span>
                   Año {selectedAnio}
                 </button>
               </>
@@ -169,11 +181,16 @@ export default function HistoricoTendenciasView() {
 
             {selectedMesIdx !== null && (
               <>
-                <span>/</span>
+                <span className="material-symbols-outlined text-slate-400 text-xs">chevron_right</span>
                 <button
                   onClick={() => setSelectedDia(null)}
-                  className={`hover:text-sky-700 cursor-pointer ${selectedDia === null ? 'text-sky-700 font-extrabold' : ''}`}
+                  className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                    selectedDia === null
+                      ? 'bg-gradient-to-r from-sky-700 to-sky-900 text-white shadow-md'
+                      : 'text-slate-600 hover:text-sky-800 hover:bg-white/80'
+                  }`}
                 >
+                  <span className="material-symbols-outlined text-sm">event</span>
                   {MESES[selectedMesIdx]}
                 </button>
               </>
@@ -181,29 +198,41 @@ export default function HistoricoTendenciasView() {
 
             {selectedDia !== null && (
               <>
-                <span>/</span>
-                <span className="text-sky-700 font-extrabold">Día {selectedDia}</span>
+                <span className="material-symbols-outlined text-slate-400 text-xs">chevron_right</span>
+                <span className="px-3 py-1.5 bg-indigo-700 text-white rounded-xl shadow-xs font-bold flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">today</span>
+                  Día {selectedDia}
+                </span>
               </>
             )}
 
             {selectedAnio !== 'todos' && (
               <button
                 onClick={resetAllFilters}
-                className="ml-3 px-2 py-0.5 bg-white text-slate-600 rounded border border-slate-300 text-[10px] hover:bg-slate-200 cursor-pointer"
+                className="ml-2 px-2.5 py-1 bg-white hover:bg-red-50 text-slate-600 hover:text-red-700 rounded-lg border border-slate-200 text-[10px] transition-colors cursor-pointer flex items-center gap-1 font-semibold"
+                title="Restablecer filtros"
               >
-                Limpiar
+                <span className="material-symbols-outlined text-xs">restart_alt</span>
+                Reset
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Top Dynamic Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 flex flex-col gap-2">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Emergencias Registradas</span>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">
+      {/* Dynamic Glassmorphic Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+        
+        {/* Card 1: Emergencies */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-sky-700 transition-colors">Emergencias Registradas</span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center group-hover:bg-sky-700 group-hover:text-white transition-colors">
+              <span className="material-symbols-outlined text-base">emergency</span>
+            </div>
+          </div>
+          <div className="my-3">
+            <span className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
               {selectedDayData
                 ? selectedDayData.emergencias.toLocaleString()
                 : selectedMesIdx !== null
@@ -212,68 +241,99 @@ export default function HistoricoTendenciasView() {
                 ? selectedItem.emergencias.toLocaleString()
                 : NATIONAL_META.totalEmergencias.toLocaleString()}
             </span>
-            <span className="text-xs font-bold text-sky-700">
-              {selectedDia !== null ? `Día ${selectedDia} de ${MESES[selectedMesIdx!]}` : selectedMesIdx !== null ? `${MESES[selectedMesIdx]} ${selectedAnio}` : selectedAnio !== 'todos' ? `Año ${selectedAnio}` : '12 Años'}
-            </span>
+          </div>
+          <div className="text-[11px] font-bold text-sky-800 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
+            {selectedDia !== null ? `Día ${selectedDia} de ${MESES[selectedMesIdx!]}` : selectedMesIdx !== null ? `${MESES[selectedMesIdx]} ${selectedAnio}` : selectedAnio !== 'todos' ? `Año ${selectedAnio}` : 'Acumulado 12 Años'}
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 flex flex-col gap-2">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Población Afectada</span>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-red-600">
+        {/* Card 2: Affected Population */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-red-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-red-700 transition-colors">Población Afectada</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors">
+              <span className="material-symbols-outlined text-base">groups</span>
+            </div>
+          </div>
+          <div className="my-3">
+            <span className="text-3xl md:text-4xl font-extrabold text-red-600 tracking-tight">
               {selectedDayData
                 ? selectedDayData.afectados.toLocaleString()
                 : selectedMesIdx !== null
                 ? monthlyList[selectedMesIdx]?.afectados.toLocaleString()
                 : selectedItem
                 ? selectedItem.afectados.toLocaleString()
-                : '1,680,000 (Pico 2017)'}
+                : '1,680,000'}
             </span>
           </div>
-          <span className="text-[11px] text-slate-500 truncate">
-            {selectedDayData ? selectedDayData.regionPico : selectedItem ? selectedItem.eventoClave : 'El Niño Costero & Ciclón Yaku'}
+          <span className="text-[11px] text-slate-500 font-medium truncate">
+            {selectedDayData ? selectedDayData.regionPico : selectedItem ? selectedItem.eventoClave : 'Pico Máximo El Niño 2017'}
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 flex flex-col gap-2">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Población Damnificada</span>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-slate-900">
+        {/* Card 3: Damnificados */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-slate-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-800 transition-colors">Población Damnificada</span>
+            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-slate-800 group-hover:text-white transition-colors">
+              <span className="material-symbols-outlined text-base">home_work</span>
+            </div>
+          </div>
+          <div className="my-3">
+            <span className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
               {selectedMesIdx !== null
                 ? monthlyList[selectedMesIdx]?.damnificados.toLocaleString()
                 : selectedItem
                 ? selectedItem.damnificados.toLocaleString()
-                : '295,000 (El Niño 2017)'}
+                : '295,000'}
             </span>
           </div>
-          <span className="text-[11px] text-slate-500">Pérdida total de vivienda</span>
+          <span className="text-[11px] text-slate-500 font-medium">Pérdida total de vivienda habitual</span>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 shadow-xs border border-slate-200/80 flex flex-col gap-2">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Viviendas Destruidas</span>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-amber-600">
-              {selectedItem ? selectedItem.viviendasDestruidas.toLocaleString() : '28,400 (Pico 2017)'}
+        {/* Card 4: Houses Destroyed */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-amber-700 transition-colors">Viviendas Colapsadas</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors">
+              <span className="material-symbols-outlined text-base">house</span>
+            </div>
+          </div>
+          <div className="my-3">
+            <span className="text-3xl md:text-4xl font-extrabold text-amber-600 tracking-tight">
+              {selectedItem ? selectedItem.viviendasDestruidas.toLocaleString() : '28,400'}
             </span>
           </div>
-          <span className="text-[11px] text-slate-500">Infraestructura colapsada</span>
+          <span className="text-[11px] text-slate-500 font-medium">Infraestructura destruida</span>
         </div>
+
       </div>
 
       {/* DRILL-DOWN LEVEL 1: Multianual (2012 - 2023) */}
-      <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-6">
-        <div className="flex justify-between items-center">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xs border border-slate-200/90 flex flex-col gap-6 relative overflow-hidden">
+        
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-200">
           <div>
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <span className="material-symbols-outlined text-sky-600">calendar_month</span>
+            <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center">
+                <span className="material-symbols-outlined text-base">bar_chart</span>
+              </div>
               Nivel 1: Evolución Multianual de Emergencias (2012 — 2023)
             </h3>
-            <span className="text-xs text-slate-500">Haz clic en cualquier barra de año para desmenuzar a sus 12 meses</span>
+            <p className="text-xs text-slate-500 mt-0.5">Haz clic sobre cualquier barra para profundizar al nivel de meses</p>
           </div>
+
+          {hoveredYear && (
+            <div className="px-3 py-1 bg-sky-50 border border-sky-200 rounded-xl text-xs font-bold text-sky-900 animate-fade-in flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm text-sky-700">info</span>
+              <span>{hoveredYear.anio}: {hoveredYear.emergencias.toLocaleString()} emergencias • {hoveredYear.eventoClave}</span>
+            </div>
+          )}
         </div>
 
-        <div className="h-64 w-full flex items-end gap-3 pt-8 pb-2 px-2 border-b border-slate-200 relative">
+        {/* Multianual Bars Chart with Rich Hover Effects */}
+        <div className="h-72 w-full flex items-end gap-2 sm:gap-3 pt-10 pb-3 px-2 border-b border-slate-200 relative bg-slate-50/40 rounded-2xl">
           {HISTORICO_ANUAL.map((item) => {
             const heightPct = Math.round((item.emergencias / maxEmergenciasAnual) * 100);
             const isPico = item.anio === 2017 || item.anio === 2023;
@@ -282,33 +342,43 @@ export default function HistoricoTendenciasView() {
             return (
               <div
                 key={item.anio}
-                className={`flex-1 flex flex-col items-center h-full justify-end group relative cursor-pointer transition-all duration-300 ${
-                  selectedAnio !== 'todos' && !isSelected ? 'opacity-30 scale-95' : 'opacity-100 scale-100'
-                }`}
+                onMouseEnter={() => setHoveredYear(item)}
+                onMouseLeave={() => setHoveredYear(null)}
                 onClick={() => {
                   setSelectedAnio(item.anio);
                   setSelectedMesIdx(null);
                   setSelectedDia(null);
                 }}
+                className={`flex-1 flex flex-col items-center h-full justify-end group relative cursor-pointer transition-all duration-300 ${
+                  selectedAnio !== 'todos' && !isSelected ? 'opacity-35 scale-95' : 'opacity-100 scale-100'
+                }`}
               >
-                <div className="w-full flex items-end justify-center h-full px-1">
+                {/* Floating Tooltip Header */}
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-12 z-20 pointer-events-none bg-slate-900 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg shadow-xl whitespace-nowrap flex flex-col items-center">
+                  <span>{item.emergencias.toLocaleString()} eventos</span>
+                  <span className="text-[9px] text-sky-300 font-normal">{item.eventoClave.split('—')[0]}</span>
+                </div>
+
+                <div className="w-full flex items-end justify-center h-full px-0.5 sm:px-1">
                   <div
-                    className={`w-full rounded-t-lg transition-all duration-300 relative ${
+                    className={`w-full rounded-t-xl transition-all duration-300 relative ${
                       isSelected
-                        ? 'bg-gradient-to-t from-sky-700 to-sky-500 ring-4 ring-sky-400 shadow-xl'
+                        ? 'bg-gradient-to-t from-sky-800 via-sky-600 to-sky-400 ring-4 ring-sky-400/60 shadow-xl scale-[1.02]'
                         : isPico
-                        ? 'bg-gradient-to-t from-red-500 to-amber-400 shadow-md'
-                        : 'bg-gradient-to-t from-sky-600 to-sky-400 hover:brightness-110'
+                        ? 'bg-gradient-to-t from-red-600 via-amber-500 to-amber-400 shadow-md group-hover:brightness-110 group-hover:scale-[1.03]'
+                        : 'bg-gradient-to-t from-sky-700 via-sky-600 to-sky-400 group-hover:brightness-110 group-hover:scale-[1.03] group-hover:shadow-lg'
                     }`}
                     style={{ height: `${heightPct}%` }}
                   >
-                    <span className="text-[10px] font-extrabold text-white absolute -top-5 left-1/2 -translate-x-1/2 hidden sm:block">
+                    <span className="text-[10px] font-extrabold text-white absolute -top-5 left-1/2 -translate-x-1/2 hidden sm:block drop-shadow-xs">
                       {item.emergencias > 10000 ? `${(item.emergencias/1000).toFixed(1)}k` : item.emergencias}
                     </span>
                   </div>
                 </div>
 
-                <span className={`text-xs font-bold mt-2 transition-colors ${isSelected ? 'text-sky-700 font-extrabold scale-110' : 'text-slate-600'}`}>
+                <span className={`text-xs font-bold mt-2.5 transition-all ${
+                  isSelected ? 'text-sky-800 font-extrabold scale-110 underline underline-offset-4' : 'text-slate-600 group-hover:text-sky-700'
+                }`}>
                   {item.anio}
                 </span>
               </div>
@@ -317,47 +387,49 @@ export default function HistoricoTendenciasView() {
         </div>
       </div>
 
-      {/* DRILL-DOWN LEVEL 2: Desglose Mensual y Trimestral (Si hay año seleccionado) */}
+      {/* DRILL-DOWN LEVEL 2: Desglose Mensual (Si hay año seleccionado) */}
       {selectedAnio !== 'todos' && (
-        <div className="bg-white rounded-2xl p-6 shadow-xs border border-sky-200/80 flex flex-col gap-6 animate-fade-in bg-sky-50/20">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xs border border-sky-200/90 flex flex-col gap-6 animate-fade-in bg-sky-50/20">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3 border-b border-sky-200/80">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-sky-700">filter_alt</span>
-                Nivel 2: Desglose Mensual y Trimestral del Año {selectedAnio}
+              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-sky-700 text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-base">calendar_view_month</span>
+                </div>
+                Nivel 2: Desglose Mensual del Año {selectedAnio}
               </h3>
-              <span className="text-xs text-slate-500">Haz clic en cualquier mes para profundizar al nivel de días (1 al 31)</span>
+              <p className="text-xs text-slate-500 mt-0.5">Haz clic en cualquier mes para desmenuzar el histograma diario</p>
             </div>
 
             {/* Quarter Filter Pills */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 text-xs font-bold shadow-2xs">
               <button
                 onClick={() => setQuarterFilter('todos')}
-                className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${quarterFilter === 'todos' ? 'bg-sky-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${quarterFilter === 'todos' ? 'bg-sky-700 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
               >
-                Todos los Meses
+                Todos
               </button>
               <button
                 onClick={() => setQuarterFilter('Q1')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${quarterFilter === 'Q1' ? 'bg-sky-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${quarterFilter === 'Q1' ? 'bg-sky-700 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
               >
                 Q1 (Ene-Mar)
               </button>
               <button
                 onClick={() => setQuarterFilter('Q2')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${quarterFilter === 'Q2' ? 'bg-sky-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${quarterFilter === 'Q2' ? 'bg-sky-700 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
               >
                 Q2 (Abr-Jun)
               </button>
               <button
                 onClick={() => setQuarterFilter('Q3')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${quarterFilter === 'Q3' ? 'bg-sky-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${quarterFilter === 'Q3' ? 'bg-sky-700 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
               >
                 Q3 (Jul-Sep)
               </button>
               <button
                 onClick={() => setQuarterFilter('Q4')}
-                className={`px-2.5 py-1 rounded-lg transition-colors cursor-pointer ${quarterFilter === 'Q4' ? 'bg-sky-700 text-white' : 'text-slate-600 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${quarterFilter === 'Q4' ? 'bg-sky-700 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
               >
                 Q4 (Oct-Dic)
               </button>
@@ -365,7 +437,7 @@ export default function HistoricoTendenciasView() {
           </div>
 
           {/* Monthly Bars Chart */}
-          <div className="h-56 w-full flex items-end gap-2 pt-6 pb-2 px-2 border-b border-slate-200 relative">
+          <div className="h-60 w-full flex items-end gap-2.5 pt-8 pb-3 px-2 border-b border-sky-200/80 relative bg-white/70 rounded-2xl">
             {filteredMonthly.map((m) => {
               const heightPct = Math.round((m.emergencias / maxEmergenciasMes) * 100);
               const isSelected = selectedMesIdx === m.mesIdx;
@@ -381,21 +453,25 @@ export default function HistoricoTendenciasView() {
                     selectedMesIdx !== null && !isSelected ? 'opacity-30 scale-95' : 'opacity-100 scale-100'
                   }`}
                 >
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-10 z-20 pointer-events-none bg-slate-900 text-white text-[10px] font-bold py-1 px-2 rounded shadow-md whitespace-nowrap">
+                    {m.fenomeno}
+                  </div>
+
                   <div className="w-full flex items-end justify-center h-full px-1">
                     <div
-                      className={`w-full rounded-t-lg transition-all duration-300 relative ${
+                      className={`w-full rounded-t-xl transition-all duration-300 relative ${
                         isSelected
-                          ? 'bg-gradient-to-t from-sky-800 to-sky-600 ring-4 ring-sky-500 shadow-xl'
-                          : 'bg-gradient-to-t from-sky-500 to-sky-300 hover:brightness-110'
+                          ? 'bg-gradient-to-t from-sky-900 to-sky-600 ring-4 ring-sky-500/70 shadow-xl scale-[1.02]'
+                          : 'bg-gradient-to-t from-sky-600 to-sky-400 group-hover:brightness-110 group-hover:scale-[1.03]'
                       }`}
                       style={{ height: `${heightPct}%` }}
                     >
-                      <span className="text-[9px] font-bold text-white absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="text-[9px] font-extrabold text-white absolute -top-4 left-1/2 -translate-x-1/2">
                         {m.emergencias}
                       </span>
                     </div>
                   </div>
-                  <span className={`text-[11px] font-bold mt-2 ${isSelected ? 'text-sky-800 underline' : 'text-slate-600'}`}>
+                  <span className={`text-[11px] font-bold mt-2.5 transition-colors ${isSelected ? 'text-sky-900 underline font-extrabold' : 'text-slate-600 group-hover:text-sky-700'}`}>
                     {m.mes.substring(0, 3)}
                   </span>
                 </div>
@@ -405,26 +481,28 @@ export default function HistoricoTendenciasView() {
         </div>
       )}
 
-      {/* DRILL-DOWN LEVEL 3: Histogram del Día a Día del Mes (Si hay mes seleccionado) */}
+      {/* DRILL-DOWN LEVEL 3: Histogram del Día a Día del Mes */}
       {selectedMesIdx !== null && (
-        <div className="bg-white rounded-2xl p-6 shadow-xs border border-indigo-200/80 flex flex-col gap-6 animate-fade-in bg-indigo-50/20">
-          <div className="flex justify-between items-center">
+        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xs border border-indigo-200/90 flex flex-col gap-6 animate-fade-in bg-indigo-50/20">
+          <div className="flex justify-between items-center pb-3 border-b border-indigo-200/80">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-indigo-600">view_timeline</span>
+              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-indigo-700 text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-base">view_timeline</span>
+                </div>
                 Nivel 3: Histograma Diario de {MESES[selectedMesIdx]} del {selectedAnio}
               </h3>
-              <span className="text-xs text-slate-500">Haz clic en un día específico para consultar la ficha de emergencia SINPAD</span>
+              <p className="text-xs text-slate-500 mt-0.5">Haz clic en un día específico para consultar la ficha de emergencia oficial SINPAD</p>
             </div>
             {selectedDia !== null && (
-              <span className="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
+              <span className="text-xs font-bold text-indigo-900 bg-indigo-100 px-3.5 py-1.5 rounded-full border border-indigo-200">
                 Día {selectedDia} Seleccionado
               </span>
             )}
           </div>
 
           {/* Daily Timeline */}
-          <div className="h-44 w-full flex items-end gap-1 pt-6 pb-2 px-1 border-b border-slate-200 overflow-x-auto">
+          <div className="h-48 w-full flex items-end gap-1 pt-6 pb-2 px-1 border-b border-indigo-200/80 overflow-x-auto bg-white/70 rounded-2xl">
             {dailyList.map((d) => {
               const heightPct = Math.round((d.emergencias / maxEmergenciasDia) * 100);
               const isSelected = selectedDia === d.dia;
@@ -433,24 +511,24 @@ export default function HistoricoTendenciasView() {
                 <div
                   key={d.dia}
                   onClick={() => setSelectedDia(d.dia)}
-                  className={`flex-1 min-w-[20px] flex flex-col items-center h-full justify-end group relative cursor-pointer transition-all duration-200 ${
-                    selectedDia !== null && !isSelected ? 'opacity-30' : 'opacity-100'
+                  className={`flex-1 min-w-[22px] flex flex-col items-center h-full justify-end group relative cursor-pointer transition-all duration-200 ${
+                    selectedDia !== null && !isSelected ? 'opacity-35' : 'opacity-100'
                   }`}
                   title={`Día ${d.dia}: ${d.emergencias} emergencias en ${d.regionPico}`}
                 >
                   <div className="w-full flex items-end justify-center h-full px-0.5">
                     <div
-                      className={`w-full rounded-t-sm transition-all ${
+                      className={`w-full rounded-t-md transition-all duration-200 ${
                         isSelected
-                          ? 'bg-indigo-600 ring-2 ring-indigo-400 shadow-lg'
+                          ? 'bg-indigo-700 ring-2 ring-indigo-400 shadow-lg scale-105'
                           : d.emergencias > 80
-                          ? 'bg-red-500'
-                          : 'bg-indigo-400 hover:bg-indigo-500'
+                          ? 'bg-red-500 hover:bg-red-600'
+                          : 'bg-indigo-400 hover:bg-indigo-600'
                       }`}
-                      style={{ height: `${Math.max(10, heightPct)}%` }}
+                      style={{ height: `${Math.max(12, heightPct)}%` }}
                     ></div>
                   </div>
-                  <span className={`text-[9px] font-bold mt-1 ${isSelected ? 'text-indigo-800' : 'text-slate-500'}`}>
+                  <span className={`text-[9px] font-bold mt-1.5 ${isSelected ? 'text-indigo-900 font-extrabold' : 'text-slate-500'}`}>
                     {d.dia}
                   </span>
                 </div>
@@ -460,26 +538,27 @@ export default function HistoricoTendenciasView() {
 
           {/* Ficha Oficial de Emergencia SINPAD para el Día Seleccionado */}
           {selectedDayData && (
-            <div className="p-4 bg-white rounded-xl border border-indigo-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in">
+            <div className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in border border-slate-700">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-[10px] font-bold uppercase">Reporte SINPAD</span>
-                  <h4 className="font-bold text-sm text-slate-900">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  <span className="px-2 py-0.5 bg-white/10 text-sky-300 rounded text-[10px] font-bold uppercase tracking-wider border border-white/10">Reporte Técnico SINPAD</span>
+                  <h4 className="font-bold text-sm text-white">
                     Emergencia del Día {selectedDayData.dia} de {MESES[selectedMesIdx]} {selectedAnio}
                   </h4>
                 </div>
-                <p className="text-xs text-slate-600">
-                  {selectedDayData.descripcion} en las regiones de <b>{selectedDayData.regionPico}</b>.
+                <p className="text-xs text-slate-300 font-medium">
+                  {selectedDayData.descripcion} en las regiones de <b className="text-sky-300">{selectedDayData.regionPico}</b>.
                 </p>
               </div>
-              <div className="flex items-center gap-6 text-xs font-semibold">
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias</span>
-                  <span className="text-indigo-700 font-extrabold text-base">{selectedDayData.emergencias}</span>
+              <div className="flex items-center gap-6 text-xs font-semibold shrink-0">
+                <div className="bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Emergencias</span>
+                  <span className="text-white font-extrabold text-base">{selectedDayData.emergencias}</span>
                 </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Población Afectada</span>
-                  <span className="text-red-600 font-extrabold text-base">{selectedDayData.afectados.toLocaleString()}</span>
+                <div className="bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
+                  <span className="text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Población Afectada</span>
+                  <span className="text-red-400 font-extrabold text-base">{selectedDayData.afectados.toLocaleString()}</span>
                 </div>
               </div>
             </div>
