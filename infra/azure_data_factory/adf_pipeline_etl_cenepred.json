@@ -1,0 +1,115 @@
+{
+  "$schema": "http://dev.azure.com/schemas/datafactory/pipeline-template.json",
+  "name": "adf_pipeline_etl_cenepred",
+  "properties": {
+    "description": "Pipeline Orquestador Automatizado E2E Medallón (Bronze -> Silver -> Gold -> WebApp) para el Sistema de Información CENEPRED BI.",
+    "activities": [
+      {
+        "name": "Execute_Bronze_Ingestion",
+        "description": "Descarga e ingesta datos crudos desde APIs de SINPAD, MEF, NASA, NOAA, Open-Meteo y USGS hacia el contenedor /bronze de ADLS Gen2.",
+        "type": "Custom",
+        "dependsOn": [],
+        "userProperties": [],
+        "typeProperties": {
+          "command": "python data/pipelines/master_pipeline.py --stage bronze",
+          "extendedProperties": {
+            "environment": "production",
+            "storageAccount": "@pipeline().parameters.StorageAccountName"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_azure_batch_python",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Execute_Silver_Cleaning_Quality",
+        "description": "Aplica estandarización, tipado, deduplicación y reglas de calidad (QA) escribiendo en /silver.",
+        "type": "Custom",
+        "dependsOn": [
+          {
+            "activity": "Execute_Bronze_Ingestion",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "command": "python data/pipelines/master_pipeline.py --stage silver",
+          "extendedProperties": {
+            "environment": "production"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_azure_batch_python",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Execute_Gold_StarSchema",
+        "description": "Construye el Modelo Estrella Star Schema (Dimensiones y Hechos) en formato Parquet/JSON en /gold.",
+        "type": "Custom",
+        "dependsOn": [
+          {
+            "activity": "Execute_Silver_Cleaning_Quality",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "command": "python data/pipelines/master_pipeline.py --stage gold",
+          "extendedProperties": {
+            "environment": "production"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_azure_batch_python",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Publish_WebApp_RealData",
+        "description": "Exporta la estructura JSON consolidada hacia la WebApp y dispara el refresco de los tableros Power BI.",
+        "type": "Custom",
+        "dependsOn": [
+          {
+            "activity": "Execute_Gold_StarSchema",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "command": "python scripts/export_gold_to_webapp_json.py",
+          "extendedProperties": {
+            "targetEnv": "webapp_production"
+          }
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_azure_batch_python",
+          "type": "LinkedServiceReference"
+        }
+      }
+    ],
+    "parameters": {
+      "StorageAccountName": {
+        "type": "string",
+        "defaultValue": "stcenepredbiprod"
+      },
+      "Environment": {
+        "type": "string",
+        "defaultValue": "prod"
+      }
+    },
+    "annotations": [
+      "CENEPRED",
+      "BI",
+      "Medallion",
+      "Automated"
+    ]
+  }
+}
