@@ -1716,34 +1716,34 @@
   ],
   "pliegosEjecutores": [
     {
-      "nombre": "MINDEF - Ejército del Perú (Gestión de Riesgos)",
-      "monto": "S/ 540M (84%)",
-      "pct": 84,
+      "nombre": "GOBIERNO REGIONAL DE PIURA",
+      "monto": "S/ 1,480.5M (74.2%)",
+      "pct": 74.2,
       "color": "bg-emerald-500"
     },
     {
-      "nombre": "MINSA - DIGESA (Atención de Emergencias)",
-      "monto": "S/ 310M (78%)",
-      "pct": 78,
+      "nombre": "GOBIERNO REGIONAL DE ANCASH",
+      "monto": "S/ 1,120.8M (68.6%)",
+      "pct": 68.6,
+      "color": "bg-sky-600"
+    },
+    {
+      "nombre": "GOBIERNO REGIONAL DE CUSCO",
+      "monto": "S/ 980.4M (82.1%)",
+      "pct": 82.1,
       "color": "bg-emerald-500"
     },
     {
-      "nombre": "MTC - Provías Nacional (Infraestructura)",
-      "monto": "S/ 820M (64%)",
-      "pct": 64,
-      "color": "bg-secondary"
+      "nombre": "GOBIERNO REGIONAL DE AREQUIPA",
+      "monto": "S/ 850.2M (79.4%)",
+      "pct": 79.4,
+      "color": "bg-emerald-500"
     },
     {
-      "nombre": "Autoridad Nacional del Agua (ANA)",
-      "monto": "S/ 190M (48%)",
-      "pct": 48,
-      "color": "bg-tertiary"
-    },
-    {
-      "nombre": "INDECI (Respuesta ante Desastres)",
-      "monto": "S/ 240M (32%)",
-      "pct": 32,
-      "color": "bg-error",
+      "nombre": "GOBIERNO REGIONAL DE LIMA",
+      "monto": "S/ 902.4M (68.6%)",
+      "pct": 68.6,
+      "color": "bg-amber-500",
       "isAlert": true
     }
   ]

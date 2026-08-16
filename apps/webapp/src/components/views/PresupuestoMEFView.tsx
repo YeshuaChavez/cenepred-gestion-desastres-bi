@@ -279,7 +279,7 @@ export default function PresupuestoMEFView() {
 
           {/* Filter Pills Bar */}
           <div className="flex items-center justify-between gap-3 bg-slate-50 p-2 rounded-2xl border border-slate-200 flex-wrap text-xs font-bold">
-            <div className="flex items-center gap-1 overflow-x-auto">
+            <div className="flex items-center gap-1 overflow-x-auto flex-wrap">
               <span className="text-slate-500 font-semibold px-2 text-[11px]">Filtrar por:</span>
               <button
                 onClick={() => setExecutionFilter('all')}
@@ -305,6 +305,14 @@ export default function PresupuestoMEFView() {
               >
                 Riesgo Muy Alto
               </button>
+
+              {selectedPliego && (
+                <span className="px-2.5 py-1 bg-sky-100 text-sky-800 rounded-xl text-xs font-bold border border-sky-300 flex items-center gap-1 animate-fade-in">
+                  <span className="material-symbols-outlined text-xs">domain</span>
+                  Pliego: {selectedPliego}
+                  <button onClick={() => setSelectedPliego(null)} className="ml-1 hover:text-red-600 font-bold cursor-pointer">✕</button>
+                </span>
+              )}
             </div>
 
             {(selectedPliego || executionFilter !== 'all' || searchTerm) && (
