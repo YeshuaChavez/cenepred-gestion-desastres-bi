@@ -1,5 +1,5 @@
-import os
 import json
+from pathlib import Path
 from fastapi.testclient import TestClient
 from data.ml.predictive_model import train_and_save_model, predict_risk
 from data.ml.score import init, run
@@ -12,7 +12,8 @@ def test_train_and_save_model():
     metadata = train_and_save_model()
     assert metadata["model_name"] == "XGBoost_CENEPRED_Risk_Predictor"
     assert metadata["accuracy"] >= 0.85
-    assert os.path.exists(r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\ml\models\xgboost_risk_model.pkl")
+    expected_model_path = Path(__file__).resolve().parents[1] / "data" / "ml" / "models" / "xgboost_risk_model.pkl"
+    assert expected_model_path.exists()
 
 def test_predict_risk_shap():
     """Prueba la lógica de inferencia directa y extracción de impactos SHAP."""

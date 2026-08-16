@@ -7,6 +7,7 @@ import os
 import json
 import logging
 import pickle
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
@@ -34,8 +35,8 @@ def init():
     """
     global model
     try:
-        # En Azure ML, los artefactos del modelo se montan en AZUREML_MODEL_DIR
-        model_dir = os.getenv("AZUREML_MODEL_DIR", r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\ml\models")
+        fallback_dir = str(Path(__file__).resolve().parent / "models")
+        model_dir = os.getenv("AZUREML_MODEL_DIR", fallback_dir)
         model_path = os.path.join(model_dir, MODEL_FILENAME)
         
         if not os.path.exists(model_path):

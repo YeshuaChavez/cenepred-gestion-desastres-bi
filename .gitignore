@@ -8,6 +8,8 @@
 **/node_modules/
 **/dist/
 **/build/
+**/.next/
+**/out/
 **/.vite/
 npm-debug.log*
 yarn-debug.log*

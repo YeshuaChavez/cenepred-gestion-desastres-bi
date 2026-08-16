@@ -5,8 +5,11 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any, Tuple
 
-GOLD_DIR = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\gold\local_data"
-MODEL_DIR = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\data\ml\models"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+GOLD_DIR = str(BASE_DIR / "data" / "gold" / "local_data")
+MODEL_DIR = str(Path(__file__).resolve().parent / "models")
 MODEL_PATH = os.path.join(MODEL_DIR, "xgboost_risk_model.pkl")
 METADATA_PATH = os.path.join(MODEL_DIR, "model_metadata.json")
 

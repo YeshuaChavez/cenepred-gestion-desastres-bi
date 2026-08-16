@@ -10,3 +10,6 @@ shap
 mlflow
 azure-storage-blob
 azure-identity
+fastapi
+uvicorn
+pydantic

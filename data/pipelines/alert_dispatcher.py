@@ -5,7 +5,9 @@ import urllib.request
 import urllib.error
 from typing import Dict, Any, List
 
-REAL_DATA_PATH = r"c:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\apps\webapp\src\data\realData.json"
+from pathlib import Path
+
+REAL_DATA_PATH = str(Path(__file__).resolve().parents[2] / "apps" / "webapp" / "src" / "data" / "realData.json")
 DEFAULT_RECIPIENT = "yeshuachavezlozano@gmail.com"
 
 def check_and_dispatch_alerts(target_email: str = DEFAULT_RECIPIENT) -> List[Dict[str, Any]]:
