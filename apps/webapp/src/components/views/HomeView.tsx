@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ActivePath } from '../../types';
-import { NATIONAL_META, PERU_DEPARTAMENTOS } from '../../data/mockData';
+import { NATIONAL_META, PERU_DEPARTAMENTOS, LOGO_CENEPRED } from '../../data/mockData';
 import ScrollReveal from '../ScrollReveal';
 
 interface HomeViewProps {
@@ -412,7 +412,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {/* Identidad institucional */}
             <div className="md:col-span-4 flex flex-col gap-3">
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-xl text-sky-400">shield</span>
+                <img src={LOGO_CENEPRED} alt="CENEPRED" className="h-8 w-auto" />
                 <span className="text-white font-bold text-sm tracking-tight">CENEPRED</span>
               </div>
               <p className="leading-relaxed text-[#7d8fa3]">
