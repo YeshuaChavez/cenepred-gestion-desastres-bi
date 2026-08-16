@@ -34,10 +34,10 @@ export default function Page() {
   };
 
   return (
-    <div className="bg-slate-950 font-sans text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+    <div className="bg-background font-sans text-on-surface min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
       <Header activePath={activePath} setActivePath={setActivePath} />
 
-      <main className="w-full pt-20 min-h-screen flex-1">
+      <main className="w-full pt-20 min-h-screen bg-background flex-1">
         {renderView()}
       </main>
 
