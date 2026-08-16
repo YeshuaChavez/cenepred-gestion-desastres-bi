@@ -28,7 +28,7 @@ export default function Header({ activePath = 'home', setActivePath }: HeaderPro
             src={LOGO_CENEPRED}
           />
           <div className="flex flex-col">
-            <span className="font-headline-lg text-lg tracking-tight text-slate-900 dark:text-white leading-tight font-bold uppercase group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+            <span className="font-headline-lg text-lg tracking-tight text-sky-700 dark:text-white leading-tight font-bold uppercase group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               CENEPRED
             </span>
             <span className="font-label-sm text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
