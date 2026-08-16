@@ -16,7 +16,7 @@ def minmax(series):
 def process_gold_data():
     print("Cargando archivos Parquet de la capa Gold...")
     dim_region = pd.read_parquet(os.path.join(GOLD_DIR, "dim_region.parquet"))
-    dim_fenomeno = pd.read_parquet(os.path.join(GOLD_DIR, "dim_fenomeno.parquet"))
+    pd.read_parquet(os.path.join(GOLD_DIR, "dim_fenomeno.parquet"))
     dim_tiempo = pd.read_parquet(os.path.join(GOLD_DIR, "dim_tiempo.parquet"))
     fact_emergencias = pd.read_parquet(os.path.join(GOLD_DIR, "fact_emergencias.parquet"))
     fact_monitoreo = pd.read_parquet(os.path.join(GOLD_DIR, "fact_monitoreo_diario.parquet"))
@@ -201,7 +201,7 @@ def process_gold_data():
         tabla_mef.append({
             "depto": d,
             "pim": f"S/ {round(pim, 1)}M",
-            "ejec": f"{round(pct, 1)}%",
+            "ejec": f"S/ {round(dev, 1)}M",
             "pct": round(pct, 1),
             "riesgo": riesgo_str,
             "estado": estado_str,
