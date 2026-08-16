@@ -417,7 +417,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               </div>
               <p className="leading-relaxed text-[#7d8fa3]">
                 Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres.
-                Organismo público ejecutor adscrito a la Presidencia del Consejo de Ministros,
+                Organismo público ejecutor adscrito al Ministerio de Defensa,
                 ente rector del SINAGERD.
               </p>
             </div>
@@ -438,10 +438,10 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <div className="md:col-span-3">
               <h4 className="text-[#cbd5e1] font-semibold text-[11px] uppercase tracking-wider mb-3">Contacto</h4>
               <ul className="flex flex-col gap-1.5">
-                <li>Av. del Parque Norte 313, San Isidro, Lima</li>
-                <li>Central: (01) 201-3550</li>
-                <li>consultas@cenepred.gob.pe</li>
-                <li>Lun - Vie: 08:30 - 17:00</li>
+                <li>Av. Del Parque Norte 829 - 833, San Isidro, Lima</li>
+                <li>Central: (01) 412-5940</li>
+                <li>mesadepartes@cenepred.gob.pe</li>
+                <li>Lun - Vie: 08:30 - 16:30</li>
               </ul>
             </div>
 
