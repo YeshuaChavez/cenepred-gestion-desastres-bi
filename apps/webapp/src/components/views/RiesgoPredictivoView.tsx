@@ -24,9 +24,8 @@ export default function RiesgoPredictivoView() {
     setSimulatedImpact(calculated);
   }, [selectedDeptoKey, precipSlider, humedadSlider, deptoData]);
 
-  // Modals
+  // Modal State for Confusion Matrix
   const [showMetricsModal, setShowMetricsModal] = useState<boolean>(false);
-  const [showSecurityModal, setShowSecurityModal] = useState<boolean>(false);
 
   // Executive Report Generator
   const [reportDeptoKey, setReportDeptoKey] = useState<string>('ancash');
@@ -60,27 +59,27 @@ export default function RiesgoPredictivoView() {
 Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
 Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
 Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
-Modelo Inferencial: XGBoost Classifier v2.4 (F1-Score: 0.912 | AUC-ROC: 0.942 | Cross-Val: 5 Folds)
+Modelo Inferencial: Algoritmo de Inteligencia Predictiva (F1-Score: 0.912 | AUC-ROC: 0.942 | Cross-Val: 5 Folds)
 
 --------------------------------------------------------------------------------
 
 1. DIAGNÓSTICO TERRITORIAL Y ANÁLISIS DE VULNERABILIDAD
-- Emergencias SINPAD Registradas: ${emergenciasCount} eventos en el historial oficial.
+- Emergencias Registradas: ${emergenciasCount} eventos en el historial oficial.
 - Población Afectada Directa: ${afectadosCount} personas.
 - Población Damnificada: ${damnificadosCount} personas.
-- Telemetría Satelital 24h: Precipitación acumulada de ${reportDeptoData.precipitacionMm} mm/24h y ${reportDeptoData.focosCalor} focos de calor activos (NASA FIRMS / VIIRS).
+- Telemetría Satelital 24h: Precipitación acumulada de ${reportDeptoData.precipitacionMm} mm/24h y ${reportDeptoData.focosCalor} focos de calor activos.
 
 2. EXPLICABILIDAD SHAP (FACTORES DETERMINANTES)
-${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.pct}%)`).join('\n')}
+${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)`).join('\n')}
 
 3. MATRIZ DE RECOMENDACIONES DE ACCIÓN PREVENTIVA
 - Activación de Alerta Nivel ${reportDeptoData.prob >= 65 ? '4 (Crítica)' : '3 (Prevención)'}: Coordinar brigadas de respuesta rápida en distritos de mayor precipitación.
 - Obras de Mitigación Prioritarias: Limpieza y descolmatación de cauces con maquinaria pesada antes del inicio de temporada.
-- Monitoreo Satelital Continuo: Sincronización cada 6 horas con Open-Meteo, NASA FIRMS y COEN-INDECI.
+- Monitoreo Satelital Continuo: Sincronización continua de telemetría y reportes regionales.
 
-4. EVALUACIÓN FINANCIERA PP 0068 (MEF PREVAED)
-- PIM Asignado: S/ ${reportDeptoData.pimM} Millones
-- Devengado Acumulado: S/ ${reportDeptoData.devengadoM} Millones
+4. EVALUACIÓN FINANCIERA DE PREVENCIÓN
+- Presupuesto Asignado: S/ ${reportDeptoData.pimM} Millones
+- Inversión Ejecutada: S/ ${reportDeptoData.devengadoM} Millones
 - Avance Financiero: ${pctExec}% de ejecución. Brecha por ejecutar: ${brecha}%.
       `;
       setGeneratedReport(reportText.trim());
@@ -92,10 +91,10 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
   const shapItemsToRender = scope === 'regional'
     ? deptoData.shap
     : [
-        { name: "Incidencia Emergencias (SINPAD)", val: "+84,369 Nal.", pct: 72, color: "#ba1a1a" },
+        { name: "Incidencia Histórica de Emergencias", val: "+84,369 Eventos", pct: 72, color: "#ba1a1a" },
         { name: "Precipitación Acumulada (mm/24h)", val: "Prom. 24.8 mm", pct: 65, color: "#006686" },
-        { name: "Focos Calor / Actividad Satelital", val: "+524,190 Nac.", pct: 54, color: "#565e74" },
-        { name: "Brecha Presupuestal MEF PP0068", val: `${NATIONAL_META.pctEjecucionNacional}% Exec`, pct: 42, color: "#94a3b8" }
+        { name: "Focos de Calor Satelitales", val: "Focos Activos", pct: 54, color: "#565e74" },
+        { name: "Avance de Inversión Pública Preventiva", val: `${NATIONAL_META.pctEjecucionNacional}% Exec`, pct: 42, color: "#94a3b8" }
       ];
 
   return (
@@ -108,7 +107,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
                 <span className="material-symbols-outlined text-sky-700">verified</span>
-                Matriz de Validación del Modelo (XGBoost)
+                Matriz de Validación de Confusión del Modelo
               </h3>
               <button
                 onClick={() => setShowMetricsModal(false)}
@@ -119,7 +118,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
             </div>
 
             <div className="space-y-3 text-xs text-slate-600">
-              <p className="font-medium">Resultados de la matriz de confusión calculados sobre 84,369 registros históricos del SINPAD:</p>
+              <p className="font-medium">Resultados de la matriz de confusión calculados sobre los registros históricos de emergencias:</p>
               
               <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center font-bold">
                 <div className="p-3 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200">
@@ -150,83 +149,39 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
         </div>
       )}
 
-      {/* Security Architecture Info Modal */}
-      {showSecurityModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-lg space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-emerald-600">lock</span>
-                Arquitectura de Seguridad del Sistema
-              </h3>
-              <button
-                onClick={() => setShowSecurityModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
-              >
-                Cerrar ✕
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs leading-relaxed text-slate-600">
-              <p className="font-semibold text-slate-800">
-                La plataforma procesa y analiza los indicadores oficiales con estándares de seguridad gubernamentales:
-              </p>
-
-              <ul className="space-y-2 border-l-2 border-emerald-500 pl-3 font-medium">
-                <li><b>Seguridad Server-Side</b>: Las consultas se ejecutan a través de servicios protegidos en la nube.</li>
-                <li><b>Integración Oficial</b>: Conexión con datos de SINPAD, MEF-SIAF y telemetría de NASA FIRMS.</li>
-                <li><b>Cero Exposición Directa</b>: El entorno cliente no expone credenciales privadas ni claves de API.</li>
-              </ul>
-
-              <div className="pt-2 text-right">
-                <button
-                  onClick={() => setShowSecurityModal(false)}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 transition-colors cursor-pointer"
-                >
-                  Entendido
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Page Title & Controls */}
+      {/* Page Title & dedicated Action Button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200">
         <div className="flex flex-col space-y-1">
           <h2 className="font-display-lg text-2xl font-bold text-slate-900 tracking-tight">Riesgo Predictivo e Inferencia de Escenarios</h2>
           <p className="font-body-md text-sm text-slate-600 max-w-2xl">
-            Análisis de estimación y simulación de escenarios de riesgo climático en el territorio nacional mediante Machine Learning (XGBoost Classifier v2.4).
+            Análisis de estimación y simulación de escenarios de riesgo climático en el territorio nacional.
           </p>
         </div>
         
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setShowSecurityModal(true)}
-            className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-colors cursor-pointer shadow-2xs"
-            title="Ver arquitectura de protección en la nube"
+            onClick={() => setShowMetricsModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+            title="Ver la matriz de confusión de validación"
           >
-            <span className="material-symbols-outlined text-sm">lock</span>
-            Seguridad Servidor
+            <span className="material-symbols-outlined text-sm">grid_on</span>
+            Ver Matriz de Confusión
           </button>
-
-          <div className="flex items-center space-x-2 bg-white px-4 py-2 rounded-xl shadow-2xs border border-slate-200 font-medium">
-            <span className="material-symbols-outlined text-sky-700 text-sm">memory</span>
-            <span className="font-body-md text-xs text-slate-800 font-bold">Modelo Activo (XGBoost)</span>
-          </div>
         </div>
       </div>
 
-      {/* Clickable Metric Cards */}
+      {/* Executive Metric Cards with Top-Right Corner Icons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div
-          onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
-          title="Haz clic para ver la matriz de confusión del modelo"
-        >
-          <div className="flex justify-between items-center">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión General</span>
-            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+        
+        {/* Metric 1 */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700 transition-colors">
+              Precisión General
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center group-hover:bg-sky-700 group-hover:text-white transition-colors duration-300">
+              <span className="material-symbols-outlined text-base">verified</span>
+            </div>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">94.2%</span>
@@ -236,14 +191,15 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
           </div>
         </div>
 
-        <div
-          onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
-          title="Haz clic para ver la matriz de confusión del modelo"
-        >
-          <div className="flex justify-between items-center">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Precisión Riesgo Alto</span>
-            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+        {/* Metric 2 */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-red-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-red-700 transition-colors">
+              Precisión Riesgo Alto
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+              <span className="material-symbols-outlined text-base">warning</span>
+            </div>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">89.1%</span>
@@ -253,14 +209,15 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
           </div>
         </div>
 
-        <div
-          onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
-          title="Haz clic para ver la matriz de confusión del modelo"
-        >
-          <div className="flex justify-between items-center">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Sensibilidad</span>
-            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+        {/* Metric 3 */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-purple-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-purple-700 transition-colors">
+              Sensibilidad
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:bg-purple-700 group-hover:text-white transition-colors duration-300">
+              <span className="material-symbols-outlined text-base">query_stats</span>
+            </div>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">91.5%</span>
@@ -270,14 +227,15 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
           </div>
         </div>
 
-        <div
-          onClick={() => setShowMetricsModal(true)}
-          className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group active:scale-98 flex flex-col space-y-1"
-          title="Haz clic para ver la matriz de confusión del modelo"
-        >
-          <div className="flex justify-between items-center">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700">Margen de Error</span>
-            <span className="material-symbols-outlined text-sky-600 text-sm group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+        {/* Metric 4 */}
+        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-amber-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-3">
+            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-amber-700 transition-colors">
+              Margen de Error
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+              <span className="material-symbols-outlined text-base">rule</span>
+            </div>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.18</span>
@@ -286,6 +244,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
             </span>
           </div>
         </div>
+
       </div>
 
       {/* Main Grid: SHAP Interpretability + Scenario Simulator */}
@@ -296,7 +255,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
           <div className="bg-white rounded-2xl p-6 shadow-2xs border border-slate-200/80 flex flex-col min-h-[450px]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h3 className="font-headline-lg text-lg font-bold text-slate-900">Interpretabilidad SHAP (Explicabilidad ML)</h3>
+                <h3 className="font-headline-lg text-lg font-bold text-slate-900">Factores de Riesgo Clave</h3>
                 <p className="font-body-md text-xs text-slate-500">Contribución relativa de variables a la probabilidad de riesgo</p>
               </div>
 
@@ -346,7 +305,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
                 <div key={idx} className="group">
                   <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700">
                     <span className="group-hover:text-sky-700 font-medium">{item.name}</span>
-                    <span className="font-bold" style={{ color: item.color }}>{item.val} (SHAP {item.pct}%)</span>
+                    <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
                   </div>
                   <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
                     <div
@@ -437,7 +396,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución SHAP ${s.p
               Generador de Diagnóstico Ejecutivo de Riesgo
             </h3>
             <p className="font-body-md text-xs text-slate-500">
-              Generación de informe técnico-ejecutivo oficial basado en telemetría satelital, emergencias SINPAD y ejecución presupuestal MEF
+              Generación de informe técnico-ejecutivo oficial basado en telemetría satelital, emergencias registradas y ejecución presupuestal
             </p>
           </div>
 
