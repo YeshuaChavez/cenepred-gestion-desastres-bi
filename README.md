@@ -1,233 +1,143 @@
-# Sistema de Alerta Temprana (SAT) y Gestión Integral del Riesgo de Desastres - CENEPRED
+# Sistema de Alerta Temprana y Gestión del Riesgo de Desastres
 
-> Plataforma Integral de Monitoreo en Tiempo Real, Evaluación Predictiva de Riesgo y Asistencia Conversacional IA para la prevención, reducción y atención de emergencias por fenómenos climáticos y desastres naturales en el territorio nacional peruano.
+Sistema informático para el monitoreo dinámico y la evaluación predictiva del riesgo de emergencias hidrometeorológicas y naturales en el Perú. El sistema integra telemetría sísmica, meteorológica, térmica y datos de ejecución presupuestal sobre el historial nacional de desastres, procesándolos mediante una arquitectura de datos Medallón en Azure y proporcionando interfaces analíticas y asistivas para la toma de decisiones.
 
----
+## Descripción General
 
-## 1. Visión General del Sistema
+CENEPRED evalúa la vulnerabilidad territorial principalmente mediante factores estáticos como topografía, zonificación urbana y geología. Este sistema complementa dicha evaluación incorporando indicadores climáticos y sísmicos observados en tiempo real, cruzados con el historial oficial de emergencias.
 
-El **Sistema de Alerta Temprana (SAT) CENEPRED** es una plataforma tecnológica avanzada diseñada para complementar la evaluación de riesgo estático tradicional (como geología, pendientes o zonificación) con un enfoque de **riesgo dinámico en tiempo real y capacidad predictiva**.
+El objetivo principal es estimar la probabilidad relativa de ocurrencia de emergencias por departamento en horizontes de corto plazo, identificar los factores determinantes de dicho riesgo y dar seguimiento a la asignación de recursos del Programa Presupuestal 0068 (PREVAED).
 
-El sistema procesa e integra continuas transmisiones de datos satelitales, hidrometeorológicos, actividad sísmica y presupuestos de emergencia del Estado, combinándolos con el historial oficial de emergencias de las últimas décadas. Mediante modelos de **Machine Learning explicable (SHAP)** y un **Asistente Virtual basado en Inteligencia Artificial Generativa (RAG con Azure OpenAI)**, el SAT CENEPRED permite a las autoridades, brigadistas y analistas de gestión de riesgos anticipar eventos críticos, priorizar la asignación de recursos presupuestales y tomar decisiones operativas oportunas.
+## Arquitectura de Datos
 
----
-
-## 2. Arquitectura del Sistema y Flujo de Datos (Capa Medallón)
-
-La arquitectura de datos está construida siguiendo el patrón **Medallion Lakehouse (Bronze → Silver → Gold)** alojada en **Microsoft Azure Data Lake Storage Gen2 (ADLS Gen2)**, orquestada de forma automática mediante **Azure Data Factory** y ejecutada en entornos distribuidos.
+El flujo de información utiliza el patrón Medallion Lakehouse (Bronze, Silver, Gold) sobre Microsoft Azure Data Lake Storage Gen2 (ADLS Gen2). La orquestación y el agendamiento diario están a cargo de Azure Data Factory (ADF).
 
 ```
-       FUENTES DE DATOS EXTERNAS E INTERNAS EN TIEMPO REAL
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│ INDECI/SINPAD│   │ MEF (PP0068) │   │ NASA FIRMS   │   │ Open-Meteo   │
-│ (Emergencias)│   │ (Presupuesto)│   │ (Focos Calor)│   │  (Sismos/Clima)
-└──────┬───────┘   └──────┬───────┘   └──────┬───────┘   └──────┬───────┘
-       │                  │                  │                  │
-       └──────────────────┴────────┬─────────┴──────────────────┘
-                                   │
-                   ┌───────────────▼───────────────┐
-                   │  Azure Data Factory (ADF)    │
-                   │ (Trigger Diario Automatizado) │
-                   └───────────────┬───────────────┘
-                                   │
-       ┌───────────────────────────┴───────────────────────────┐
-       │     MICROSOFT AZURE DATA LAKE STORAGE GEN2 (ADLS)      │
-       │                                                       │
-       │  ┌─────────────────────────────────────────────────┐  │
-       │  │ Capa BRONZE: Datos Crudos en Formato JSON/CSV   │  │
-       │  └────────────────────────┬────────────────────────┘  │
-       │                           │ (Limpieza, Deduplicación,  │
-       │                           │  Normalización, Validaciones QA)
-       │  ┌────────────────────────▼────────────────────────┐  │
-       │  │ Capa SILVER: Datos Estandarizados (Parquet)     │  │
-       │  └────────────────────────┬────────────────────────┘  │
-       │                           │ (Modelado Estrella Star Schema,│
-       │                           │  Feature Engineering & ML) │
-       │  ┌────────────────────────▼────────────────────────┐  │
-       │  │ Capa GOLD: Tablas Dimensionales y Hechos Parquet│  │
-       │  └────────────────────────┬────────────────────────┘  │
-       └───────────────────────────┼───────────────────────────┘
-                                   │
-         ┌─────────────────────────┼─────────────────────────┐
-         │                         │                         │
-┌────────▼────────┐       ┌────────▼────────┐       ┌────────▼────────┐
-│  Plataforma Web │       │  Modelos ML     │       │ Assistant AI    │
-│  Next.js (SAT)  │       │  Predictivos    │       │  (RAG OpenAI)   │
-└─────────────────┘       └─────────────────┘       └─────────────────┘
+[SINPAD / INDECI]  [MEF PP0068]  [NASA FIRMS]  [USGS / Open-Meteo]
+       │                 │             │                 │
+       └─────────────────┴──────┬──────┴─────────────────┘
+                                │
+                     Azure Data Factory (ADF)
+                                │
+               Azure Data Lake Storage Gen2 (ADLS)
+                 ├── /bronze  (JSON / CSV crudo)
+                 ├── /silver  (Parquet limpio y estandarizado)
+                 └── /gold    (Modelo Estrella Parquet)
+                                │
+      ┌─────────────────────────┼─────────────────────────┐
+      │                         │                         │
+Plataforma Web             Modelos ML              Asistente IA RAG
+(Next.js / React)      (XGBoost / SHAP)          (Azure OpenAI / Search)
 ```
 
-### Descripción de las Capas Medallón:
-- **Capa Bronze (`adls://bronze/`)**: Almacena las extracciones crudas e inmutables obtenidas directamente desde las APIs oficiales de SINPAD, MEF, NASA FIRMS, USGS y Open-Meteo, preservando el trazado histórico original.
-- **Capa Silver (`adls://silver/`)**: Limpia, enriquece y estandariza los datos. Aplica normalización de nombres de departamentos, limpieza de caracteres corruptos, resolución espacial de coordenadas a departamentos (geofencing) y pasa por la suite automatizada de validaciones de calidad (`validar_silver.py`).
-- **Capa Gold (`adls://gold/`)**: Estructura los datos en un **Modelo Dimensional Estrella (Star Schema)** optimizado para análisis analítico de alto rendimiento, consulta rápida desde la aplicación web y alimentación del motor predictivo.
+- **Bronze**: Almacenamiento de archivos crudos sin modificar tal como son entregados por las APIs de origen.
+- **Silver**: Normalización de nombres departamentales, limpieza de caracteres, validación espacial de coordenadas y aplicación de reglas de calidad.
+- **Gold**: Estructuración dimensional Star Schema optimizada para consumo analítico y entrenamiento de modelos.
 
----
+## Fuentes de Datos
 
-## 3. Fuentes de Datos Oficiales Integradas
+- **SINPAD / INDECI**: Registro histórico oficial de emergencias, personas afectadas, damnificadas, fallecidas y daños en infraestructura.
+- **MEF (PP 0068 PREVAED)**: Presupuesto Institucional Modificado (PIM) y Devengado ejecutado por departamentos y pliegos ministeriales.
+- **NASA FIRMS**: Detección satelital de focos de calor activos mediante sensores MODIS y VIIRS.
+- **USGS**: Registro continuo de sismicidad (epicentro, profundidad y magnitud).
+- **Open-Meteo & NOAA**: Telemetría hidrometeorológica diaria (precipitación acumulada y rangos de temperatura).
 
-| Fuente | Tipo de Datos | Frecuencia de Actualización | Función en el Sistema |
-| :--- | :--- | :--- | :--- |
-| **INDECI / SINPAD** | Histórico Oficial de Emergencias | Continua / Diaria | Registro de eventos, fallecidos, damnificados, afectados y viviendas destruidas. |
-| **MEF (PP 0068 PREVAED)** | Presupuesto Institucional Modificado (PIM) y Devengado | Diaria | Seguimiento a la ejecución presupuestal para reducción de la vulnerabilidad y atención de emergencias. |
-| **NASA FIRMS (Satelital)** | Detección de Focos de Calor Activos | ~Cada 3 horas (VIIRS/MODIS) | Identificación satelital inmediata de incendios forestales y anomalías térmicas. |
-| **USGS Earthquake Catalog** | Telemetría Sísmica Global | Tiempo Real | Monitoreo de magnitud, profundidad y epicentros de sismos en el territorio nacional y mar peruano. |
-| **Open-Meteo & NOAA** | Variables Hidrometeorológicas | Diaria / Horaria | Medición de precipitaciones acumuladas (24h), temperaturas máximas/mínimas y anomalías climáticas. |
+## Modelo Dimensional
 
----
+La capa Gold organiza la información en un modelo estrella compuesto por dimensiones y tablas de hechos:
 
-## 4. Modelo de Datos Dimensional (Star Schema - Capa Gold)
+- `DIM_REGION`: Catálogo departamental con división por regiones naturales (Costa, Sierra, Selva) y clusters de riesgo.
+- `DIM_FENOMENO`: Clasificación jerárquica de eventos (lluvias intensas, inundaciones, heladas, friajes, sismos, incendios forestales).
+- `DIM_TIEMPO`: Dimensión temporal continua con atributos astronómicos y marcadores de variabilidad climática (El Niño / La Niña ONI).
+- `FACT_EMERGENCIAS`: Consolidado de eventos históricos y métricas de impacto humano y físico.
+- `FACT_MONITOREO_DIARIO`: Matriz departamental diaria con métricas meteorológicas, sísmicas y térmicas en ventanas móviles de 7 días.
+- `FACT_GASTO_PREVAED`: Ejecución financiera de recursos asignados a la gestión del riesgo de desastres.
 
-La capa Gold organiza la información estratégica mediante las siguientes tablas dimensionales y hechos:
+## Componentes Predictivos y Asistenciales
 
-### Tablas Dimensionales (`DIM_*`):
-- **`DIM_REGION`**: Catálogo único de los 24 departamentos de la República del Perú y la Provincia Constitucional del Callao, agrupados por regiones naturales (Costa, Sierra, Selva) y clusters de vulnerabilidad.
-- **`DIM_FENOMENO`**: Clasificación jerárquica de fenómenos climáticos y físicos (Lluvias Intensas, Inundaciones, Heladas, Sismos, Incendios Forestales, Friajes, Deslizamientos/Huaicos).
-- **`DIM_TIEMPO`**: Dimensión temporal continua (2012–2023+) con atributos de año, mes, trimestre, día, estación astronómica y banderas de eventos climáticos globales (El Niño / La Niña ONI).
+- **Clasificación de Riesgo**: Modelos XGBoost y LightGBM entrenados para clasificar el nivel de riesgo por departamento.
+- **Modelado Temporal**: Redes neuronales recurrentes (LSTM) para la evaluación de series temporales de precipitación y actividad sísmica.
+- **Explicabilidad**: Cálculo de valores SHAP (SHapley Additive exPlanations) para identificar el peso específico de cada variable en las predicciones generadas.
+- **Asistente Conversacional**: Integración de Azure OpenAI y Azure AI Search (arquitectura RAG) para consultar el estado del sistema y los factores de riesgo mediante lenguaje natural.
 
-### Tablas de Hechos (`FACT_*`):
-- **`FACT_EMERGENCIAS`**: Registro consolidado de eventos históricos con métricas de impacto socioeconómico (fallecidos, heridos, damnificados, viviendas destruidas, nivel de severidad).
-- **`FACT_MONITOREO_DIARIO`**: Matriz de telemetría diaria que combina precipitaciones acumuladas, temperaturas, número de focos de calor activos y sismos en ventana móvil de 7 días por departamento.
-- **`FACT_GASTO_PREVAED`**: Seguimiento financiero detallado por departamento y pliego ejecutor (MINDEF, MINSA, MTC, ANA, INDECI) sobre el Programa Presupuestal 0068.
+## Aplicación Web
 
----
+La interfaz de usuario está desarrollada en Next.js con TailwindCSS y provee:
 
-## 5. Motor Predictivo de Machine Learning y Explicabilidad SHAP
+- Mapa dinámico de riesgo por departamento.
+- Cuadros de mando para monitoreo meteorológico, sísmico y térmico.
+- Módulo de seguimiento presupuestal MEF por pliego ejecutor.
+- Tablas comparativas y filtros por región, periodo y tipo de fenómeno.
 
-El componente predictivo evalúa constantemente el riesgo relativo de cada departamento para los siguientes 7 días:
+## Ejecución y Pruebas
 
-1. **Modelos de Clasificación de Riesgo**:
-   - **XGBoost & LightGBM**: Modelos principales entrenados sobre el historial de telemetría climática y registros de emergencias para clasificar el nivel de riesgo (Bajo, Medio, Alto, Crítico).
-   - **Random Forest**: Modelo de ensamble alternativo para validación cruzada.
-2. **Deep Learning Temporal**:
-   - **Red Neuronal LSTM (Long Short-Term Memory)**: Captura dependencias secuenciales multivariadas en las series temporales de precipitación y actividad sísmica.
-3. **Clustering y Detección de Anomalías**:
-   - **K-Means Clustering**: Segmentación no supervisada de departamentos según perfiles de vulnerabilidad estructural y climática.
-   - **Isolation Forest**: Identificación en tiempo real de anomalías atípicas en sensores meteorológicos y sísmicos.
-4. **Explicabilidad con SHAP (SHapley Additive exPlanations)**:
-   - Cada predicción de riesgo generada por el sistema incluye el desglose exacto de los factores determinantes (ejemplo: +42% debido a lluvias acumuladas > 85mm en 24h, +28% por focos de calor activos en la última semana), permitiendo una auditoría transparente del algoritmo.
+### Entorno Python
 
----
-
-## 6. Asistente Conversacional Inteligente (IA RAG)
-
-El SAT CENEPRED integra un **Asistente Virtual interactivo** basado en arquitectura **RAG (Retrieval-Augmented Generation)**:
-- **Tecnología**: Azure OpenAI Service (GPT-4o) integrado con Azure AI Search.
-- **Capacidades**:
-  - Responde consultas en lenguaje natural formuladas por autoridades y analistas sobre el estado de riesgo de cualquier región.
-  - Ofrece sugerencias inmediatas con accesos directos (*Regiones en Riesgo*, *Presupuesto MEF*, *Lluvia Máx 24h*, *Riesgo Predictivo*).
-  - Explica las causas subyacentes del nivel de alerta combinando el modelo SHAP con los informes oficiales de CENEPRED e INDECI.
-
----
-
-## 7. Plataforma Web Interactiva (Next.js 14)
-
-La aplicación web ofrece una experiencia de usuario fluida, moderna y responsiva construida con **Next.js 14, React 18 y TailwindCSS**:
-
-- **Visor Geográfico de Riesgo**: Mapa interactivo del Perú teñido por niveles de riesgo actualizados en tiempo real.
-- **Tablero de Monitoreo Meteorológico y Sísmico**: Métricas diarias de precipitación, focos de calor activos y registro sismológico.
-- **Monitor de Ejecución Presupuestal MEF**: Cuadro comparativo de PIM vs. Devengado por departamento y pliegos ejecutores claves.
-- **Filtros Dinámicos**: Exploración personalizada por departamento, fenómeno natural y ventana temporal.
-- **Modo Oscuro / Claro y Paleta Sky**: Interfaz diseñada para salas de control de mando operativas 24/7.
-
----
-
-## 8. Instalación y Configuración Local
-
-### Requisitos Previos:
-- **Python**: Versión 3.11 o superior.
-- **Node.js**: Versión 18.0 o superior (con `npm`).
-- **Azure CLI**: Para despliegue de infraestructura y ejecución remota.
-
-### 1. Clonar el Repositorio:
 ```bash
-git clone https://github.com/YeshuaChavez/cenepred-gestion-desastres-bi.git
-cd cenepred-gestion-desastres-bi
-```
-
-### 2. Configurar Entorno Virtual de Python e Instalación de Dependencias:
-```bash
-# Crear entorno virtual
 python -m venv venv
-
-# Activar en Windows PowerShell
 .\venv\Scripts\Activate.ps1
-
-# Instalación de librerías
-pip install --upgrade pip
 pip install -r requirements.txt
-pip install pytest ruff
 ```
 
-### 3. Ejecución del Pipeline Medallón Localmente:
+### Orquestación de Datos
+
 ```bash
-# Ejecutar todas las etapas del pipeline maestro (Bronze -> Silver -> QA -> Gold -> Export)
+# Ejecutar pipeline Medallón completo (Bronze, Silver, Gold, Export)
 python data/pipelines/master_pipeline.py --stage all
 
-# Generar el archivo realData.json sincronizado para la WebApp
+# Exportar dataset consolidado para la aplicación web
 python scripts/export_gold_to_webapp_json.py
 ```
 
-### 4. Ejecución de Pruebas Unitarias y Calidad:
+### Pruebas Unitarias y Calidad
+
 ```bash
-# Ejecutar la suite completa de 59 pruebas unitarias
+# Suite de pruebas unitarias
 python -m pytest tests/ -v
 
-# Verificar linting y calidad de código con Ruff
+# Validación de código
 python -m ruff check . --select F,E9
 ```
 
-### 5. Iniciar la Aplicación Web Localmente:
+### Aplicación Web
+
 ```bash
 cd apps/webapp
 npm install
 npm run dev
 ```
-Accede a la aplicación en tu navegador ingresando a `http://localhost:3000`.
 
----
+## Infraestructura en la Nube
 
-## 9. Infraestructura en la Nube (Microsoft Azure y Terraform)
+La infraestructura en Microsoft Azure está definida mediante Terraform (`infra/environments/prod`) e incluye:
 
-El proyecto utiliza **Terraform** para aprovisionar y gestionar la infraestructura como código (IaC) de forma repetible y segura:
+- Grupo de Recursos: `rg-cenepred-dev`
+- Data Factory: `adf-cenepred-dev`
+- Storage Account (ADLS Gen2): `stcenepreddev1`
+- Databricks Workspace: `dbw-cenepred-dev`
+- Key Vault: `kv-cenepred-dev1`
+- Azure OpenAI: `oai-cenepred-dev`
 
-- **Grupo de Recursos**: `rg-cenepred-dev`
-- **Data Factory**: `adf-cenepred-dev` (Pipeline `adf_pipeline_etl_cenepred` y Trigger Diario `trigger_diario_cenepred`)
-- **Data Lake Storage Gen2**: `stcenepreddev1` (Contenedores `/bronze`, `/silver`, `/gold`, `/synapsefs`)
-- **Databricks Workspace**: `dbw-cenepred-dev`
-- **Key Vault**: `kv-cenepred-dev1`
-- **Azure OpenAI**: `oai-cenepred-dev`
-
-### Despliegue de Infraestructura con Terraform:
-```bash
-cd infra/environments/prod
-terraform init
-terraform plan
-terraform apply
-```
-
----
-
-## 11. Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 .
 ├── .github/
-│   └── workflows/              # Workflows automatizados de CI/CD para GitHub Actions
+│   └── workflows/              # Workflows de CI/CD para GitHub Actions
 ├── apps/
-│   └── webapp/                 # Aplicación Web SAT (Next.js 14, React 18, TailwindCSS)
+│   └── webapp/                 # Aplicación Web (Next.js 14, React 18, TailwindCSS)
 ├── data/
-│   ├── bronze/                 # Capa Bronze: Ingesta cruda e inmutable (JSON/CSV)
-│   ├── silver/                 # Capa Silver: Datos estandarizados, limpios y validados (Parquet)
+│   ├── bronze/                 # Capa Bronze: Datos crudos (JSON/CSV)
+│   ├── silver/                 # Capa Silver: Datos limpios y estandarizados (Parquet)
 │   ├── gold/                   # Capa Gold: Modelo dimensional Star Schema (Parquet)
-│   └── pipelines/              # Orquestador del pipeline maestro de ingesta y transformación
-├── docs/                       # Documentación técnica, guías de arquitectura y manuales
+│   └── pipelines/              # Scripts orquestadores del pipeline
+├── docs/                       # Documentación técnica y manuales
 ├── infra/
-│   ├── azure_data_factory/     # Definiciones JSON de pipelines, triggers y linked services ADF
-│   └── environments/           # Infraestructura como Código (IaC con Terraform)
-├── notebooks/                  # Cuadernos de experimentación ML, EDA y explicabilidad SHAP
-├── scripts/                    # Utilerías de exportación y sincronización de datos
-├── tests/                      # Suite automatizada de pruebas unitarias (Pytest)
-├── requirements.txt            # Dependencias del proyecto en Python
-└── README.md                   # Documentación principal del sistema
+│   ├── azure_data_factory/     # Definiciones JSON de pipelines y triggers ADF
+│   └── environments/           # Infraestructura como Código (Terraform)
+├── notebooks/                  # Cuadernos de análisis y modelado ML
+├── scripts/                    # Scripts de exportación y utilerías
+├── tests/                      # Pruebas unitarias (Pytest)
+├── requirements.txt            # Dependencias de Python
+└── README.md                   # Documentación principal
 ```
-
