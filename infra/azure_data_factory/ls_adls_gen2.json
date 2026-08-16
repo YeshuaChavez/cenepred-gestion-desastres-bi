@@ -1,0 +1,7 @@
+{
+  "description": "Servicio vinculado a Azure Data Lake Storage Gen2 (stcenepreddev1)",
+  "type": "AzureBlobFS",
+  "typeProperties": {
+    "url": "https://stcenepreddev1.dfs.core.windows.net/"
+  }
+}
