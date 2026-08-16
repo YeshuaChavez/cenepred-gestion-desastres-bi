@@ -6,6 +6,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { RegionData } from '../types';
 import { useTheme } from '../hooks/useTheme';
+import { INFRAESTRUCTURA_CRITICA, InfrastructureItem } from '../data/infrastructureData';
 
 // Fix Leaflet default icon issues in Webpack/Vite
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -26,6 +27,9 @@ interface PeruInteractiveMapProps {
   macroRegion?: string;
   timeWindow?: TimeWindow;
   forecast48h?: boolean;
+  showHospitals?: boolean;
+  showBridges?: boolean;
+  showShelters?: boolean;
 }
 
 const MACRO_CENTERS: Record<string, { center: [number, number]; zoom: number }> = {
@@ -89,7 +93,10 @@ export default function PeruInteractiveMap({
   mapMode = 'riesgo',
   macroRegion = 'todas',
   timeWindow = '24h',
-  forecast48h = false
+  forecast48h = false,
+  showHospitals = false,
+  showBridges = false,
+  showShelters = false
 }: PeruInteractiveMapProps) {
   const { theme } = useTheme();
   const [isClientDark, setIsClientDark] = useState<boolean>(false);
@@ -182,8 +189,16 @@ export default function PeruInteractiveMap({
     return { color, radius, label, prob, precip, focos, forecastDelta };
   };
 
+  // Filtrar infraestructura según toggles activos
+  const filteredInfra = INFRAESTRUCTURA_CRITICA.filter(item => {
+    if (item.tipo === 'hospital' && showHospitals) return true;
+    if (item.tipo === 'puente' && showBridges) return true;
+    if (item.tipo === 'albergue' && showShelters) return true;
+    return false;
+  });
+
   return (
-    <div className={`w-full h-[520px] rounded-3xl overflow-hidden shadow-sm border transition-colors duration-300 relative z-0 ${
+    <div className={`w-full h-[540px] rounded-3xl overflow-hidden shadow-sm border transition-colors duration-300 relative z-0 ${
       isClientDark ? 'border-slate-800 bg-[#060d1f]' : 'border-slate-200 bg-slate-50'
     }`}>
       
@@ -197,6 +212,18 @@ export default function PeruInteractiveMap({
             {forecast48h ? 'Pronóstico Predictivo IA (48 Horas)' : `Monitoreo SAT (${timeWindow === '24h' ? 'Últimas 24h' : timeWindow === '7d' ? 'Últimos 7 Días' : 'Últimos 30 Días'})`}
           </span>
         </div>
+
+        {/* Dynamic active layers badge */}
+        {(showHospitals || showBridges || showShelters) && (
+          <div className={`px-2.5 py-1 rounded-lg backdrop-blur-md shadow-sm border text-[10px] font-semibold flex items-center gap-2 ${
+            isClientDark ? 'bg-slate-900/80 text-slate-300 border-slate-700' : 'bg-white/80 text-slate-700 border-slate-200'
+          }`}>
+            <span>Capas Activas:</span>
+            {showHospitals && <span className="text-emerald-500 font-bold">🏥 Hospitales</span>}
+            {showBridges && <span className="text-amber-500 font-bold">🌉 Puentes</span>}
+            {showShelters && <span className="text-purple-500 font-bold">⛺ Albergues</span>}
+          </div>
+        )}
       </div>
 
       <MapContainer
@@ -205,7 +232,7 @@ export default function PeruInteractiveMap({
         scrollWheelZoom={true}
         className="w-full h-full"
         style={{
-          height: '520px',
+          height: '540px',
           width: '100%',
           background: isClientDark ? '#060d1f' : '#f8fafc'
         }}
@@ -219,6 +246,7 @@ export default function PeruInteractiveMap({
           maxZoom={18}
         />
 
+        {/* 1. Regional SAT Risk & Telemetry Department Markers */}
         {Object.entries(departamentos).map(([key, data]) => {
           const coords = DEPT_COORDS[key] || centerPeru;
           const isSelected = key === selectedDeptoKey;
@@ -240,7 +268,7 @@ export default function PeruInteractiveMap({
               }}
             >
               <Popup className="custom-leaflet-popup">
-                <div className={`p-3 space-y-2.5 min-w-[220px] font-sans ${isClientDark ? 'text-slate-100' : 'text-slate-800'}`}>
+                <div className={`p-3 space-y-2.5 min-w-[230px] font-sans ${isClientDark ? 'text-slate-100' : 'text-slate-800'}`}>
                   <div className="flex items-center justify-between border-b pb-1.5 border-slate-200 dark:border-slate-700">
                     <h4 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-xs text-sky-600">location_on</span>
@@ -299,6 +327,68 @@ export default function PeruInteractiveMap({
             </CircleMarker>
           );
         })}
+
+        {/* 2. Critical Infrastructure GIS Overlay (Hospitales, Puentes, Albergues) */}
+        {filteredInfra.map((item) => {
+          const isHosp = item.tipo === 'hospital';
+          const isBridge = item.tipo === 'puente';
+          const color = isHosp ? '#059669' : isBridge ? '#d97706' : '#7c3aed';
+          const iconSymbol = isHosp ? '🏥' : isBridge ? '🌉' : '⛺';
+
+          return (
+            <CircleMarker
+              key={`infra-${item.id}-${isClientDark ? 'dark' : 'light'}`}
+              center={[item.lat, item.lng]}
+              radius={8}
+              pathOptions={{
+                fillColor: color,
+                fillOpacity: 0.95,
+                color: isClientDark ? '#ffffff' : '#0f172a',
+                weight: 2.2
+              }}
+            >
+              <Popup className="custom-leaflet-popup">
+                <div className={`p-3 space-y-2 max-w-[260px] font-sans ${isClientDark ? 'text-slate-100' : 'text-slate-800'}`}>
+                  <div className="flex items-center gap-2 border-b pb-1.5 border-slate-200 dark:border-slate-700">
+                    <span className="text-lg">{iconSymbol}</span>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900 dark:text-white leading-tight">
+                        {item.nombre}
+                      </h4>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                        {item.entidad}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded-lg text-[11px]">
+                      <span className="text-slate-500 dark:text-slate-400">Estado:</span>
+                      <span className={`font-bold uppercase text-[10px] px-2 py-0.5 rounded-md text-white ${
+                        item.estado === 'critico' ? 'bg-red-600' : item.estado === 'alerta' ? 'bg-amber-600' : 'bg-emerald-600'
+                      }`}>
+                        {item.estado}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+                      <b>Capacidad:</b> {item.capacidad}
+                    </p>
+
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 italic">
+                      {item.descripcion}
+                    </p>
+
+                    <div className="pt-1 border-t border-slate-200 dark:border-slate-700 text-[10px] text-sky-700 dark:text-sky-400 font-bold">
+                      📞 {item.contacto}
+                    </div>
+                  </div>
+                </div>
+              </Popup>
+            </CircleMarker>
+          );
+        })}
+
       </MapContainer>
     </div>
   );

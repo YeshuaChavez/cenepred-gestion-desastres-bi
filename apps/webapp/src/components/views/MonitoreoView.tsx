@@ -31,6 +31,9 @@ export default function MonitoreoView() {
   const [mapMode, setMapMode] = useState<MapLayerMode>('riesgo');
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('24h');
   const [forecast48h, setForecast48h] = useState<boolean>(false);
+  const [showHospitals, setShowHospitals] = useState<boolean>(false);
+  const [showBridges, setShowBridges] = useState<boolean>(false);
+  const [showShelters, setShowShelters] = useState<boolean>(false);
   const [exportToast, setExportToast] = useState<boolean>(false);
   
   const rawDeptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
@@ -264,8 +267,68 @@ export default function MonitoreoView() {
           onClick={() => handleMacroRegionChange('costa_centro')}
           className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${macroRegion === 'costa_centro' ? 'bg-sky-600 dark:bg-sky-500 text-white font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'}`}
         >
-          Costa Centro / Sur
+          Costa Centro / Lima
         </button>
+      </div>
+
+      {/* Infrastructure & Shelter Layer Controls */}
+      <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs font-semibold">
+        <div className="flex items-center gap-2">
+          <span className="text-slate-500 dark:text-slate-400 font-bold px-2 flex items-center gap-1.5 shrink-0">
+            <span className="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400">domain</span> Infraestructura Crítica:
+          </span>
+          <button
+            onClick={() => setShowHospitals(!showHospitals)}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border ${
+              showHospitals
+                ? 'bg-emerald-600 text-white border-emerald-500 shadow-xs font-bold'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-400'
+            }`}
+          >
+            <span>🏥</span>
+            <span>Hospitales (MINSA/EsSalud)</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showHospitals ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
+              {showHospitals ? 'ON' : 'OFF'}
+            </span>
+          </button>
+          <button
+            onClick={() => setShowBridges(!showBridges)}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border ${
+              showBridges
+                ? 'bg-amber-600 text-white border-amber-500 shadow-xs font-bold'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'
+            }`}
+          >
+            <span>🌉</span>
+            <span>Puentes Críticos (MTC)</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showBridges ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
+              {showBridges ? 'ON' : 'OFF'}
+            </span>
+          </button>
+          <button
+            onClick={() => setShowShelters(!showShelters)}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border ${
+              showShelters
+                ? 'bg-purple-600 text-white border-purple-500 shadow-xs font-bold'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-purple-400'
+            }`}
+          >
+            <span>⛺</span>
+            <span>Albergues Oficiales (INDECI)</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showShelters ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
+              {showShelters ? 'ON' : 'OFF'}
+            </span>
+          </button>
+        </div>
+
+        {(showHospitals || showBridges || showShelters) && (
+          <button
+            onClick={() => { setShowHospitals(false); setShowBridges(false); setShowShelters(false); }}
+            className="text-[11px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 px-2 py-1 underline cursor-pointer shrink-0"
+          >
+            Ocultar Capas GIS
+          </button>
+        )}
       </div>
 
       {/* 4 Dynamic Metric KPI Cards */}
@@ -512,6 +575,9 @@ export default function MonitoreoView() {
               macroRegion={macroRegion}
               timeWindow={timeWindow}
               forecast48h={forecast48h}
+              showHospitals={showHospitals}
+              showBridges={showBridges}
+              showShelters={showShelters}
             />
           </div>
         </div>
