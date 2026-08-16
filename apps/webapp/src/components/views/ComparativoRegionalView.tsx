@@ -22,10 +22,10 @@ export default function ComparativoRegionalView() {
   const depto2 = PERU_DEPARTAMENTOS[depto2Key] || PERU_DEPARTAMENTOS['cusco'];
 
   const getColorClass = (val: number): string => {
-    if (val >= 8) return 'bg-red-500 text-white font-bold cursor-pointer hover:scale-110 transition-transform shadow-xs';
-    if (val >= 5) return 'bg-amber-400 text-slate-900 font-semibold cursor-pointer hover:scale-110 transition-transform';
-    if (val >= 3) return 'bg-sky-200 text-slate-800 font-medium cursor-pointer hover:scale-110 transition-transform';
-    return 'bg-slate-100 text-slate-600 cursor-pointer hover:bg-slate-200';
+    if (val >= 8) return 'bg-red-500 text-white font-bold cursor-pointer hover:scale-115 hover:shadow-lg transition-all';
+    if (val >= 5) return 'bg-amber-400 text-slate-900 font-bold cursor-pointer hover:scale-115 hover:shadow-md transition-all';
+    if (val >= 3) return 'bg-sky-200 text-slate-800 font-semibold cursor-pointer hover:scale-115 hover:shadow-sm transition-all';
+    return 'bg-slate-100 text-slate-600 font-medium cursor-pointer hover:bg-slate-200 hover:scale-110 transition-all';
   };
 
   const handleCellClick = (depto: string, monthIdx: number, val: number) => {
@@ -41,7 +41,7 @@ export default function ComparativoRegionalView() {
       
       {/* Cell Detail Modal */}
       {selectedCell && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-md space-y-4">
             <div className="flex justify-between items-center border-b border-slate-200 pb-3">
               <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -50,36 +50,36 @@ export default function ComparativoRegionalView() {
               </h3>
               <button
                 onClick={() => setSelectedCell(null)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2 py-1 bg-slate-100 rounded cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
               >
-                ESC
+                Cerrar ✕
               </button>
             </div>
 
             <div className="space-y-3 text-xs text-slate-600">
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Nivel de Recurrencia Histórica</span>
-                <span className="text-xl font-extrabold text-slate-900">
-                  {selectedCell.intensity >= 8 ? 'Intensidad Crítica (Pico Anual)' : selectedCell.intensity >= 5 ? 'Intensidad Moderada - Alta' : 'Intensidad Baja / Normal'}
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Nivel de Incidencia Histórica</span>
+                <span className="text-lg font-extrabold text-slate-900">
+                  {selectedCell.intensity >= 8 ? 'Alta Incidencia (Temporada de Riesgo)' : selectedCell.intensity >= 5 ? 'Incidencia Moderada' : 'Incidencia Baja / Normal'}
                 </span>
                 <span className="block text-sky-700 font-semibold">Índice relativo: {selectedCell.intensity} / 10</span>
               </div>
 
               <div className="space-y-1">
-                <span className="font-bold text-slate-800 block">Fenómenos Recurrentes en este mes:</span>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+                <span className="font-bold text-slate-800 block">Características Estacionales del Mes:</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed font-medium">
                   {selectedCell.month === 'Enero' || selectedCell.month === 'Febrero' || selectedCell.month === 'Marzo'
-                    ? 'Precipitaciones intensas por temporada de lluvias en la sierra y costa norte. Riesgo de inundaciones y desbordes de ríos.'
+                    ? 'Temporada de lluvias intensas en la sierra y costa norte. Incremento de caudales y monitoreo preventivo de riadas.'
                     : selectedCell.month === 'Junio' || selectedCell.month === 'Julio' || selectedCell.month === 'Agosto'
-                    ? 'Temporada de heladas en zonas sobre los 3,500 m s. n. m. e incremento de friajes en la selva sur.'
-                    : 'Transición estacional con eventos focalizados de vientos fuertes y lluvias moderadas.'}
+                    ? 'Descenso de temperaturas y heladas en zonas altas sobre 3,500 m s. n. m., y friajes estacionales en la selva.'
+                    : 'Periodo de transición estacional con precipitaciones moderadas y monitoreo continuo.'}
                 </p>
               </div>
 
               <div className="pt-2 text-right">
                 <button
                   onClick={() => setSelectedCell(null)}
-                  className="px-4 py-2 bg-sky-700 text-white rounded-lg font-bold text-xs hover:bg-sky-800 transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-sky-700 text-white rounded-xl font-bold text-xs hover:bg-sky-800 transition-colors cursor-pointer"
                 >
                   Entendido
                 </button>
@@ -89,35 +89,37 @@ export default function ComparativoRegionalView() {
         </div>
       )}
 
-      <div className="flex flex-col gap-2 border-b border-slate-200 pb-3">
+      <div className="flex flex-col gap-1 border-b border-slate-200 pb-3">
         <h2 className="font-headline-lg text-2xl font-bold text-slate-900">Comparativo Regional y Matriz Estacional</h2>
         <p className="font-body-md text-sm text-slate-600 max-w-3xl">
-          Matriz de recurrencia e intensidad de emergencias climáticas por departamento y mes basada en 84,369 eventos históricos.
+          Confrontación directa de indicadores clímaticos y presupuestales entre departamentos, junto a la matriz de recurrencia estacional por mes.
         </p>
       </div>
 
       {/* Side-by-Side Executive Comparator Tool */}
-      <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-6">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xs border border-slate-200/90 flex flex-col gap-6">
         <div className="flex justify-between items-center border-b border-slate-100 pb-4">
           <div>
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <span className="material-symbols-outlined text-sky-700">compare_arrows</span>
+            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center">
+                <span className="material-symbols-outlined text-base">compare_arrows</span>
+              </div>
               Comparador Lado a Lado de Departamentos
             </h3>
-            <p className="text-xs text-slate-500">Selecciona 2 regiones para confrontar su perfil de riesgo y ejecución presupuestal</p>
+            <p className="text-xs text-slate-500 mt-0.5">Selecciona dos regiones para comparar sus datos en tiempo real</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Department 1 Card */}
-          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+          <div className="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/90 hover:border-sky-300 transition-all space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Región A</span>
               <select
                 value={depto1Key}
                 onChange={(e) => setDepto1Key(e.target.value)}
-                className="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-bold text-sky-800 shadow-xs cursor-pointer outline-none"
+                className="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-sky-800 shadow-2xs cursor-pointer outline-none"
               >
                 {deptosKeys.map(k => (
                   <option key={k} value={k}>{PERU_DEPARTAMENTOS[k].name}</option>
@@ -125,41 +127,41 @@ export default function ComparativoRegionalView() {
               </select>
             </div>
 
-            <div className="flex items-baseline justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-baseline justify-between border-b border-slate-200/80 pb-3">
               <span className="text-2xl font-extrabold text-slate-900">{depto1.name}</span>
-              <span className={`px-2.5 py-0.5 rounded text-xs font-bold text-white uppercase ${depto1.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase ${depto1.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
                 Riesgo {depto1.prob}%
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias SINPAD</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias Atendidas</span>
                 <span className="font-extrabold text-slate-900 text-base">{(depto1.emergencias ?? 0).toLocaleString()}</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación Acum</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación 24h</span>
                 <span className="font-extrabold text-sky-700 text-base">{depto1.precipitacionMm} mm</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">PIM Asignado MEF</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Presupuesto Asignado</span>
                 <span className="font-extrabold text-slate-900 text-base">S/ {depto1.pimM}M</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Ejecución PP 0068</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Inversión Ejecutada</span>
                 <span className="font-extrabold text-emerald-600 text-base">{depto1.pctEjecucion}%</span>
               </div>
             </div>
           </div>
 
           {/* Department 2 Card */}
-          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-4">
+          <div className="bg-slate-50/70 p-6 rounded-2xl border border-slate-200/90 hover:border-sky-300 transition-all space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Región B</span>
               <select
                 value={depto2Key}
                 onChange={(e) => setDepto2Key(e.target.value)}
-                className="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-bold text-sky-800 shadow-xs cursor-pointer outline-none"
+                className="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-sky-800 shadow-2xs cursor-pointer outline-none"
               >
                 {deptosKeys.map(k => (
                   <option key={k} value={k}>{PERU_DEPARTAMENTOS[k].name}</option>
@@ -167,28 +169,28 @@ export default function ComparativoRegionalView() {
               </select>
             </div>
 
-            <div className="flex items-baseline justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-baseline justify-between border-b border-slate-200/80 pb-3">
               <span className="text-2xl font-extrabold text-slate-900">{depto2.name}</span>
-              <span className={`px-2.5 py-0.5 rounded text-xs font-bold text-white uppercase ${depto2.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold text-white uppercase ${depto2.prob >= 65 ? 'bg-red-600' : 'bg-sky-600'}`}>
                 Riesgo {depto2.prob}%
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias SINPAD</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Emergencias Atendidas</span>
                 <span className="font-extrabold text-slate-900 text-base">{(depto2.emergencias ?? 0).toLocaleString()}</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación Acum</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Precipitación 24h</span>
                 <span className="font-extrabold text-sky-700 text-base">{depto2.precipitacionMm} mm</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">PIM Asignado MEF</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Presupuesto Asignado</span>
                 <span className="font-extrabold text-slate-900 text-base">S/ {depto2.pimM}M</span>
               </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Ejecución PP 0068</span>
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Inversión Ejecutada</span>
                 <span className="font-extrabold text-emerald-600 text-base">{depto2.pctEjecucion}%</span>
               </div>
             </div>
@@ -197,12 +199,15 @@ export default function ComparativoRegionalView() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow-xs border border-slate-200/80 flex flex-col gap-4">
-        <h3 className="font-title-md text-base font-bold text-slate-900">Recurrencia e Intensidad Mensual por Departamento</h3>
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xs border border-slate-200/90 flex flex-col gap-4">
+        <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+          <span className="material-symbols-outlined text-sky-700">grid_on</span>
+          Matriz de Recurrencia e Intensidad Mensual por Departamento
+        </h3>
 
         <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
           <table className="w-full text-center border-collapse min-w-[750px]">
-            <thead className="sticky top-0 bg-slate-100 shadow-xs z-10">
+            <thead className="sticky top-0 bg-slate-100 shadow-2xs z-10">
               <tr className="border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
                 <th className="py-3 px-4 text-left">Departamento</th>
                 {MONTH_NAMES.map((m, i) => (
@@ -212,7 +217,7 @@ export default function ComparativoRegionalView() {
             </thead>
             <tbody className="text-sm">
               {MATRIZ_ESTACIONAL.map((row: any, idx: number) => (
-                <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <tr key={idx} className="border-b border-slate-100 hover:bg-sky-50/50 transition-colors">
                   <td className="py-2.5 px-4 text-left font-bold text-slate-800">{row.depto}</td>
                   {[row.ene, row.feb, row.mar, row.abr, row.may, row.jun, row.jul, row.ago, row.sep, row.oct, row.nov, row.dic].map((val, mIdx) => (
                     <td key={mIdx} className="py-1.5 px-2">
