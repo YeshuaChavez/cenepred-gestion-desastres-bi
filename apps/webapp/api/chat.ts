@@ -1,6 +1,8 @@
-export default async function handler(req, res) {
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Configurar cabeceras CORS
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
@@ -17,7 +19,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { prompt } = req.body;
+    const { prompt } = req.body || {};
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt es requerido' });
     }
@@ -59,7 +61,7 @@ Responde siempre de manera concisa, ejecutiva, institucional y precisa en españ
       });
 
       if (azureRes.ok) {
-        const data = await azureRes.json();
+        const data: any = await azureRes.json();
         const reply = data.choices?.[0]?.message?.content || 'Respuesta generada por Azure CENEPRED.';
         return res.status(200).json({ reply, provider: 'Azure OpenAI Service (GPT-4o)' });
       }
@@ -79,7 +81,7 @@ Responde siempre de manera concisa, ejecutiva, institucional y precisa en españ
       });
 
       if (geminiRes.ok) {
-        const data = await geminiRes.json();
+        const data: any = await geminiRes.json();
         const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Respuesta generada.';
         return res.status(200).json({ reply, provider: 'Gemini AI' });
       }

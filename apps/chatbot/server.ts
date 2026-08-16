@@ -1,7 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,10 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // Azure OpenAI & Gemini credentials from root .env
-const AZURE_OPENAI_KEY = process.env.AZURE_OPENAI_KEY || '';
-const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT || 'https://yeshuachavezlozano-8430-resource.openai.azure.com/';
-const AZURE_OPENAI_DEPLOYMENT = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const AZURE_OPENAI_KEY: string = process.env.AZURE_OPENAI_KEY || '';
+const AZURE_OPENAI_ENDPOINT: string = process.env.AZURE_OPENAI_ENDPOINT || 'https://yeshuachavezlozano-8430-resource.openai.azure.com/';
+const AZURE_OPENAI_DEPLOYMENT: string = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
+const GEMINI_API_KEY: string = process.env.GEMINI_API_KEY || '';
 
 // System Prompt for Azure CENEPRED Chatbot with Guardrails
 const CENEPRED_SYSTEM_PROMPT = `
@@ -32,7 +34,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
 `;
 
 // Healthcheck Endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'online',
     service: 'CENEPRED Azure Chatbot Backend',
@@ -43,7 +45,7 @@ app.get('/health', (req, res) => {
 });
 
 // Chatbot Endpoint (Azure OpenAI Proxy)
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', async (req: Request, res: Response) => {
   try {
     const { prompt } = req.body;
     if (!prompt) {
@@ -70,7 +72,7 @@ app.post('/api/chat', async (req, res) => {
       });
 
       if (azureRes.ok) {
-        const data = await azureRes.json();
+        const data: any = await azureRes.json();
         const reply = data.choices?.[0]?.message?.content || 'Respuesta generada por Azure CENEPRED.';
         return res.json({ reply, provider: 'Azure OpenAI Service' });
       }
@@ -90,7 +92,7 @@ app.post('/api/chat', async (req, res) => {
       });
 
       if (geminiRes.ok) {
-        const data = await geminiRes.json();
+        const data: any = await geminiRes.json();
         const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Respuesta generada.';
         return res.json({ reply, provider: 'Gemini AI Server Proxy' });
       }
@@ -104,12 +106,12 @@ app.post('/api/chat', async (req, res) => {
 
   } catch (err) {
     console.error('Error en /api/chat:', err);
-    res.status(500).json({ error: 'Error interno en el servidor de chat' });
+    return res.status(500).json({ error: 'Error interno en el servidor de chat' });
   }
 });
 
 // Executive Report Generation Endpoint
-app.post('/api/reports/ml-generate', async (req, res) => {
+app.post('/api/reports/ml-generate', async (req: Request, res: Response) => {
   try {
     const { region } = req.body;
     return res.json({
@@ -119,7 +121,7 @@ app.post('/api/reports/ml-generate', async (req, res) => {
       provider: AZURE_OPENAI_KEY ? 'Azure OpenAI Service' : 'Gemini AI Server Proxy'
     });
   } catch (err) {
-    res.status(500).json({ error: 'Error al generar reporte en Azure' });
+    return res.status(500).json({ error: 'Error al generar reporte en Azure' });
   }
 });
 
