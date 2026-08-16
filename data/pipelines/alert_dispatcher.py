@@ -15,11 +15,11 @@ def check_and_dispatch_alerts(target_email: str = DEFAULT_RECIPIENT) -> List[Dic
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8')
         
-    print(f"📡 Escaneando mapa de riesgo para notificaciones automatizadas...")
-    print(f"📧 Destinatario oficial: {target_email}")
+    print(f"Escaneando mapa de riesgo para notificaciones automatizadas...")
+    print(f"Destinatario oficial: {target_email}")
     
     if not os.path.exists(REAL_DATA_PATH):
-        print(f"⚠️ Archivo {REAL_DATA_PATH} no encontrado. Omitiendo despacho de alertas.")
+        print(f"Archivo {REAL_DATA_PATH} no encontrado. Omitiendo despacho de alertas.")
         return []
         
     with open(REAL_DATA_PATH, "r", encoding="utf-8") as f:
@@ -61,7 +61,7 @@ def check_and_dispatch_alerts(target_email: str = DEFAULT_RECIPIENT) -> List[Dic
                 "destinatario": target_email
             }
             
-            print(f"🚨 ALERTA DETECTADA: Departamento de {nombre} - Nivel {riesgo.upper()}")
+            print(f"[ALERTA DETECTADA] Departamento de {nombre} - Nivel {riesgo.upper()}")
             print(f"   --> Despachando notificación a {target_email}...")
             
             # Enviar mediante la API de Nodemailer local / remota si el servidor está arriba
@@ -81,7 +81,7 @@ def check_and_dispatch_alerts(target_email: str = DEFAULT_RECIPIENT) -> List[Dic
                 
             dispatched_alerts.append(alert_payload)
             
-    print(f"✅ Proceso de alertas finalizado. {len(dispatched_alerts)} alertas procesadas para {target_email}.")
+    print(f"Proceso de alertas finalizado. {len(dispatched_alerts)} alertas procesadas para {target_email}.")
     return dispatched_alerts
 
 if __name__ == "__main__":

@@ -35,62 +35,86 @@ export async function POST(req: NextRequest) {
     });
 
     const isCritical = nivelRiesgo === "Crítico";
-    const headerColor = isCritical ? "#dc2626" : "#ea580c";
-    const statusBadge = isCritical ? "🚨 CRÍTICO" : "⚠️ ALTO";
+    const headerColor = isCritical ? "#0c365a" : "#0284c7";
+    const badgeColor = isCritical ? "#dc2626" : "#ea580c";
+    const statusBadge = isCritical ? "CRÍTICO" : "ALTO";
 
-    // Plantilla HTML formal para analistas de gestión de riesgos
+    // Plantilla HTML formal e institucional con iconos SVG (sin emojis)
     const htmlTemplate = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-        <div style="background-color: ${headerColor}; padding: 20px; text-align: center; color: #ffffff;">
-          <h1 style="margin: 0; font-size: 20px;">SISTEMA DE ALERTA TEMPRANA - CENEPRED</h1>
-          <p style="margin: 5px 0 0 0; font-size: 14px;">Notificación Automática de Inferencia de Riesgo</p>
-        </div>
-        <div style="padding: 24px; background-color: #ffffff; color: #1e293b;">
-          <div style="display: inline-block; background-color: ${headerColor}; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold; margin-bottom: 16px;">
-            NIVEL DE RIESGO: ${statusBadge}
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+        <div style="background-color: ${headerColor}; padding: 24px 20px; text-align: center; color: #ffffff;">
+          <div style="margin-bottom: 8px; display: inline-block;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
           </div>
-          <h2 style="margin-top: 0; color: #0f172a;">Alerta Temprana en el Departamento de ${departamento}</h2>
-          <p style="line-height: 1.5; color: #334155;">
-            El modelo predictivo de Machine Learning ha detectado una condición de riesgo elevado para las próximas 24-72 horas en el departamento de <strong>${departamento}</strong>.
+          <h1 style="margin: 0; font-size: 20px; letter-spacing: 0.5px; font-weight: 700;">SISTEMA DE ALERTA TEMPRANA - CENEPRED</h1>
+          <p style="margin: 6px 0 0 0; font-size: 13px; opacity: 0.9;">Reporte Institucional de Inferencia y Monitoreo de Riesgo</p>
+        </div>
+        
+        <div style="padding: 28px 24px; color: #1e293b;">
+          <div style="display: inline-block; background-color: ${badgeColor}; color: #ffffff; padding: 6px 14px; border-radius: 4px; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; margin-bottom: 20px;">
+            NIVEL DE ALERTA: ${statusBadge}
+          </div>
+          
+          <h2 style="margin: 0 0 12px 0; color: #0f172a; font-size: 18px;">Evaluación de Riesgo: Departamento de ${departamento}</h2>
+          <p style="line-height: 1.6; color: #334155; margin-bottom: 24px; font-size: 14px;">
+            El motor de evaluación predictiva ha identificado una condición de riesgo elevado para el departamento de <strong>${departamento}</strong> durante las próximas 24 a 72 horas.
           </p>
           
-          <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #f8fafc;">
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
             <thead>
-              <tr style="border-bottom: 2px solid #cbd5e1; text-align: left;">
-                <th style="padding: 10px;">Variable Telegráfica</th>
-                <th style="padding: 10px;">Valor Registrado (24h)</th>
+              <tr style="border-bottom: 2px solid #cbd5e1; text-align: left; background-color: #f1f5f9;">
+                <th style="padding: 12px; font-size: 13px; color: #334155;">Variable Telegráfica</th>
+                <th style="padding: 12px; font-size: 13px; color: #334155;">Valor Registrado (24h)</th>
               </tr>
             </thead>
             <tbody>
               <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 10px;">Precipitación Máxima</td>
-                <td style="padding: 10px; font-weight: bold;">${precipitacionMax} mm</td>
+                <td style="padding: 12px; font-size: 13px;">
+                  <span style="vertical-align: middle; display: inline-block; margin-right: 6px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                  </span>
+                  Precipitación Máxima
+                </td>
+                <td style="padding: 12px; font-weight: bold; font-size: 13px; color: #0f172a;">${precipitacionMax} mm</td>
               </tr>
               <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 10px;">Focos de Calor Activos</td>
-                <td style="padding: 10px; font-weight: bold;">${focosCalor} focos</td>
+                <td style="padding: 12px; font-size: 13px;">
+                  <span style="vertical-align: middle; display: inline-block; margin-right: 6px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+                  </span>
+                  Focos de Calor Activos
+                </td>
+                <td style="padding: 12px; font-weight: bold; font-size: 13px; color: #0f172a;">${focosCalor} focos</td>
               </tr>
               <tr>
-                <td style="padding: 10px;">Actividad Sísmica (7 días)</td>
-                <td style="padding: 10px; font-weight: bold;">${sismos7d} sismos</td>
+                <td style="padding: 12px; font-size: 13px;">
+                  <span style="vertical-align: middle; display: inline-block; margin-right: 6px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </span>
+                  Actividad Sísmica (7 días)
+                </td>
+                <td style="padding: 12px; font-weight: bold; font-size: 13px; color: #0f172a;">${sismos7d} sismos</td>
               </tr>
             </tbody>
           </table>
 
-          <h3 style="color: #0f172a; margin-bottom: 8px;">Factores Determinantes (SHAP):</h3>
-          <ul style="padding-left: 20px; color: #475569;">
-            ${factoresRiesgo.map((f: string) => `<li style="margin-bottom: 4px;">${f}</li>`).join("")}
+          <h3 style="color: #0f172a; font-size: 14px; margin: 0 0 10px 0;">Factores Determinantes (Explicabilidad SHAP):</h3>
+          <ul style="padding-left: 20px; color: #475569; margin: 0 0 24px 0; font-size: 13px; line-height: 1.6;">
+            ${factoresRiesgo.map((f: string) => `<li style="margin-bottom: 6px;">${f}</li>`).join("")}
           </ul>
 
-          <div style="margin-top: 24px; padding: 12px; background-color: #f1f5f9; border-left: 4px solid #0284c7; border-radius: 4px;">
-            <p style="margin: 0; font-size: 13px; color: #0369a1;">
-              <strong>Acción Recomendada:</strong> Verificar planes de contingencia regionales y revisar la ejecución presupuestal PREVAED en el sistema SAT CENEPRED.
+          <div style="padding: 14px 16px; background-color: #f0f9ff; border-left: 4px solid #0284c7; border-radius: 4px;">
+            <p style="margin: 0; font-size: 13px; color: #0369a1; line-height: 1.5;">
+              <strong>Acción Operativa Recomendada:</strong> Verificar los planes de contingencia regionales y dar seguimiento a la ejecución presupuestal del Programa PP 0068 en la plataforma SAT CENEPRED.
             </p>
           </div>
         </div>
-        <div style="background-color: #f8fafc; padding: 12px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">
-          Notificación generada automáticamente por el motor de inferencia CENEPRED SAT.<br/>
-          Destinatario oficial: ${destinatario}
+        
+        <div style="background-color: #f8fafc; padding: 14px 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">
+          Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres - CENEPRED<br/>
+          Notificación dirigida a: <strong>${destinatario}</strong>
         </div>
       </div>
     `;
@@ -101,9 +125,9 @@ export async function POST(req: NextRequest) {
     try {
       if (process.env.SMTP_PASS && process.env.SMTP_PASS !== "demo-app-password-token") {
         await transporter.sendMail({
-          from: '"SAT CENEPRED Alertas" <alertas.sat.cenepred@gmail.com>',
+          from: '"CENEPRED SAT Alertas" <alertas.sat.cenepred@gmail.com>',
           to: destinatario,
-          subject: `[ALERTA ${nivelRiesgo.toUpperCase()}] Riesgo de Desastre Detectado en ${departamento}`,
+          subject: `[ALERTA ${nivelRiesgo.toUpperCase()}] Evaluación de Riesgo en ${departamento}`,
           html: htmlTemplate
         });
         emailSent = true;
@@ -115,18 +139,17 @@ export async function POST(req: NextRequest) {
       emailStatus = `SMTP_ERROR: ${e.message}`;
     }
 
-    // 2. Envío Opcional de Alerta a Telegram Bot
+    // 2. Envío Opcional de Alerta a Telegram Bot (sin emojis)
     let telegramSent = false;
     if (process.env.TELEGRAM_BOT_TOKEN && telegramChatId) {
       try {
-        const tgMessage = `🚨 *ALERTA SAT CENEPRED - RIESGO ${nivelRiesgo.toUpperCase()}*\n\n📍 *Departamento:* ${departamento}\n🌧️ *Precipitación Máx:* ${precipitacionMax} mm\n🔥 *Focos Calor:* ${focosCalor}\n🌋 *Sismos 7d:* ${sismos7d}\n\n📨 Notificación enviada a: ${destinatario}`;
+        const tgMessage = `[ALERTA SAT CENEPRED - RIESGO ${nivelRiesgo.toUpperCase()}]\n\nDepartamento: ${departamento}\nPrecipitación Máx: ${precipitacionMax} mm\nFocos Calor: ${focosCalor}\nSismos 7d: ${sismos7d}\n\nNotificación enviada a: ${destinatario}`;
         await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             chat_id: telegramChatId,
-            text: tgMessage,
-            parse_mode: "Markdown"
+            text: tgMessage
           })
         });
         telegramSent = true;
