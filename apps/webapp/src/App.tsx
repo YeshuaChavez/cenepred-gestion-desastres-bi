@@ -32,10 +32,10 @@ export default function App() {
   };
 
   return (
-    <div className="bg-background font-sans text-on-surface min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+    <div className="bg-[#f8fafc] dark:bg-[#060d1f] font-sans text-slate-900 dark:text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white transition-colors duration-300">
       <Header activePath={activePath} setActivePath={setActivePath} />
 
-      <main className="w-full pt-20 min-h-screen bg-background flex-1">
+      <main className="w-full pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#060d1f] flex-1 transition-colors duration-300">
         {renderActiveView()}
       </main>
 

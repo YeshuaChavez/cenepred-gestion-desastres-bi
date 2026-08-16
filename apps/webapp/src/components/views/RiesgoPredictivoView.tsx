@@ -98,51 +98,51 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
       ];
 
   return (
-    <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800 relative">
+    <div className="flex flex-col w-full p-6 md:p-8 gap-6 animate-fade-in max-w-[1600px] mx-auto text-slate-800 dark:text-slate-100 relative transition-colors duration-300">
       
       {/* Confusion Matrix / Model Validation Modal */}
       {showMetricsModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl p-6 shadow-2xl border border-slate-200 w-full max-w-lg space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <span className="material-symbols-outlined text-sky-700">verified</span>
+          <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-700 pb-3">
+              <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                <span className="material-symbols-outlined text-sky-600 dark:text-sky-400">verified</span>
                 Matriz de Validación de Confusión del Modelo
               </h3>
               <button
                 onClick={() => setShowMetricsModal(false)}
-                className="text-slate-400 hover:text-slate-700 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600">
+            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
               <p className="font-medium">Resultados de la matriz de confusión calculados sobre los registros históricos de emergencias:</p>
               
-              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center font-bold">
-                <div className="p-3 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-center font-bold">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-xl border border-emerald-200 dark:border-emerald-800/50">
                   <span className="block text-xl font-extrabold">74,520</span>
                   <span className="text-[10px] uppercase tracking-wider">Verdaderos Positivos</span>
                 </div>
-                <div className="p-3 bg-sky-50 text-sky-800 rounded-xl border border-sky-200">
+                <div className="p-3 bg-sky-50 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 rounded-xl border border-sky-200 dark:border-sky-800/50">
                   <span className="block text-xl font-extrabold">5,240</span>
                   <span className="text-[10px] uppercase tracking-wider">Verdaderos Negativos</span>
                 </div>
-                <div className="p-3 bg-amber-50 text-amber-800 rounded-xl border border-amber-200">
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 rounded-xl border border-amber-200 dark:border-amber-800/50">
                   <span className="block text-xl font-extrabold">2,810</span>
                   <span className="text-[10px] uppercase tracking-wider">Falsos Positivos</span>
                 </div>
-                <div className="p-3 bg-red-50 text-red-800 rounded-xl border border-red-200">
+                <div className="p-3 bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 rounded-xl border border-red-200 dark:border-red-800/50">
                   <span className="block text-xl font-extrabold">1,799</span>
                   <span className="text-[10px] uppercase tracking-wider">Falsos Negativos</span>
                 </div>
               </div>
 
-              <div className="pt-2 text-[11px] text-slate-500 flex justify-between font-semibold">
-                <span>AUC-ROC: <b className="text-slate-900">0.942</b></span>
-                <span>F1-Score: <b className="text-slate-900">0.912</b></span>
-                <span>Validación Cruzada: <b className="text-slate-900">5 Folds</b></span>
+              <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between font-semibold">
+                <span>AUC-ROC: <b className="text-slate-900 dark:text-white">0.942</b></span>
+                <span>F1-Score: <b className="text-slate-900 dark:text-white">0.912</b></span>
+                <span>Validación Cruzada: <b className="text-slate-900 dark:text-white">5 Folds</b></span>
               </div>
             </div>
           </div>
@@ -150,10 +150,10 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
       )}
 
       {/* Page Title & dedicated Action Button */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-2 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div className="flex flex-col space-y-1">
-          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Simulador e Inferencia de Riesgo</h2>
-          <p className="font-body-md text-sm text-slate-600 max-w-2xl mt-1">
+          <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Simulador e Inferencia de Riesgo</h2>
+          <p className="font-body-md text-sm text-slate-600 dark:text-slate-400 max-w-2xl mt-1">
             Simula escenarios climáticos ajustando lluvias y humedad para evaluar el impacto proyectado y los factores de riesgo en tu región.
           </p>
         </div>
@@ -161,7 +161,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowMetricsModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-sky-600 dark:bg-sky-500 hover:bg-sky-700 dark:hover:bg-sky-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
             title="Ver la matriz de confusión de validación"
           >
             <span className="material-symbols-outlined text-sm">grid_on</span>
@@ -170,76 +170,76 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
         </div>
       </div>
 
-      {/* Executive Metric Cards with Top-Right Corner Icons */}
+      {/* Executive Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         
         {/* Metric 1 */}
-        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-sky-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-5 shadow-2xs border border-slate-200/90 dark:border-slate-800/90 hover:border-sky-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-sky-700 transition-colors">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               Precisión General
             </span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center group-hover:bg-sky-700 group-hover:text-white transition-colors duration-300">
+            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
               <span className="material-symbols-outlined text-base">verified</span>
             </div>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">94.2%</span>
-            <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">94.2%</span>
+            <span className="font-body-md text-xs text-emerald-600 dark:text-emerald-400 flex items-center font-semibold">
               <span className="material-symbols-outlined text-xs">arrow_upward</span> 1.5%
             </span>
           </div>
         </div>
 
         {/* Metric 2 */}
-        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-red-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-5 shadow-2xs border border-slate-200/90 dark:border-slate-800/90 hover:border-red-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-red-700 transition-colors">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
               Precisión Riesgo Alto
             </span>
-            <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
               <span className="material-symbols-outlined text-base">warning</span>
             </div>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">89.1%</span>
-            <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">89.1%</span>
+            <span className="font-body-md text-xs text-emerald-600 dark:text-emerald-400 flex items-center font-semibold">
               <span className="material-symbols-outlined text-xs">arrow_upward</span> 2.2%
             </span>
           </div>
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-purple-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-5 shadow-2xs border border-slate-200/90 dark:border-slate-800/90 hover:border-purple-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-purple-700 transition-colors">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
               Sensibilidad
             </span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:bg-purple-700 group-hover:text-white transition-colors duration-300">
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
               <span className="material-symbols-outlined text-base">query_stats</span>
             </div>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">91.5%</span>
-            <span className="font-body-md text-xs text-red-600 flex items-center font-semibold">
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">91.5%</span>
+            <span className="font-body-md text-xs text-red-600 dark:text-red-400 flex items-center font-semibold">
               <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.4%
             </span>
           </div>
         </div>
 
         {/* Metric 4 */}
-        <div className="bg-white rounded-2xl p-5 shadow-2xs border border-slate-200/90 hover:border-amber-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-5 shadow-2xs border border-slate-200/90 dark:border-slate-800/90 hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <span className="font-label-sm text-xs text-slate-500 uppercase tracking-wider font-semibold group-hover:text-amber-700 transition-colors">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
               Margen de Error
             </span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
               <span className="material-symbols-outlined text-base">rule</span>
             </div>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900">0.18</span>
-            <span className="font-body-md text-xs text-emerald-600 flex items-center font-semibold">
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">0.18</span>
+            <span className="font-body-md text-xs text-emerald-600 dark:text-emerald-400 flex items-center font-semibold">
               <span className="material-symbols-outlined text-xs">arrow_downward</span> 0.01
             </span>
           </div>
@@ -252,19 +252,19 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
         
         {/* SHAP Feature Importance */}
         <div className="lg:col-span-2 flex flex-col space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-2xs border border-slate-200/80 flex flex-col min-h-[450px]">
+          <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col min-h-[450px] transition-colors">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h3 className="font-headline-lg text-lg font-bold text-slate-900">Factores de Riesgo Clave</h3>
-                <p className="font-body-md text-xs text-slate-500">Contribución relativa de variables a la probabilidad de riesgo</p>
+                <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave</h3>
+                <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de variables a la probabilidad de riesgo</p>
               </div>
 
               {/* Scope Switcher: National vs Regional */}
-              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                 <button
                   onClick={() => setScope('national')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'national' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    scope === 'national' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Nacional
@@ -272,7 +272,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
                 <button
                   onClick={() => setScope('regional')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    scope === 'regional' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'
+                    scope === 'regional' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   Por Región
@@ -282,17 +282,17 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
             {/* If regional scope is selected */}
             {scope === 'regional' && (
-              <div className="mb-6 p-3 bg-sky-50 rounded-xl border border-sky-100 flex items-center justify-between animate-fade-in">
-                <span className="text-xs font-bold text-sky-900 flex items-center gap-1.5">
+              <div className="mb-6 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 flex items-center justify-between animate-fade-in">
+                <span className="text-xs font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
                 </span>
                 <select
                   value={selectedDeptoKey}
                   onChange={(e) => setSelectedDeptoKey(e.target.value)}
-                  className="bg-white border border-slate-200 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 cursor-pointer shadow-2xs"
+                  className="bg-white dark:bg-[#0c1833] border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs"
                 >
                   {departmentKeys.map((key) => (
-                    <option key={key} value={key}>
+                    <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">
                       {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
                     </option>
                   ))}
@@ -303,11 +303,11 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             <div className="space-y-5 flex-1 justify-center flex flex-col">
               {shapItemsToRender.map((item, idx) => (
                 <div key={idx} className="group">
-                  <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700">
-                    <span className="group-hover:text-sky-700 font-medium">{item.name}</span>
+                  <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                    <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 font-medium">{item.name}</span>
                     <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
                   </div>
-                  <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${item.pct}%`, backgroundColor: item.color }}
@@ -320,16 +320,16 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
         </div>
 
         {/* Scenario Simulator */}
-        <div className="bg-white rounded-2xl p-6 shadow-2xs border border-slate-200/80 flex flex-col justify-between space-y-6">
+        <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between space-y-6 transition-colors">
           <div>
-            <h3 className="font-headline-lg text-lg font-bold text-slate-900 mb-1">Simulador de Escenarios What-If</h3>
-            <p className="font-body-md text-xs text-slate-500 mb-6">Ajusta precipitaciones y humedad para simular el impacto en tiempo real sobre <b>{deptoData.name}</b> (Base: {deptoData.prob}%)</p>
+            <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white mb-1">Simulador de Escenarios What-If</h3>
+            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 mb-6">Ajusta precipitaciones y humedad para simular el impacto en tiempo real sobre <b>{deptoData.name}</b> (Base: {deptoData.prob}%)</p>
 
             <div className="space-y-6">
               <div>
                 <div className="flex justify-between text-xs font-bold mb-2">
-                  <span>Precipitación Adicional (+mm)</span>
-                  <span className="text-sky-700 font-bold">+{precipSlider} mm/24h</span>
+                  <span className="text-slate-700 dark:text-slate-300">Precipitación Adicional (+mm)</span>
+                  <span className="text-sky-600 dark:text-sky-400 font-bold">+{precipSlider} mm/24h</span>
                 </div>
                 <input
                   type="range"
@@ -343,8 +343,8 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
               <div>
                 <div className="flex justify-between text-xs font-bold mb-2">
-                  <span>Incremento de Humedad (%)</span>
-                  <span className="text-sky-700 font-bold">+{humedadSlider}%</span>
+                  <span className="text-slate-700 dark:text-slate-300">Incremento de Humedad (%)</span>
+                  <span className="text-sky-600 dark:text-sky-400 font-bold">+{humedadSlider}%</span>
                 </div>
                 <input
                   type="range"
@@ -358,7 +358,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
               <button
                 onClick={handleSimulate}
-                className="w-full py-3 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">tune</span>
                 Recalcular Inferencia Simulado
@@ -366,13 +366,13 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-            <div className="flex justify-between items-center text-xs font-bold text-slate-600">
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex justify-between items-center text-xs font-bold text-slate-600 dark:text-slate-400">
               <span className="uppercase tracking-wider">Score Simulado • {deptoData.name}</span>
-              <span className="text-slate-400 font-normal">(Base: {deptoData.prob}%)</span>
+              <span className="text-slate-400 dark:text-slate-500 font-normal">(Base: {deptoData.prob}%)</span>
             </div>
             <div className="flex items-baseline justify-between">
-              <span className="text-3xl font-extrabold text-slate-900">{simulatedImpact}%</span>
+              <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{simulatedImpact}%</span>
               <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold text-white uppercase ${
                 simulatedImpact >= 65 ? 'bg-red-600' : simulatedImpact >= 55 ? 'bg-orange-500' : simulatedImpact >= 45 ? 'bg-amber-500' : 'bg-sky-600'
               }`}>
@@ -384,18 +384,18 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
       </div>
 
-      {/* GENERADOR DE REPORTES EJECUTIVOS DE INTELIGENCIA PREDICTIVA */}
-      <div className="bg-white rounded-2xl p-6 md:p-8 shadow-2xs border border-slate-200/80 space-y-6 mt-2">
+      {/* GENERADOR DE REPORTES EJECUTIVOS */}
+      <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 md:p-8 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 space-y-6 mt-2 transition-colors">
         
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="space-y-1">
-            <h3 className="font-headline-lg text-xl font-bold text-slate-900 flex items-center gap-2.5">
+            <h3 className="font-headline-lg text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-xs">
                 <span className="material-symbols-outlined text-lg">description</span>
               </div>
               Generador de Diagnóstico Ejecutivo de Riesgo
             </h3>
-            <p className="font-body-md text-xs text-slate-500">
+            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">
               Generación de informe técnico-ejecutivo oficial basado en telemetría satelital, emergencias registradas y ejecución presupuestal
             </p>
           </div>
@@ -404,10 +404,10 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             <select
               value={reportDeptoKey}
               onChange={(e) => setReportDeptoKey(e.target.value)}
-              className="bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold px-3 py-2 outline-none text-slate-800 cursor-pointer shadow-2xs"
+              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold px-3 py-2 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs"
             >
               {departmentKeys.map((key) => (
-                <option key={key} value={key}>
+                <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">
                   Región: {PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)
                 </option>
               ))}
@@ -416,7 +416,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             <button
               onClick={handleGenerateReport}
               disabled={isGeneratingReport}
-              className="px-5 py-2.5 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
             >
               {isGeneratingReport ? (
                 <>
@@ -435,23 +435,23 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
 
         {/* Report Output Box */}
         {generatedReport && (
-          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4 animate-fade-in">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-200">
+          <div className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 space-y-4 animate-fade-in">
+            <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span className="font-bold text-xs text-slate-800">Diagnóstico Oficial CENEPRED • {reportDeptoData.name}</span>
+                <span className="font-bold text-xs text-slate-800 dark:text-slate-200">Diagnóstico Oficial CENEPRED • {reportDeptoData.name}</span>
               </div>
               
               <button
                 onClick={() => window.print()}
-                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
               >
                 <span className="material-symbols-outlined text-sm">print</span>
                 Exportar PDF / Imprimir
               </button>
             </div>
 
-            <div className="text-xs leading-relaxed text-slate-800 whitespace-pre-line font-mono bg-white p-6 rounded-xl border border-slate-200/80 shadow-2xs">
+            <div className="text-xs leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-line font-mono bg-white dark:bg-[#070e22] p-6 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
               {generatedReport}
             </div>
           </div>

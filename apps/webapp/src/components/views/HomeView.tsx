@@ -48,9 +48,9 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
   };
 
   return (
-    <div className="flex flex-col w-full bg-background -mt-20 overflow-x-hidden">
+    <div className="flex flex-col w-full bg-[#f8fafc] dark:bg-[#060d1f] -mt-20 overflow-x-hidden transition-colors duration-300">
       
-      {/* 1. Hero Section (Cinematic 4K UHD Video Background) */}
+      {/* 1. Hero Section (Cinematic Video Background) */}
       <section className="relative w-full min-h-[680px] h-[88vh] flex items-center justify-center overflow-hidden bg-slate-950 pt-12 pb-16">
         
         {/* Ambient Video & Overlay */}
@@ -80,7 +80,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </h1>
 
           <p className="font-body-md text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed mb-12">
-            Estimación inteligente del riesgo climático en tiempo real, monitoreo satelital continuo de precipitaciones y seguimiento de la inversión pública preventivas en las 25 regiones del país.
+            Estimación inteligente del riesgo climático en tiempo real, monitoreo satelital continuo de precipitaciones y seguimiento de la inversión pública preventiva en las 25 regiones del país.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
@@ -108,62 +108,62 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
           <ScrollReveal delayMs={100}>
-            <div className="bg-white/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-sky-400 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="bg-white/95 dark:bg-[#0c1833]/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-xl hover:border-sky-400 dark:hover:border-sky-400 hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
-                <span className="font-label-sm text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-sky-700 transition-colors">Emergencias Nacionales</span>
-                <span className="p-2.5 bg-sky-50 text-sky-700 rounded-2xl group-hover:bg-sky-700 group-hover:text-white transition-colors duration-300">
+                <span className="font-label-sm text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">Emergencias Nacionales</span>
+                <span className="p-2.5 bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 rounded-2xl group-hover:bg-sky-600 group-hover:text-white transition-colors duration-300">
                   <span className="material-symbols-outlined text-2xl">emergency</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
                 {NATIONAL_META.totalEmergencias.toLocaleString()}
               </div>
-              <p className="font-body-md text-xs text-slate-500 font-medium">Eventos atendidos y registrados formalmente</p>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">Eventos atendidos y registrados formalmente</p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal delayMs={200}>
-            <div className="bg-white/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-amber-400 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="bg-white/95 dark:bg-[#0c1833]/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-xl hover:border-amber-400 dark:hover:border-amber-400 hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
-                <span className="font-label-sm text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-amber-700 transition-colors">Población Protegida</span>
-                <span className="p-2.5 bg-amber-50 text-amber-700 rounded-2xl group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                <span className="font-label-sm text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Población Protegida</span>
+                <span className="p-2.5 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 rounded-2xl group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
                   <span className="material-symbols-outlined text-2xl">groups</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
                 {NATIONAL_META.totalAfectados.toLocaleString()}
               </div>
-              <p className="font-body-md text-xs text-slate-500 font-medium">Personas bajo seguimiento y asistencia</p>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">Personas bajo seguimiento y asistencia</p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal delayMs={300}>
-            <div className="bg-white/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-red-400 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="bg-white/95 dark:bg-[#0c1833]/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-xl hover:border-red-400 dark:hover:border-red-400 hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
-                <span className="font-label-sm text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-red-700 transition-colors">Regiones Prioritarias</span>
-                <span className="p-2.5 bg-red-50 text-red-700 rounded-2xl group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+                <span className="font-label-sm text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">Regiones Prioritarias</span>
+                <span className="p-2.5 bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 rounded-2xl group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
                   <span className="material-symbols-outlined text-2xl">warning</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-red-600 mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-red-600 dark:text-red-400 mb-2 tracking-tight">
                 {highRiskCount} Regiones
               </div>
-              <p className="font-body-md text-xs text-slate-500 font-medium">Departamentos con mayor nivel de atención</p>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">Departamentos con mayor nivel de atención</p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal delayMs={400}>
-            <div className="bg-white/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-emerald-400 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="bg-white/95 dark:bg-[#0c1833]/95 backdrop-blur-xl p-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-xl hover:border-emerald-400 dark:hover:border-emerald-400 hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center justify-between mb-4">
-                <span className="font-label-sm text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">Presupuesto Ejecutado</span>
-                <span className="p-2.5 bg-emerald-50 text-emerald-700 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                <span className="font-label-sm text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Presupuesto Ejecutado</span>
+                <span className="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
                   <span className="material-symbols-outlined text-2xl">account_balance</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-emerald-600 mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-2 tracking-tight">
                 {NATIONAL_META.pctEjecucionNacional}%
               </div>
-              <p className="font-body-md text-xs text-slate-500 font-medium">S/ {NATIONAL_META.totalDevengadoMillones}M invertidos en prevención</p>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">S/ {NATIONAL_META.totalDevengadoMillones}M invertidos en prevención</p>
             </div>
           </ScrollReveal>
 
@@ -171,21 +171,21 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 3. High Risk Regions Spotlight */}
-      <section className="w-full px-6 md:px-16 py-20 bg-slate-50/60">
+      <section className="w-full px-6 md:px-16 py-20 bg-slate-50/60 dark:bg-[#081024]/60 transition-colors duration-300">
         <div className="max-w-7xl mx-auto">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <span className="font-label-sm text-xs font-bold text-sky-800 uppercase tracking-widest mb-2 block">
+              <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-2 block">
                 Vigilancia Climatológica
               </span>
-              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Regiones con Mayor Atención
               </h2>
             </div>
             <button
               onClick={() => setActivePath('riesgo-predictivo')}
-              className="text-xs font-bold uppercase tracking-wider text-sky-800 hover:text-sky-900 transition-colors flex items-center gap-2 cursor-pointer self-start md:self-auto group"
+              className="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 transition-colors flex items-center gap-2 cursor-pointer self-start md:self-auto group"
             >
               Ver Análisis de Inferencia Completo
               <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -197,35 +197,35 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               <ScrollReveal key={d.name} delayMs={index * 100}>
                 <div
                   onClick={() => setActivePath('monitoreo-diario')}
-                  className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-sky-300 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
+                  className="bg-white dark:bg-[#0c1833] p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-sky-300 dark:hover:border-sky-500/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-base font-bold text-slate-900 group-hover:text-sky-800 transition-colors">
+                      <span className="text-base font-bold text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400 transition-colors">
                         {d.name}
                       </span>
-                      <span className="px-3 py-1 bg-red-100 text-red-700 text-[11px] font-bold rounded-full">
+                      <span className="px-3 py-1 bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 text-[11px] font-bold rounded-full border border-red-200 dark:border-red-800/50">
                         {d.prob}% Riesgo
                       </span>
                     </div>
 
-                    <div className="space-y-2.5 text-xs text-slate-600 mb-6 font-medium">
-                      <div className="flex justify-between border-b border-slate-100 pb-2">
-                        <span className="text-slate-400">Precipitación 24h:</span>
-                        <span className="font-bold text-slate-800">{d.precipitacionMm} mm</span>
+                    <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 mb-6 font-medium">
+                      <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span className="text-slate-400 dark:text-slate-500">Precipitación 24h:</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.precipitacionMm} mm</span>
                       </div>
-                      <div className="flex justify-between border-b border-slate-100 pb-2">
-                        <span className="text-slate-400">Focos de Calor:</span>
-                        <span className="font-bold text-slate-800">{d.focosCalor} activos</span>
+                      <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <span className="text-slate-400 dark:text-slate-500">Focos de Calor:</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.focosCalor} activos</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Inversión Ejecutada:</span>
-                        <span className="font-bold text-emerald-700">{d.pctEjecucion}%</span>
+                        <span className="text-slate-400 dark:text-slate-500">Inversión Ejecutada:</span>
+                        <span className="font-bold text-emerald-700 dark:text-emerald-400">{d.pctEjecucion}%</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-sky-800 group-hover:underline">
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-700 dark:text-sky-400 group-hover:underline">
                     <span>Ver Detalles Regionales</span>
                     <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">chevron_right</span>
                   </div>
@@ -238,14 +238,14 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 4. Core Features Showcase */}
-      <section className="w-full px-6 md:px-16 py-24 bg-white border-y border-slate-200/80">
+      <section className="w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-y border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300">
         <div className="max-w-7xl mx-auto">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="font-label-sm text-xs font-bold text-sky-800 uppercase tracking-widest mb-3 block">
+            <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-3 block">
               Plataforma Institucional
             </span>
-            <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+            <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
               Módulos Principales de Consulta
             </h2>
           </div>
@@ -255,20 +255,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <ScrollReveal delayMs={100}>
               <div
                 onClick={() => setActivePath('monitoreo-diario')}
-                className="bg-slate-50/60 p-8 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-sky-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
+                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-sky-400 dark:hover:border-sky-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
               >
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-sky-100 text-sky-700 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-700 group-hover:text-white transition-all duration-300">
+                  <div className="w-14 h-14 bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
                     <span className="material-symbols-outlined text-3xl">satellite_alt</span>
                   </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
                 </div>
 
                 <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-3 group-hover:text-sky-700 transition-colors">
+                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                     Monitoreo Diario y Mapa
                   </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                     Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.
                   </p>
                 </div>
@@ -278,20 +278,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <ScrollReveal delayMs={200}>
               <div
                 onClick={() => setActivePath('riesgo-predictivo')}
-                className="bg-slate-50/60 p-8 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-indigo-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
+                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-indigo-400 dark:hover:border-indigo-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
               >
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-700 group-hover:text-white transition-all duration-300">
+                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
                     <span className="material-symbols-outlined text-3xl">psychology</span>
                   </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-indigo-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
                 </div>
 
                 <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-3 group-hover:text-indigo-700 transition-colors">
+                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     Simulador de Escenarios
                   </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                     Ajusta variables de lluvia y clima para simular el riesgo futuro de cada departamento y generar diagnósticos ejecutivos.
                   </p>
                 </div>
@@ -301,20 +301,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             <ScrollReveal delayMs={300}>
               <div
                 onClick={() => setActivePath('presupuesto-mef')}
-                className="bg-slate-50/60 p-8 rounded-3xl border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-emerald-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
+                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-emerald-400 dark:hover:border-emerald-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
               >
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-700 group-hover:text-white transition-all duration-300">
+                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
                     <span className="material-symbols-outlined text-3xl">analytics</span>
                   </div>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-700 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
+                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
                 </div>
 
                 <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
+                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                     Presupuesto de Prevención
                   </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                     Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.
                   </p>
                 </div>
@@ -326,9 +326,9 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 5. Executive CTA Section */}
-      <section className="w-full px-6 md:px-16 py-20 bg-slate-50">
+      <section className="w-full px-6 md:px-16 py-20 bg-slate-50 dark:bg-[#060d1f] transition-colors duration-300">
         <ScrollReveal>
-          <div className="max-w-6xl mx-auto bg-gradient-to-r from-sky-900 via-sky-900 to-sky-900 text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+          <div className="max-w-6xl mx-auto bg-gradient-to-r from-[#0c365a] via-sky-900 to-[#0c365a] dark:from-[#081f3d] dark:via-sky-950 dark:to-[#081f3d] text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl border border-sky-800/40">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
@@ -355,12 +355,12 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 6. FAQ Section */}
-      <section className="w-full px-6 md:px-16 py-24 bg-white border-t border-slate-200/80">
+      <section className="w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-t border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300">
         <div className="max-w-5xl mx-auto">
           
           <ScrollReveal>
             <div className="text-center max-w-3xl mx-auto mb-14">
-              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+              <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
                 Preguntas Frecuentes
               </h2>
             </div>
@@ -372,24 +372,24 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               const isOpen = openFaq === index;
               return (
                 <ScrollReveal key={index} delayMs={index * 60}>
-                  <div className="bg-slate-50/60 rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden transition-all duration-300">
+                  <div className="bg-slate-50/70 dark:bg-[#0c1833]/70 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs overflow-hidden transition-all duration-300">
                     <button
                       onClick={() => toggleFaq(index)}
-                      className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-100/80 transition-colors"
+                      className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-800/60 transition-colors"
                     >
-                      <span className="font-bold text-sm md:text-base text-slate-900 flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                      <span className="font-bold text-sm md:text-base text-slate-900 dark:text-white flex items-center gap-3">
+                        <span className="w-7 h-7 rounded-full bg-sky-100 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 font-bold text-xs flex items-center justify-center flex-shrink-0">
                           {index + 1}
                         </span>
                         {item.q}
                       </span>
-                      <div className={`w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0 transition-transform duration-300 border border-slate-200 ${isOpen ? 'rotate-180 bg-sky-700 text-white border-sky-700' : 'text-slate-600'}`}>
+                      <div className={`w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 transition-transform duration-300 border border-slate-200 dark:border-slate-700 ${isOpen ? 'rotate-180 bg-sky-600 dark:bg-sky-500 text-white border-sky-600' : 'text-slate-600 dark:text-slate-300'}`}>
                         <span className="material-symbols-outlined text-lg">expand_more</span>
                       </div>
                     </button>
 
                     {isOpen && (
-                      <div className="px-6 pb-6 pt-2 text-slate-600 text-xs md:text-sm leading-relaxed border-t border-slate-200/60 bg-white animate-fade-in font-medium">
+                      <div className="px-6 pb-6 pt-2 text-slate-600 dark:text-slate-300 text-xs md:text-sm leading-relaxed border-t border-slate-200/60 dark:border-slate-800 bg-white dark:bg-[#091329] animate-fade-in font-medium">
                         <p>{item.a}</p>
                       </div>
                     )}
@@ -403,7 +403,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* Footer Institucional */}
-      <footer className="w-full bg-[#0a2540] text-[#94a3b8] text-xs">
+      <footer className="w-full bg-[#0a2540] dark:bg-[#051322] text-[#94a3b8] text-xs border-t border-slate-800 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 md:px-16">
 
           {/* Contenido principal */}
@@ -481,94 +481,44 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         </div>
       </footer>
 
-      {/* 1. Modal: Términos de Uso (Minimalist & Clean) */}
-      {activeLegalModal === 'terminos' && (
-        <div className="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full flex flex-col shadow-xl border border-slate-200 overflow-hidden font-sans">
+      {/* Modal Legal: Términos / Privacidad */}
+      {activeLegalModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white dark:bg-[#0c1833] rounded-3xl max-w-2xl w-full p-8 max-h-[85vh] overflow-y-auto border border-slate-200 dark:border-slate-700 shadow-2xl relative animate-fade-in-up">
+            <button
+              onClick={() => setActiveLegalModal(null)}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
             
-            {/* Minimal Header */}
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <div>
-                <h3 className="font-bold text-slate-900 text-base">Términos de Uso</h3>
-                <p className="text-xs text-slate-500">CENEPRED — Plataforma de Gestión del Riesgo</p>
-              </div>
-              <button
-                onClick={() => setActiveLegalModal(null)}
-                className="text-slate-400 hover:text-slate-700 text-sm font-bold cursor-pointer p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Clean Body */}
-            <div className="p-6 space-y-4 text-xs text-slate-600 leading-relaxed font-normal">
-              <p>
-                La información facilitada en esta plataforma es de acceso libre y público. Está orientada al análisis preventivo, la consulta ciudadana y la toma de decisiones informadas en el ámbito del Sistema Nacional de Gestión del Riesgo de Desastres (SINAGERD).
-              </p>
-              <p>
-                Los indicadores de precipitación, focos de calor y ejecución presupuestal se sincronizan desde fuentes oficiales del Estado (SINPAD - INDECI, MEF, NASA FIRMS y Open-Meteo). Se permite la libre citación y análisis con fines académicos o de gestión pública.
-              </p>
-              <p>
-                Los modelos predictivos y proyecciones de riesgo actúan como herramientas de apoyo preventivo. Ante emergencias activas o situaciones de desastre, la población debe atender las indicaciones oficiales emitidas por las autoridades competentes.
-              </p>
-            </div>
-
-            {/* Simple Footer */}
-            <div className="px-6 py-4 border-t border-slate-100 flex justify-end bg-slate-50/50">
-              <button
-                onClick={() => setActiveLegalModal(null)}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer"
-              >
-                Cerrar
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* 2. Modal: Política de Privacidad (Minimalist & Clean) */}
-      {activeLegalModal === 'privacidad' && (
-        <div className="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full flex flex-col shadow-xl border border-slate-200 overflow-hidden font-sans">
+            <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              {activeLegalModal === 'terminos' ? 'Términos de Uso' : 'Política de Privacidad'}
+            </h3>
             
-            {/* Minimal Header */}
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <div>
-                <h3 className="font-bold text-slate-900 text-base">Política de Privacidad</h3>
-                <p className="text-xs text-slate-500">Protección de Datos y Transparencia Pública</p>
-              </div>
+            <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed font-medium">
+              {activeLegalModal === 'terminos' ? (
+                <>
+                  <p>La información contenida en este portal institucional es de carácter oficial y libre acceso conforme a la Ley de Transparencia y Acceso a la Información Pública.</p>
+                  <p>Los datos cartográficos y meteorológicos son provistos por entidades científicas y técnicas oficiales del Estado Peruano (CENEPRED, INDECI, SENAMHI, MEF) e internacionales (NASA, USGS).</p>
+                  <p>Queda autorizada la reproducción total o parcial de los datos con fines de estudio, investigación, planificación territorial y prevención ciudadana, citando como fuente al CENEPRED.</p>
+                </>
+              ) : (
+                <>
+                  <p>El CENEPRED garantiza la confidencialidad y el tratamiento seguro de las interacciones realizadas en este portal público conforme a la Ley N° 29733 (Ley de Protección de Datos Personales).</p>
+                  <p>No se recopilan datos privados sensibles sin el consentimiento explícito de los usuarios. Las consultas anónimas y telemetría de navegación son procesadas únicamente para fines estadísticos y optimización del servicio público.</p>
+                </>
+              )}
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
               <button
                 onClick={() => setActiveLegalModal(null)}
-                className="text-slate-400 hover:text-slate-700 text-sm font-bold cursor-pointer p-1"
+                className="px-6 py-2.5 bg-sky-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-sky-500 transition-colors cursor-pointer"
               >
-                ✕
+                Entendido
               </button>
             </div>
-
-            {/* Clean Body */}
-            <div className="p-6 space-y-4 text-xs text-slate-600 leading-relaxed font-normal">
-              <p>
-                En cumplimiento de la Ley N° 29733 (Ley de Protección de Datos Personales) y la Ley N° 27806 (Ley de Transparencia), el CENEPRED garantiza que esta plataforma no solicita, recopila ni almacena información personal ni requiere registro de usuarios.
-              </p>
-              <p>
-                La navegación es totalmente anónima. Se registran únicamente métricas agregadas de uso con fines de rendimiento del servidor y seguridad informática de la infraestructura estatal.
-              </p>
-              <p>
-                Para consultas formales relativas a transparencia o solicitudes institucionales, puede comunicarse con la entidad a través de los canales oficiales habilitados en la sede central de la institución.
-              </p>
-            </div>
-
-            {/* Simple Footer */}
-            <div className="px-6 py-4 border-t border-slate-100 flex justify-end bg-slate-50/50">
-              <button
-                onClick={() => setActiveLegalModal(null)}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl transition-all cursor-pointer"
-              >
-                Cerrar
-              </button>
-            </div>
-
           </div>
         </div>
       )}
