@@ -402,130 +402,78 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         </div>
       </section>
 
-      {/* Professional Institutional Footer */}
-      <footer className="w-full bg-gradient-to-br from-sky-900 via-[#0c365a] to-sky-950 text-sky-100 pt-16 pb-8 px-6 md:px-16 border-t border-sky-800/60 text-xs font-sans">
-        <div className="max-w-7xl mx-auto flex flex-col gap-12">
-          
-          {/* Main 4 Column Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-            
-            {/* Col 1: Institutional Identity */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center font-black text-lg shadow-md">
-                  <span className="material-symbols-outlined text-2xl">shield_with_heart</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-extrabold text-white text-base tracking-tight leading-none">CENEPRED</span>
-                  <span className="text-[10px] text-sky-300 font-semibold tracking-wider uppercase mt-1">Gobierno del Perú</span>
-                </div>
+      {/* Footer Institucional */}
+      <footer className="w-full bg-[#0a2540] text-[#94a3b8] text-xs">
+        <div className="max-w-7xl mx-auto px-6 md:px-16">
+
+          {/* Contenido principal */}
+          <div className="py-10 grid grid-cols-1 md:grid-cols-12 gap-8 border-b border-white/10">
+
+            {/* Identidad institucional */}
+            <div className="md:col-span-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-xl text-sky-400">shield</span>
+                <span className="text-white font-bold text-sm tracking-tight">CENEPRED</span>
               </div>
-              <p className="text-sky-100/90 text-xs leading-relaxed font-medium">
-                Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Organismo público ejecutor adscrito al Ministerio de Defensa (MINDEF) y ente rector del SINAGERD.
+              <p className="leading-relaxed text-[#7d8fa3]">
+                Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres.
+                Organismo público ejecutor adscrito a la Presidencia del Consejo de Ministros,
+                ente rector del SINAGERD.
               </p>
             </div>
 
-            {/* Col 2: Useful Navigation */}
-            <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Secciones de la Plataforma</h4>
-              <ul className="flex flex-col gap-2.5 text-xs font-medium">
-                <li>
-                  <button onClick={() => setActivePath('monitoreo-diario')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-300">space_dashboard</span>
-                    Monitoreo Diario & Telemetría Satelital
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActivePath('historico-tendencias')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-300">show_chart</span>
-                    Histórico & Tendencias Nacionales
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActivePath('riesgo-predictivo')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-300">psychology</span>
-                    Modelo Predictivo XGBoost & SHAP
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActivePath('presupuesto-mef')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-300">account_balance</span>
-                    Presupuesto de Prevención MEF
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActivePath('comparativo-regional')} className="hover:text-white transition-colors cursor-pointer flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm text-sky-300">bar_chart</span>
-                    Comparativo Regional 25 Departamentos
-                  </button>
-                </li>
+            {/* Navegación */}
+            <div className="md:col-span-3">
+              <h4 className="text-[#cbd5e1] font-semibold text-[11px] uppercase tracking-wider mb-3">Plataforma</h4>
+              <ul className="flex flex-col gap-1.5">
+                <li><button onClick={() => setActivePath('monitoreo-diario')} className="hover:text-white transition-colors cursor-pointer">Monitoreo y Telemetría</button></li>
+                <li><button onClick={() => setActivePath('historico-tendencias')} className="hover:text-white transition-colors cursor-pointer">Histórico y Tendencias</button></li>
+                <li><button onClick={() => setActivePath('riesgo-predictivo')} className="hover:text-white transition-colors cursor-pointer">Modelo Predictivo</button></li>
+                <li><button onClick={() => setActivePath('presupuesto-mef')} className="hover:text-white transition-colors cursor-pointer">Presupuesto MEF</button></li>
+                <li><button onClick={() => setActivePath('comparativo-regional')} className="hover:text-white transition-colors cursor-pointer">Comparativo Regional</button></li>
               </ul>
             </div>
 
-            {/* Col 3: National Emergency Hotlines */}
-            <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Líneas de Emergencia Nacional</h4>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
-                  <span className="text-[10px] text-sky-200 font-bold uppercase">Bomberos</span>
-                  <span className="text-red-400 font-extrabold text-sm">116</span>
-                </div>
-                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
-                  <span className="text-[10px] text-sky-200 font-bold uppercase">Policía Nacional</span>
-                  <span className="text-sky-300 font-extrabold text-sm">105</span>
-                </div>
-                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
-                  <span className="text-[10px] text-sky-200 font-bold uppercase">SAMU Salud</span>
-                  <span className="text-emerald-400 font-extrabold text-sm">106</span>
-                </div>
-                <div className="bg-sky-950/70 p-2.5 rounded-xl border border-sky-800/80 flex flex-col gap-0.5 shadow-2xs">
-                  <span className="text-[10px] text-sky-200 font-bold uppercase">INDECI Alerta</span>
-                  <span className="text-amber-400 font-extrabold text-sm">115</span>
-                </div>
-              </div>
+            {/* Contacto */}
+            <div className="md:col-span-3">
+              <h4 className="text-[#cbd5e1] font-semibold text-[11px] uppercase tracking-wider mb-3">Contacto</h4>
+              <ul className="flex flex-col gap-1.5">
+                <li>Av. del Parque Norte 313, San Isidro, Lima</li>
+                <li>Central: (01) 201-3550</li>
+                <li>consultas@cenepred.gob.pe</li>
+                <li>Lun - Vie: 08:30 - 17:00</li>
+              </ul>
             </div>
 
-            {/* Col 4: Sede Central & Contact */}
-            <div className="flex flex-col gap-3.5">
-              <h4 className="text-white font-extrabold text-xs tracking-wider uppercase border-b border-sky-700/60 pb-2">Sede Central & Atención</h4>
-              <ul className="flex flex-col gap-2.5 text-xs text-sky-100/90 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0 mt-0.5">location_on</span>
-                  <span>Av. del Parque Norte 313, San Isidro, Lima - Perú</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">call</span>
-                  <span>Central Telefónica: (01) 201-3550</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">mail</span>
-                  <span>consultas@cenepred.gob.pe</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm text-sky-300 shrink-0">schedule</span>
-                  <span>Lun - Vie: 08:30 a.m. - 05:00 p.m.</span>
-                </li>
+            {/* Emergencias */}
+            <div className="md:col-span-2">
+              <h4 className="text-[#cbd5e1] font-semibold text-[11px] uppercase tracking-wider mb-3">Emergencias</h4>
+              <ul className="flex flex-col gap-1.5">
+                <li className="flex justify-between"><span>Bomberos</span><span className="text-white font-semibold">116</span></li>
+                <li className="flex justify-between"><span>PNP</span><span className="text-white font-semibold">105</span></li>
+                <li className="flex justify-between"><span>SAMU</span><span className="text-white font-semibold">106</span></li>
+                <li className="flex justify-between"><span>INDECI</span><span className="text-white font-semibold">115</span></li>
               </ul>
             </div>
 
           </div>
 
-          {/* Bottom Bar */}
-          <div className="pt-6 border-t border-sky-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-sky-200 text-[11px] font-medium">
-            <span>© 2026 CENEPRED. Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres. Plataforma Oficial del Estado Peruano.</span>
-            <div className="flex items-center gap-4">
+          {/* Barra inferior */}
+          <div className="py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#64748b]">
+            <span>&copy; {new Date().getFullYear()} CENEPRED &mdash; Gobierno del Perú</span>
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setActiveLegalModal('terminos')}
-                className="hover:text-white font-semibold transition-colors cursor-pointer"
+                className="hover:text-white transition-colors cursor-pointer"
               >
-                Términos de Uso
+                Términos de uso
               </button>
-              <span>•</span>
+              <span className="text-[#475569]">|</span>
               <button
                 onClick={() => setActiveLegalModal('privacidad')}
-                className="hover:text-white font-semibold transition-colors cursor-pointer"
+                className="hover:text-white transition-colors cursor-pointer"
               >
-                Política de Privacidad
+                Privacidad
               </button>
             </div>
           </div>
