@@ -272,7 +272,7 @@ def sync_to_azure_blob(json_path: str):
             ]
             res = subprocess.run(cmd, capture_output=True, text=True, shell=True)
             if res.returncode == 0:
-                print(f"realData.json sincronizado en Azure ADLS Gen2 (stcenepreddev1/gold/realData.json) mediante Azure CLI.")
+                print("realData.json sincronizado en Azure ADLS Gen2 (stcenepreddev1/gold/realData.json) mediante Azure CLI.")
             else:
                 print("Nota: La sincronizacion a Azure Blob usara credenciales administradas ADF.")
     except Exception as e:
