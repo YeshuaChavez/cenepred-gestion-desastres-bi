@@ -61,6 +61,9 @@ htmlcov/
 # Data Files (Excluir datasets voluminosos locales)
 # ------------------------------------------
 **/local_data/
+
+# Artefactos de modelo entrenados sobre datos Gold locales (se regeneran; no se commitean).
+data/ml/models/
 *.parquet
 *.csv
 !**/sample_data/*.csv
