@@ -39,10 +39,22 @@ jobs:
         run: |
           python data/pipelines/master_pipeline.py --help || python -c "import data.pipelines.master_pipeline"
 
+  check-secrets:
+    name: 🔎 Check Deploy Credentials
+    needs: validate-and-test
+    runs-on: ubuntu-latest
+    outputs:
+      has-azure: ${{ steps.check.outputs.has-azure }}
+    steps:
+      # El contexto `secrets` no está disponible en el `if` a nivel de job, pero sí
+      # dentro de un step. Se expone como output para gatear el job de deploy.
+      - id: check
+        run: echo "has-azure=${{ secrets.AZURE_CREDENTIALS != '' }}" >> "$GITHUB_OUTPUT"
+
   deploy-adf:
     name: ☁️ Deploy Azure Data Factory Pipeline
-    needs: validate-and-test
-    if: github.ref == 'refs/heads/main' && secrets.AZURE_CREDENTIALS != ''
+    needs: [validate-and-test, check-secrets]
+    if: github.ref == 'refs/heads/main' && needs.check-secrets.outputs.has-azure == 'true'
     runs-on: ubuntu-latest
 
     steps:
