@@ -113,8 +113,8 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
     ? deptoData.shap
     : [
         { name: "Incidencia Histórica de Emergencias", val: "+84,369 Eventos", pct: 72, color: "#ba1a1a" },
-        { name: "Precipitación Acumulada (mm/24h)", val: "Prom. 24.8 mm", pct: 65, color: "#006686" },
-        { name: "Focos de Calor Satelitales", val: "Focos Activos", pct: 54, color: "#565e74" },
+        { name: "Precipitación Media Diaria Nacional", val: "Prom. 2.8 mm/día", pct: 65, color: "#006686" },
+        { name: "Focos de Calor Satelitales", val: "+893,500 acum.", pct: 54, color: "#565e74" },
         { name: "Avance de Inversión Pública Preventiva", val: `${NATIONAL_META.pctEjecucionNacional}% Exec`, pct: 42, color: "#94a3b8" }
       ];
 
@@ -341,8 +341,8 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex justify-between">
-              <span>Modelo: XGBoost Classifier v2.4</span>
-              <span>Explicabilidad: TreeSHAP Kernel</span>
+              <span>Modelo: XGBoost</span>
+              <span>Explicabilidad: TreeSHAP (XGBoost)</span>
             </div>
           </div>
         </div>
