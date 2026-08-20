@@ -23,7 +23,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
 - NUNCA utilices emojis ni emoticones en tus respuestas (NO uses símbolos como 📊, 🚨, 💰, etc.).
 - Utiliza únicamente texto institucional sobrio, guiones (-) o viñetas formales.
 - Responde siempre de manera concisa, ejecutiva y precisa en español (máximo 2 a 3 viñetas o 50 palabras).
-- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
+- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, S/ 31,016M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
 `;
 
     // Conectar directamente con Azure OpenAI Service (GPT-4o)
@@ -53,7 +53,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
     }
 
     return NextResponse.json({
-      reply: `- Emergencias SINPAD: 84,369 eventos registrados en el Perú.\n- Presupuesto MEF PP0068: S/ 1,420M PIM (71.4% ejecutado).\n- Modelo Predictivo XGBoost: F1-score 0.751, AUC-ROC 0.860.`,
+      reply: `- Emergencias SINPAD: 84,369 eventos registrados en el Perú.\n- Presupuesto MEF PP0068: S/ 31,016M PIM (71.4% ejecutado).\n- Modelo Predictivo XGBoost: F1-score 0.751, AUC-ROC 0.860.`,
       provider: 'Azure AI CENEPRED Engine'
     });
 

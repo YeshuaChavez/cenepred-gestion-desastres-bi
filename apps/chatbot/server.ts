@@ -30,7 +30,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
 - NUNCA utilices emojis ni emoticones en tus respuestas (NO uses símbolos como 📊, 🚨, 💰, etc.).
 - Utiliza únicamente texto institucional sobrio, guiones (-), viñetas formales o listas numeradas.
 - Responde siempre de manera concisa, ejecutiva, institucional y precisa en español.
-- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, 1,420,850 personas afectadas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
+- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, 11,178,408 personas afectadas, S/ 31,016M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
 `;
 
 // Healthcheck Endpoint
@@ -100,7 +100,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
 
     // 3. Fallback Smart Response Server-Side
     return res.json({
-      reply: `[Servidor Azure CENEPRED]: Analizando '${prompt}'. Conectado a los 25 departamentos. Registramos 84,369 emergencias históricas y S/ 1,420M en PIM PP 0068 (71.4% ejecutado).`,
+      reply: `[Servidor Azure CENEPRED]: Analizando '${prompt}'. Conectado a los 25 departamentos. Registramos 84,369 emergencias históricas y S/ 31,016M en PIM PP 0068 (71.4% ejecutado).`,
       provider: 'Azure CENEPRED Local Engine'
     });
 
