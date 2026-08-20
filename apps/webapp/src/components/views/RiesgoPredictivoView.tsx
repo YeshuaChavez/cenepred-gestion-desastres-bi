@@ -38,7 +38,7 @@ export default function RiesgoPredictivoView() {
 Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
 Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
 Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
-Modelo Inferencial: Algoritmo de Inteligencia Predictiva (F1-Score: 0.751 | AUC-ROC: 0.860 | Cross-Val: 5 Folds)
+Modelo Inferencial: XGBoost (F1-Score: 0.751 | AUC-ROC: 0.860 | Validación: split temporal 2012-20 / 21-23)
 
 --------------------------------------------------------------------------------
 
@@ -97,23 +97,23 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
             </div>
 
             <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
-              <p className="font-medium">Resultados de la matriz de confusión calculados sobre los registros históricos de emergencias:</p>
+              <p className="font-medium">Resultados de la matriz de confusión sobre el conjunto de prueba (2021-2023, 27,375 registros región-día):</p>
               
               <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-center font-bold">
                 <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 rounded-xl border border-emerald-200 dark:border-emerald-800/50">
-                  <span className="block text-xl font-extrabold">74,520</span>
+                  <span className="block text-xl font-extrabold">9,531</span>
                   <span className="text-[10px] uppercase tracking-wider">Verdaderos Positivos</span>
                 </div>
                 <div className="p-3 bg-sky-50 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 rounded-xl border border-sky-200 dark:border-sky-800/50">
-                  <span className="block text-xl font-extrabold">5,240</span>
+                  <span className="block text-xl font-extrabold">11,530</span>
                   <span className="text-[10px] uppercase tracking-wider">Verdaderos Negativos</span>
                 </div>
                 <div className="p-3 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 rounded-xl border border-amber-200 dark:border-amber-800/50">
-                  <span className="block text-xl font-extrabold">2,810</span>
+                  <span className="block text-xl font-extrabold">4,563</span>
                   <span className="text-[10px] uppercase tracking-wider">Falsos Positivos</span>
                 </div>
                 <div className="p-3 bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 rounded-xl border border-red-200 dark:border-red-800/50">
-                  <span className="block text-xl font-extrabold">1,799</span>
+                  <span className="block text-xl font-extrabold">1,751</span>
                   <span className="text-[10px] uppercase tracking-wider">Falsos Negativos</span>
                 </div>
               </div>
@@ -121,7 +121,7 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
               <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between font-semibold">
                 <span>AUC-ROC: <b className="text-slate-900 dark:text-white">0.860</b></span>
                 <span>F1-Score: <b className="text-slate-900 dark:text-white">0.751</b></span>
-                <span>Validación Cruzada: <b className="text-slate-900 dark:text-white">5 Folds</b></span>
+                <span>Validación: <b className="text-slate-900 dark:text-white">Split temporal 2012-20 / 21-23</b></span>
               </div>
             </div>
           </div>
