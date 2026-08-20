@@ -24,50 +24,45 @@ export default function RiesgoPredictivoView() {
 
   const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
-  const round1 = (val: number) => Math.round(val * 10) / 10;
-
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     setIsGeneratingReport(true);
     setGeneratedReport(null);
 
-    setTimeout(() => {
-      const emergenciasCount = (reportDeptoData?.emergencias || 0).toLocaleString();
-      const afectadosCount = (reportDeptoData?.afectados || 0).toLocaleString();
-      const damnificadosCount = (reportDeptoData?.damnificados || 0).toLocaleString();
-      const pctExec = reportDeptoData?.pctEjecucion || 0;
-      const brecha = round1(100 - pctExec);
+    try {
+      const res = await fetch('/api/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: reportDeptoData.name,
+          tag: reportDeptoData.tag,
+          prob: reportDeptoData.prob,
+          emergencias: reportDeptoData.emergencias,
+          afectados: reportDeptoData.afectados,
+          damnificados: reportDeptoData.damnificados,
+          precipitacionMm: reportDeptoData.precipitacionMm,
+          focosCalor: reportDeptoData.focosCalor,
+          sismos7d: reportDeptoData.sismos7d,
+          shap: reportDeptoData.shap,
+          pimM: reportDeptoData.pimM,
+          devengadoM: reportDeptoData.devengadoM,
+          pctEjecucion: reportDeptoData.pctEjecucion,
+        }),
+      });
 
-      const reportText = `
-# REPORTE DE INTELIGENCIA PREDICTIVA CENEPRED: DIAGNÓSTICO EJECUTIVO NACIONAL
-Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
-Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
-Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
-Modelo Inferencial: XGBoost (F1-Score: 0.751 | AUC-ROC: 0.860 | Validación: split temporal 2012-20 / 21-23)
-
---------------------------------------------------------------------------------
-
-1. DIAGNÓSTICO TERRITORIAL Y ANÁLISIS DE VULNERABILIDAD
-- Emergencias Registradas: ${emergenciasCount} eventos en el historial oficial.
-- Población Afectada Directa: ${afectadosCount} personas.
-- Población Damnificada: ${damnificadosCount} personas.
-- Telemetría Satelital 24h: Precipitación acumulada de ${reportDeptoData.precipitacionMm} mm/24h y ${reportDeptoData.focosCalor} focos de calor activos.
-
-2. EXPLICABILIDAD SHAP (FACTORES DETERMINANTES)
-${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)`).join('\n')}
-
-3. MATRIZ DE RECOMENDACIONES DE ACCIÓN PREVENTIVA
-- Activación de Alerta Nivel ${reportDeptoData.prob >= 65 ? '4 (Crítica)' : '3 (Prevención)'}: Coordinar brigadas de respuesta rápida en distritos de mayor precipitación.
-- Obras de Mitigación Prioritarias: Limpieza y descolmatación de cauces con maquinaria pesada antes del inicio de temporada.
-- Monitoreo Satelital Continuo: Sincronización continua de telemetría y reportes regionales.
-
-4. EVALUACIÓN FINANCIERA DE PREVENCIÓN
-- Presupuesto Asignado: S/ ${reportDeptoData.pimM} Millones
-- Inversión Ejecutada: S/ ${reportDeptoData.devengadoM} Millones
-- Avance Financiero: ${pctExec}% de ejecución. Brecha por ejecutar: ${brecha}%.
-      `;
-      setGeneratedReport(reportText.trim());
+      const data = await res.json();
+      if (res.ok && data.report) {
+        setGeneratedReport(data.report);
+      } else {
+        setGeneratedReport(
+          `No se pudo generar el diagnóstico con Gemini: ${data.error || res.statusText}` +
+          (data.detail ? `\n${data.detail}` : '')
+        );
+      }
+    } catch {
+      setGeneratedReport('Error de red al contactar el servicio de generación (Gemini).');
+    } finally {
       setIsGeneratingReport(false);
-    }, 700);
+    }
   };
 
   // La ruta /api/alerts solo despacha para niveles "Alto" o "Crítico".
