@@ -1,0 +1,13 @@
+name: cenepred-inference
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - azureml-inference-server-http
+      - xgboost>=3.0,<4
+      - pandas>=2.0
+      - pyarrow
+      - scikit-learn
+      - numpy

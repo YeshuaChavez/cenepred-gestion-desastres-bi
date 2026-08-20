@@ -7,7 +7,11 @@
     "code": "../../data/ml",
     "scoring_script": "score.py"
   },
-  "environment": "azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu:1",
+  "environment": {
+    "name": "cenepred-inference-env",
+    "image": "mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest",
+    "conda_file": "conda_env.yml"
+  },
   "instance_type": "Standard_DS2_v2",
   "instance_count": 1
 }

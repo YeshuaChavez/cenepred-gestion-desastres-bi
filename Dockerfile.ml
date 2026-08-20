@@ -18,6 +18,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código del proyecto
 COPY . .
 
+# Entrenar y hornear los artefactos del modelo real (pkl + snapshot + metadata) en la imagen,
+# usando la capa Gold copiada arriba. Así el endpoint arranca autocontenido y sin reentrenar.
+RUN python data/ml/predictive_model.py
+
 # Exponer puerto de la API FastAPI
 EXPOSE 8000
 
