@@ -7,8 +7,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Prompt es requerido' }, { status: 400 });
     }
 
-    const AZURE_OPENAI_KEY = process.env.AZURE_OPENAI_KEY || '7TFP6v1X4J47mTX8cuxtUSGNMP1A6tMwIZqNQYHVmxjqfZR5jRMCJQQJ99CHACfhMk5XJ3w3AAAAACOG99NL';
-    const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT || 'https://yeshuachavezlozano-8430-resource.openai.azure.com/';
+    const AZURE_OPENAI_KEY = process.env.AZURE_OPENAI_KEY;
+    const AZURE_OPENAI_ENDPOINT = process.env.AZURE_OPENAI_ENDPOINT;
     const AZURE_OPENAI_DEPLOYMENT = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
 
     const CENEPRED_SYSTEM_PROMPT = `
@@ -23,11 +23,11 @@ REGLAS DE ESTILO INSTITUCIONAL:
 - NUNCA utilices emojis ni emoticones en tus respuestas (NO uses símbolos como 📊, 🚨, 💰, etc.).
 - Utiliza únicamente texto institucional sobrio, guiones (-) o viñetas formales.
 - Responde siempre de manera concisa, ejecutiva y precisa en español (máximo 2 a 3 viñetas o 50 palabras).
-- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.912, AUC-ROC: 0.942).
+- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
 `;
 
     // Conectar directamente con Azure OpenAI Service (GPT-4o)
-    if (AZURE_OPENAI_KEY) {
+    if (AZURE_OPENAI_KEY && AZURE_OPENAI_ENDPOINT) {
       const azureUrl = `${AZURE_OPENAI_ENDPOINT.replace(/\/$/, '')}/openai/deployments/${AZURE_OPENAI_DEPLOYMENT}/chat/completions?api-version=2024-02-15-preview`;
       const azureRes = await fetch(azureUrl, {
         method: 'POST',
@@ -53,7 +53,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
     }
 
     return NextResponse.json({
-      reply: `- Emergencias SINPAD: 84,369 eventos registrados en el Perú.\n- Presupuesto MEF PP0068: S/ 1,420M PIM (71.4% ejecutado).\n- Modelo Predictivo XGBoost: F1-score 0.912, AUC-ROC 0.942.`,
+      reply: `- Emergencias SINPAD: 84,369 eventos registrados en el Perú.\n- Presupuesto MEF PP0068: S/ 1,420M PIM (71.4% ejecutado).\n- Modelo Predictivo XGBoost: F1-score 0.751, AUC-ROC 0.860.`,
       provider: 'Azure AI CENEPRED Engine'
     });
 

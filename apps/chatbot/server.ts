@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Azure OpenAI & Gemini credentials from root .env
 const AZURE_OPENAI_KEY: string = process.env.AZURE_OPENAI_KEY || '';
-const AZURE_OPENAI_ENDPOINT: string = process.env.AZURE_OPENAI_ENDPOINT || 'https://yeshuachavezlozano-8430-resource.openai.azure.com/';
+const AZURE_OPENAI_ENDPOINT: string = process.env.AZURE_OPENAI_ENDPOINT || '';
 const AZURE_OPENAI_DEPLOYMENT: string = process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4o';
 const GEMINI_API_KEY: string = process.env.GEMINI_API_KEY || '';
 
@@ -30,7 +30,7 @@ REGLAS DE ESTILO INSTITUCIONAL:
 - NUNCA utilices emojis ni emoticones en tus respuestas (NO uses símbolos como 📊, 🚨, 💰, etc.).
 - Utiliza únicamente texto institucional sobrio, guiones (-), viñetas formales o listas numeradas.
 - Responde siempre de manera concisa, ejecutiva, institucional y precisa en español.
-- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, 1,420,850 personas afectadas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.912, AUC-ROC: 0.942).
+- Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, 1,420,850 personas afectadas, S/ 1,420M PIM PP0068 (71.4% ejecutado) y métricas del modelo XGBoost (F1-score: 0.751, AUC-ROC: 0.860).
 `;
 
 // Healthcheck Endpoint

@@ -38,7 +38,7 @@ export default function RiesgoPredictivoView() {
 Fecha de Emisión: ${new Date().toLocaleDateString('es-PE')}
 Región Evaluada: ${reportDeptoData.name} (${reportDeptoData.tag})
 Score de Riesgo Climático: ${reportDeptoData.prob}% (${reportDeptoData.prob >= 65 ? 'CRÍTICO' : reportDeptoData.prob >= 55 ? 'MUY ALTO' : reportDeptoData.prob >= 45 ? 'ALTO' : 'MEDIO'})
-Modelo Inferencial: Algoritmo de Inteligencia Predictiva (F1-Score: 0.912 | AUC-ROC: 0.942 | Cross-Val: 5 Folds)
+Modelo Inferencial: Algoritmo de Inteligencia Predictiva (F1-Score: 0.751 | AUC-ROC: 0.860 | Cross-Val: 5 Folds)
 
 --------------------------------------------------------------------------------
 
@@ -119,8 +119,8 @@ ${reportDeptoData.shap.map(s => `- ${s.name}: ${s.val} (Contribución ${s.pct}%)
               </div>
 
               <div className="pt-2 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between font-semibold">
-                <span>AUC-ROC: <b className="text-slate-900 dark:text-white">0.942</b></span>
-                <span>F1-Score: <b className="text-slate-900 dark:text-white">0.912</b></span>
+                <span>AUC-ROC: <b className="text-slate-900 dark:text-white">0.860</b></span>
+                <span>F1-Score: <b className="text-slate-900 dark:text-white">0.751</b></span>
                 <span>Validación Cruzada: <b className="text-slate-900 dark:text-white">5 Folds</b></span>
               </div>
             </div>
