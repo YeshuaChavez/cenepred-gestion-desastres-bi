@@ -9,10 +9,11 @@ import sys
 subprocess.run(["rm", "-rf", "/tmp/cenepred"], check=False)
 subprocess.run(["git", "clone", "--depth", "1",
                 "https://github.com/YeshuaChavez/cenepred-gestion-desastres-bi", "/tmp/cenepred"], check=True)
-# pandas/pyarrow/requests ya vienen en el Databricks Runtime; reinstalarlos rompe el ABI de
-# numpy. Solo instalamos lo que falta en el runtime.
+# pandas/pyarrow/requests ya vienen en el Databricks Runtime. geopandas arrastra numpy 2.x,
+# que rompe el ABI del pyarrow del runtime (compilado contra numpy 1) y deja a pandas sin motor
+# parquet. Se fija numpy<2 para mantener el stack del runtime consistente.
 subprocess.run([sys.executable, "-m", "pip", "install", "-q",
-                "geopandas", "pandera", "azure-storage-blob"], check=True)
+                "numpy<2", "geopandas", "pandera", "azure-storage-blob"], check=True)
 
 os.environ["NASA_FIRMS_MAP_KEY"] = dbutils.secrets.get("cenepred", "nasa-firms-key")  # noqa: F821
 os.environ["AZURE_STORAGE_KEY"] = dbutils.secrets.get("cenepred", "adls-key")  # noqa: F821
