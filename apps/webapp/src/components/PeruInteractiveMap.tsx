@@ -219,9 +219,9 @@ export default function PeruInteractiveMap({
             isClientDark ? 'bg-slate-900/80 text-slate-300 border-slate-700' : 'bg-white/80 text-slate-700 border-slate-200'
           }`}>
             <span>Capas Activas:</span>
-            {showHospitals && <span className="text-emerald-500 font-bold">🏥 Hospitales</span>}
-            {showBridges && <span className="text-amber-500 font-bold">🌉 Puentes</span>}
-            {showShelters && <span className="text-purple-500 font-bold">⛺ Albergues</span>}
+            {showHospitals && <span className="text-emerald-500 font-bold">Hospitales</span>}
+            {showBridges && <span className="text-amber-500 font-bold">Puentes</span>}
+            {showShelters && <span className="text-purple-500 font-bold">Albergues</span>}
           </div>
         )}
       </div>
@@ -333,7 +333,7 @@ export default function PeruInteractiveMap({
           const isHosp = item.tipo === 'hospital';
           const isBridge = item.tipo === 'puente';
           const color = isHosp ? '#059669' : isBridge ? '#d97706' : '#7c3aed';
-          const iconSymbol = isHosp ? '🏥' : isBridge ? '🌉' : '⛺';
+          const iconSymbol = isHosp ? 'H' : isBridge ? 'P' : 'A';
 
           return (
             <CircleMarker
@@ -380,7 +380,7 @@ export default function PeruInteractiveMap({
                     </p>
 
                     <div className="pt-1 border-t border-slate-200 dark:border-slate-700 text-[10px] text-sky-700 dark:text-sky-400 font-bold">
-                      📞 {item.contacto}
+                      Tel: {item.contacto}
                     </div>
                   </div>
                 </div>

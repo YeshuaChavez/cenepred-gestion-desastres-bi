@@ -285,7 +285,6 @@ export default function MonitoreoView() {
                 : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-400'
             }`}
           >
-            <span>🏥</span>
             <span>Hospitales (MINSA/EsSalud)</span>
             <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showHospitals ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
               {showHospitals ? 'ON' : 'OFF'}
@@ -299,7 +298,6 @@ export default function MonitoreoView() {
                 : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-amber-400'
             }`}
           >
-            <span>🌉</span>
             <span>Puentes Críticos (MTC)</span>
             <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showBridges ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
               {showBridges ? 'ON' : 'OFF'}
@@ -313,7 +311,6 @@ export default function MonitoreoView() {
                 : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-purple-400'
             }`}
           >
-            <span>⛺</span>
             <span>Albergues Oficiales (INDECI)</span>
             <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${showShelters ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
               {showShelters ? 'ON' : 'OFF'}

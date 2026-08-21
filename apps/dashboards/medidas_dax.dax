@@ -158,9 +158,9 @@ VAR prob = [Probabilidad Riesgo Promedio (%)] / 100
 RETURN
     SWITCH(
         TRUE(),
-        prob >= 0.70, "ALTO RIESGO (🔴)",
-        prob >= 0.40, "RIESGO MODERADO (🟡)",
-        "RIESGO BAJO (🟢)"
+        prob >= 0.70, "ALTO RIESGO",
+        prob >= 0.40, "RIESGO MODERADO",
+        "RIESGO BAJO"
     )
 
 

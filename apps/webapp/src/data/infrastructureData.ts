@@ -13,7 +13,7 @@ export interface InfrastructureItem {
 }
 
 export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
-  // 🏥 HOSPITALES Y CENTROS DE SALUD ESTRATÉGICOS
+  // HOSPITALES Y CENTROS DE SALUD ESTRATÉGICOS
   {
     id: "hosp-01",
     nombre: "Hospital de Apoyo II-2 Sullana",
@@ -119,7 +119,7 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     descripcion: "Punto de atención crítica del Altiplano ante temporadas de heladas extremas y nevadas."
   },
 
-  // 🌉 PUENTES Y CORREDORES VIALES VULNERABLES
+  // PUENTES Y CORREDORES VIALES VULNERABLES
   {
     id: "bridge-01",
     nombre: "Puente Simón Rodríguez (Carretera Panamericana Norte)",
@@ -199,7 +199,7 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     descripcion: "Paso cordillerano crítico para el abastecimiento de víveres y combustibles entre Apurímac y Cusco."
   },
 
-  // ⛺ CENTROS DE REFUGIO Y ALBERGUES OFICIALES INDECI
+  // CENTROS DE REFUGIO Y ALBERGUES OFICIALES INDECI
   {
     id: "albergue-01",
     nombre: "Albergue Temporal Estadio Campeones del 36",

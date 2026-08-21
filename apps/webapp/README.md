@@ -4,18 +4,18 @@ Esta carpeta contiene la **aplicación web unificada (Portal Ejecutivo)** del Si
 
 ---
 
-## 🚀 Características de la Aplicación Web
+## Características de la Aplicación Web
 
 1. **Header & Navigation Bar:** Estado de conexión en tiempo real a Azure Databricks SQL Warehouse Serverless (`dbw_cenepred_dev`).
 2. **5 Dashboards Tab System:** Navegación fluida entre los 5 dashboards de Power BI:
-   * 🌤️ *Monitoreo Diario*
-   * 📈 *Histórico & Tendencias (2012-2023)*
-   * 🤖 *Riesgo Predictivo (XGBoost) & Explicabilidad SHAP*
-   * 📊 *Comparativo Regional (Heatmap)*
-   * 💰 *Impacto Socioeconómico y Presupuestal MEF (PP 0068)*
+   * *Monitoreo Diario*
+   * *Histórico & Tendencias (2012-2023)*
+   * *Riesgo Predictivo (XGBoost) & Explicabilidad SHAP*
+   * *Comparativo Regional (Heatmap)*
+   * *Impacto Socioeconómico y Presupuestal MEF (PP 0068)*
 3. **Panel Interactivo de Explicabilidad SHAP:**
    * Selector dinámico para las **25 regiones del Perú**.
-   * Medidor de nivel de riesgo predictivo (Gauge Meter con etiquetas de riesgo ALTO 🔴, MODERADO 🟡, BAJO 🟢).
+   * Medidor de nivel de riesgo predictivo (Gauge Meter con etiquetas de riesgo ALTO , MODERADO , BAJO ).
    * Desglose visual interactivo de los factores explicativos SHAP en porcentaje (Precipitación Open-Meteo, Focos de Calor NASA FIRMS, Sismos 7d USGS, Histórico INDECI SINPAD).
 4. **Chatbot Conversacional RAG Flotante (Widget AI):**
    * Asistente virtual embebido en la esquina inferior derecha.
@@ -23,7 +23,7 @@ Esta carpeta contiene la **aplicación web unificada (Portal Ejecutivo)** del Si
 
 ---
 
-## 💻 Ejecución Local
+## Ejecución Local
 
 Para previsualizar la aplicación web localmente en cualquier navegador:
 
@@ -39,7 +39,7 @@ Luego entra a `http://localhost:8000` en tu navegador.
 
 ---
 
-## ☁️ Despliegue en Azure (Azure Static Web Apps)
+## Despliegue en Azure (Azure Static Web Apps)
 
 La aplicación está lista para ser desplegada en **Azure Static Web Apps**:
 

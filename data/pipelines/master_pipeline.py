@@ -37,20 +37,20 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 
 def run_step(step_name: str, cmd: list):
     """Ejecuta un paso del pipeline con control de errores e impresiones de estado."""
-    logging.info(f"🚀 Iniciando Paso: {step_name}...")
+    logging.info(f"Iniciando Paso: {step_name}...")
     start_time = datetime.now()
     
     try:
         res = subprocess.run(cmd, cwd=PROJECT_ROOT, capture_output=True, text=True, check=True)
         duration = (datetime.now() - start_time).total_seconds()
-        logging.info(f"✅ {step_name} completado con éxito ({duration:.2f}s).")
+        logging.info(f"{step_name} completado con éxito ({duration:.2f}s).")
         if res.stdout.strip():
             for line in res.stdout.strip().splitlines()[-5:]:
                 logging.info(f"   [out] {line}")
         return True
     except subprocess.CalledProcessError as e:
         duration = (datetime.now() - start_time).total_seconds()
-        logging.error(f"❌ Error en {step_name} ({duration:.2f}s): {e}")
+        logging.error(f"Error en {step_name} ({duration:.2f}s): {e}")
         if e.stdout:
             logging.error(f"   [stdout] {e.stdout[-1000:]}")
         if e.stderr:
@@ -59,7 +59,7 @@ def run_step(step_name: str, cmd: list):
 
 def main():
     logging.info("=" * 80)
-    logging.info("🔥 CENEPRED BI DATA PIPELINE — EJECUCIÓN AUTOMATIZADA MASTER 🔥")
+    logging.info("CENEPRED BI DATA PIPELINE — EJECUCIÓN AUTOMATIZADA MASTER ")
     logging.info(f"Directorio Raíz: {PROJECT_ROOT}")
     logging.info(f"Marca de Tiempo: {datetime.now(timezone.utc).isoformat()} UTC")
     logging.info("=" * 80)
@@ -113,7 +113,7 @@ def main():
     run_step("Alerts: Evaluación y Envío de Alertas Tempranas", [sys.executable, "data/pipelines/alert_dispatcher.py"])
 
     logging.info("\n" + "=" * 80)
-    logging.info("🎉 PIPELINE AUTOMATIZADO COMPLETADO CON ÉXITO CERO ERRORES 🎉")
+    logging.info("PIPELINE AUTOMATIZADO COMPLETADO CON ÉXITO CERO ERRORES ")
     logging.info("=" * 80)
 
 if __name__ == "__main__":

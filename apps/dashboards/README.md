@@ -4,7 +4,7 @@ Esta carpeta contiene los activos, archivos de proyecto, biblioteca de medidas D
 
 ---
 
-## 📁 Archivos en esta carpeta
+## Archivos en esta carpeta
 
 * **`dashboard_cenepred.pbix`** — Archivo principal de Power BI Desktop conectado a Azure Databricks Serverless SQL Warehouse.
 * **`medidas_dax.dax`** — Script de medidas DAX (Inteligencia de Tiempo, KPIs de Daño, Monitoreo Activo, ML Predictivo y Gasto Presupuestal MEF).
@@ -13,7 +13,7 @@ Esta carpeta contiene los activos, archivos de proyecto, biblioteca de medidas D
 
 ---
 
-## 📊 Resumen de los 5 Dashboards
+## Resumen de los 5 Dashboards
 
 1. **Monitoreo Diario de Riesgo y Actividad:** Clima (Open-Meteo), sismos 7d (USGS) y focos de calor satelitales activos (NASA FIRMS) por región.
 2. **Histórico y Tendencias Multianuales:** Evolución temporal de emergencias 2012–2023 con Inteligencia de Tiempo YoY y YTD.
@@ -23,7 +23,7 @@ Esta carpeta contiene los activos, archivos de proyecto, biblioteca de medidas D
 
 ---
 
-## ⚡ Conexión a Azure Databricks
+## Conexión a Azure Databricks
 
 Los dashboards consumen las tablas Delta Lake de la capa Gold publicadas en Unity Catalog:
 

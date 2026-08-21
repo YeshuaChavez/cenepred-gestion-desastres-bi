@@ -4,7 +4,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 🎨 Paleta de Colores y Estilo Visual
+## Paleta de Colores y Estilo Visual
 
 * **Modo de Diseño:** Dark / Navy Slate Theme (Modern Executive Dashboard)
 * **Color Primario (Riesgo Alto / Alerta):** `#E63946` (Rojo Carmesí)
@@ -16,7 +16,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 📊 Dashboard 1: Monitoreo Diario de Riesgo y Actividad
+## Dashboard 1: Monitoreo Diario de Riesgo y Actividad
 
 * **Objetivo:** Visualizar el estado activo del clima, actividad sísmica y focos de calor satelitales en el territorio nacional.
 
@@ -39,7 +39,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 📈 Dashboard 2: Histórico de Emergencias y Tendencias Multianuales
+## Dashboard 2: Histórico de Emergencias y Tendencias Multianuales
 
 * **Objetivo:** Analizar la evolución multianual (2012-2023) del daño causado por emergencias climáticas.
 
@@ -62,7 +62,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 🤖 Dashboard 3: Riesgo Dinámico Predictivo y Explicabilidad (ML + SHAP)
+## Dashboard 3: Riesgo Dinámico Predictivo y Explicabilidad (ML + SHAP)
 
 * **Objetivo:** Presentar las predicciones del modelo XGBoost y justificar el riesgo mediante explicabilidad SHAP.
 
@@ -81,7 +81,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 🔄 Dashboard 4: Comparativo Regional y Matriz Estacional
+## Dashboard 4: Comparativo Regional y Matriz Estacional
 
 * **Objetivo:** Evaluar la concentración estacional y realizar ranking entre departamentos.
 
@@ -101,7 +101,7 @@ Este documento detalla la estructura, maquetación visual, paleta de colores y c
 
 ---
 
-## 💰 Dashboard 5: Impacto Socioeconómico y Gestión Presupuestal (MEF PP 0068)
+## Dashboard 5: Impacto Socioeconómico y Gestión Presupuestal (MEF PP 0068)
 
 * **Objetivo:** Evaluar la efectividad del gasto ejecutado en el Programa Presupuestal PP 0068 (PREVAED) frente a las emergencias sufridas.
 
