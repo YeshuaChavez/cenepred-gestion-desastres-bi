@@ -38,7 +38,7 @@ jobs:
           assert os.path.exists(path), 'realData.json no fue generado'
           with open(path, 'r', encoding='utf-8') as f:
               data = json.load(f)
-          print(f'✅ Validación exitosa: {len(data.get(\"departamentos\", {}))} departamentos sincronizados.')
+          print(f'Validación exitosa: {len(data.get(\"departamentos\", {}))} departamentos sincronizados.')
           "
 
       - name: Commit y Push de Datos Diarios Actualizados

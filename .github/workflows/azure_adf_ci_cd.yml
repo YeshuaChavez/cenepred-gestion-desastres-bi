@@ -8,39 +8,39 @@ on:
 
 jobs:
   validate-and-test:
-    name: 🧪 Run Unit Tests & Linting
+    name: Run Unit Tests & Linting
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: 📦 Install Python Dependencies
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest ruff
 
-      - name: 🔍 Linting with Ruff
+      - name: Linting with Ruff
         run: |
           python -m ruff check . --select F,E9
 
-      - name: 🧪 Execute Unit Tests (pytest)
+      - name: Execute Unit Tests (pytest)
         run: |
           python -m pytest tests/ -v
 
-      - name: ⚡ Validate Master Pipeline Syntax
+      - name: Validate Master Pipeline Syntax
         run: |
           python data/pipelines/master_pipeline.py --help || python -c "import data.pipelines.master_pipeline"
 
   check-secrets:
-    name: 🔎 Check Deploy Credentials
+    name: Check Deploy Credentials
     needs: validate-and-test
     runs-on: ubuntu-latest
     outputs:
@@ -52,21 +52,25 @@ jobs:
         run: echo "has-azure=${{ secrets.AZURE_CREDENTIALS != '' }}" >> "$GITHUB_OUTPUT"
 
   deploy-adf:
-    name: ☁️ Deploy Azure Data Factory Pipeline
+    name: Deploy Azure Data Factory Pipeline
     needs: [validate-and-test, check-secrets]
-    if: github.ref == 'refs/heads/main' && needs.check-secrets.outputs.has-azure == 'true'
+    # Opt-in: solo se despliega si existe un Data Factory real y se define la variable de repo
+    # DEPLOY_ADF=true. Se evita así que CI falle intentando desplegar a infra inexistente.
+    # (adf_pipeline_etl_cenepred.json es una definición de pipeline de ADF; antes de activar
+    # esto hay que envolverla en un ARM template válido o usar `az datafactory pipeline create`.)
+    if: github.ref == 'refs/heads/main' && needs.check-secrets.outputs.has-azure == 'true' && vars.DEPLOY_ADF == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🔐 Azure Login (Service Principal)
+      - name: Azure Login (Service Principal)
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🚀 Validate & Deploy ADF Pipeline ARM Template
+      - name: Validate & Deploy ADF Pipeline ARM Template
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
