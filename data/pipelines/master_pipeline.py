@@ -76,6 +76,9 @@ def main(daily: bool = False, upload_adls: bool = False):
         run_step("Bronze: NOAA ONI (Índice El Niño)", [sys.executable, "data/ingestion/noaa_oni/fetch_oni.py"])
         run_step("Bronze: Open-Meteo (Telemetría Satelital)", [sys.executable, "data/ingestion/open_meteo/fetch_open_meteo.py"])
         run_step("Bronze: USGS (Sismicidad Nacional)", [sys.executable, "data/ingestion/usgs/fetch_usgs.py"])
+        # Los polígonos INEI son necesarios para el join geoespacial de Silver (asignar focos
+        # de calor y sismos a su departamento). Su fuente no bloquea la IP de la nube.
+        run_step("Bronze: INEI Límites Regionales", [sys.executable, "data/ingestion/inei_limites/fetch_inei_limites.py"])
 
         logging.info("\n--- 2. LIMPIEZA SILVER (telemetría) ---")
         run_step("Silver: NASA FIRMS", [sys.executable, "data/silver/nasa_firms/limpieza_nasa_firms.py"])
