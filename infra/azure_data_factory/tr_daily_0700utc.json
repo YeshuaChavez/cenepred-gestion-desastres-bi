@@ -1,0 +1,23 @@
+{
+  "type": "ScheduleTrigger",
+  "typeProperties": {
+    "recurrence": {
+      "frequency": "Day",
+      "interval": 1,
+      "startTime": "2026-08-22T07:00:00Z",
+      "timeZone": "UTC",
+      "schedule": {
+        "hours": [7],
+        "minutes": [0]
+      }
+    }
+  },
+  "pipelines": [
+    {
+      "pipelineReference": {
+        "referenceName": "pl_daily_medallion",
+        "type": "PipelineReference"
+      }
+    }
+  ]
+}

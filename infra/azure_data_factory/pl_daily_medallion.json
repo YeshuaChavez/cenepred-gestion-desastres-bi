@@ -1,0 +1,21 @@
+{
+  "activities": [
+    {
+      "name": "RunDailyMedallion",
+      "type": "DatabricksNotebook",
+      "dependsOn": [],
+      "policy": {
+        "timeout": "1.00:00:00",
+        "retry": 1,
+        "retryIntervalInSeconds": 60
+      },
+      "linkedServiceName": {
+        "referenceName": "ls_databricks",
+        "type": "LinkedServiceReference"
+      },
+      "typeProperties": {
+        "notebookPath": "/Shared/cenepred_daily_pipeline"
+      }
+    }
+  ]
+}

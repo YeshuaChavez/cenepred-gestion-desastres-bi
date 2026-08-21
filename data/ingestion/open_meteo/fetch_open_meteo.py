@@ -55,20 +55,27 @@ def download_clima(start_date: str, end_date: str, output_dir: Path = OUTPUT_DIR
         "timezone": TIMEZONE,
     }
 
-    # Reintentos con backoff exponencial
+    # Reintentos con backoff. Open-Meteo (free tier) responde 429 cuando se supera la cuota;
+    # se respeta el header Retry-After si viene, con un backoff mínimo creciente.
+    max_intentos = 4
     response = None
-    for attempt in range(3):
+    for attempt in range(max_intentos):
         try:
             response = requests.get(ARCHIVE_API_URL, params=params, timeout=180)
+            if response.status_code == 429:
+                espera = int(response.headers.get("Retry-After", 0)) or 15 * (attempt + 1)
+                print(f"Aviso: Open-Meteo 429 (rate limit). Reintento {attempt + 1}/{max_intentos} en {espera}s...")
+                time.sleep(espera)
+                continue
             response.raise_for_status()
             break
         except Exception as e:
-            if attempt == 2:
+            if attempt == max_intentos - 1:
                 if dest_path.exists() and dest_path.stat().st_size > 1024:
-                    print(f"Aviso: Timeout en Open-Meteo, usando datos en caché de Bronze -> {dest_path}")
+                    print(f"Aviso: Fallo en Open-Meteo, usando datos en caché de Bronze -> {dest_path}")
                     return dest_path
                 raise e
-            time.sleep(3 * (attempt + 1))
+            time.sleep(10 * (attempt + 1))
 
     resultados = response.json() if response else []
 
