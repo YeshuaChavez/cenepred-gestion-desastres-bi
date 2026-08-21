@@ -66,10 +66,35 @@ def main(daily: bool = False, upload_adls: bool = False):
     logging.info(f"Marca de Tiempo: {datetime.now(timezone.utc).isoformat()} UTC")
     logging.info("=" * 80)
 
-    # En modo diario se omite el MEF PP0068: es un dato ANUAL de exportación manual
-    # (no está en el repo que clona Databricks) y no cambia día a día. Su tabla Gold
-    # (fact_gasto_prevaed) se mantiene desde la última corrida completa en ADLS.
+    if daily:
+        # Modo DIARIO: refresca SOLO la telemetría dinámica -> fact_monitoreo_diario.
+        # No se reconstruyen las dims ni las tablas históricas (emergencias/INDECI,
+        # gasto/MEF): dependen de fuentes históricas o manuales y de portales que
+        # bloquean la IP de la nube. dim_region/dim_tiempo se descargan estáticas de ADLS.
+        logging.info("\n--- 1. INGESTA BRONZE (telemetría dinámica) ---")
+        run_step("Bronze: NASA FIRMS (Focos de Calor)", [sys.executable, "data/ingestion/nasa_firms/fetch_nasa_firms.py"])
+        run_step("Bronze: NOAA ONI (Índice El Niño)", [sys.executable, "data/ingestion/noaa_oni/fetch_oni.py"])
+        run_step("Bronze: Open-Meteo (Telemetría Satelital)", [sys.executable, "data/ingestion/open_meteo/fetch_open_meteo.py"])
+        run_step("Bronze: USGS (Sismicidad Nacional)", [sys.executable, "data/ingestion/usgs/fetch_usgs.py"])
 
+        logging.info("\n--- 2. LIMPIEZA SILVER (telemetría) ---")
+        run_step("Silver: NASA FIRMS", [sys.executable, "data/silver/nasa_firms/limpieza_nasa_firms.py"])
+        run_step("Silver: NOAA ONI", [sys.executable, "data/silver/noaa_oni/limpieza_oni.py"])
+        run_step("Silver: Open-Meteo", [sys.executable, "data/silver/open_meteo/limpieza_open_meteo.py"])
+        run_step("Silver: USGS", [sys.executable, "data/silver/usgs/limpieza_usgs.py"])
+
+        logging.info("\n--- 3. DIMS ESTÁTICAS (desde ADLS) + GOLD MONITOREO ---")
+        run_step("ADLS: Descargar dims estáticas", [sys.executable, "scripts/fetch_gold_dims_from_adls.py"])
+        run_step("Gold: Monitoreo Diario Satelital", [sys.executable, "data/gold/fact_monitoreo_diario.py"])
+
+        logging.info("\n--- 4. PUBLICACIÓN ADLS ---")
+        run_step("ADLS: Sincronizar capa Gold", [sys.executable, "scripts/sync_gold_to_adls.py"])
+        logging.info("\n" + "=" * 80)
+        logging.info("PIPELINE DIARIO COMPLETADO: fact_monitoreo_diario refrescado y sincronizado a ADLS.")
+        logging.info("=" * 80)
+        return
+
+    # ===================== MODO COMPLETO (bronze -> silver -> gold -> publicación) ==========
     # -------------------------------------------------------------------------
     # CAPA 1: BRONZE (Ingesta de Fuentes Externas)
     # -------------------------------------------------------------------------
@@ -86,8 +111,7 @@ def main(daily: bool = False, upload_adls: bool = False):
     # -------------------------------------------------------------------------
     logging.info("\n--- 2. TRANSFORMACIÓN & LIMPIEZA SILVER ---")
     run_step("Silver: Limpieza INDECI", [sys.executable, "data/silver/indeci/limpieza_indeci.py"])
-    if not daily:
-        run_step("Silver: Limpieza MEF PP 0068", [sys.executable, "data/silver/mef_pp0068/limpieza_mef_pp0068.py"])
+    run_step("Silver: Limpieza MEF PP 0068", [sys.executable, "data/silver/mef_pp0068/limpieza_mef_pp0068.py"])
     run_step("Silver: Limpieza NASA FIRMS", [sys.executable, "data/silver/nasa_firms/limpieza_nasa_firms.py"])
     run_step("Silver: Limpieza NOAA ONI", [sys.executable, "data/silver/noaa_oni/limpieza_oni.py"])
     run_step("Silver: Limpieza Open-Meteo", [sys.executable, "data/silver/open_meteo/limpieza_open_meteo.py"])
@@ -104,17 +128,8 @@ def main(daily: bool = False, upload_adls: bool = False):
     run_step("Gold: Dimensión Tiempo", [sys.executable, "data/gold/dim_tiempo.py"])
     run_step("Gold: Dimensión Fenómeno", [sys.executable, "data/gold/dim_fenomeno.py"])
     run_step("Gold: Hechos Emergencias SINPAD", [sys.executable, "data/gold/fact_emergencias.py"])
-    if not daily:
-        run_step("Gold: Hechos Gasto PREVAED MEF", [sys.executable, "data/gold/fact_gasto_prevaed.py"])
+    run_step("Gold: Hechos Gasto PREVAED MEF", [sys.executable, "data/gold/fact_gasto_prevaed.py"])
     run_step("Gold: Hechos Monitoreo Diario Satelital", [sys.executable, "data/gold/fact_monitoreo_diario.py"])
-
-    if daily:
-        # En modo diario el objetivo es refrescar el data lake Gold en ADLS.
-        run_step("ADLS: Sincronizar capa Gold", [sys.executable, "scripts/sync_gold_to_adls.py"])
-        logging.info("\n" + "=" * 80)
-        logging.info("PIPELINE DIARIO COMPLETADO: capa Gold refrescada y sincronizada a ADLS.")
-        logging.info("=" * 80)
-        return
 
     # -------------------------------------------------------------------------
     # CAPA 4: PUBLICACIÓN & EXPORTACIÓN
