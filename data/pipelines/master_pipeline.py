@@ -12,6 +12,7 @@ Custom Activity en Azure Data Factory (ADF).
 ===============================================================================
 """
 
+import argparse
 import sys
 import os
 import subprocess
@@ -57,12 +58,17 @@ def run_step(step_name: str, cmd: list):
             logging.error(f"   [stderr] {e.stderr[-1000:]}")
         raise e
 
-def main():
+def main(daily: bool = False, upload_adls: bool = False):
+    modo = "DIARIO (telemetría dinámica)" if daily else "COMPLETO"
     logging.info("=" * 80)
-    logging.info("CENEPRED BI DATA PIPELINE — EJECUCIÓN AUTOMATIZADA MASTER ")
+    logging.info(f"CENEPRED BI DATA PIPELINE — EJECUCION AUTOMATIZADA [{modo}]")
     logging.info(f"Directorio Raíz: {PROJECT_ROOT}")
     logging.info(f"Marca de Tiempo: {datetime.now(timezone.utc).isoformat()} UTC")
     logging.info("=" * 80)
+
+    # En modo diario se omite el MEF PP0068: es un dato ANUAL de exportación manual
+    # (no está en el repo que clona Databricks) y no cambia día a día. Su tabla Gold
+    # (fact_gasto_prevaed) se mantiene desde la última corrida completa en ADLS.
 
     # -------------------------------------------------------------------------
     # CAPA 1: BRONZE (Ingesta de Fuentes Externas)
@@ -80,12 +86,13 @@ def main():
     # -------------------------------------------------------------------------
     logging.info("\n--- 2. TRANSFORMACIÓN & LIMPIEZA SILVER ---")
     run_step("Silver: Limpieza INDECI", [sys.executable, "data/silver/indeci/limpieza_indeci.py"])
-    run_step("Silver: Limpieza MEF PP 0068", [sys.executable, "data/silver/mef_pp0068/limpieza_mef_pp0068.py"])
+    if not daily:
+        run_step("Silver: Limpieza MEF PP 0068", [sys.executable, "data/silver/mef_pp0068/limpieza_mef_pp0068.py"])
     run_step("Silver: Limpieza NASA FIRMS", [sys.executable, "data/silver/nasa_firms/limpieza_nasa_firms.py"])
     run_step("Silver: Limpieza NOAA ONI", [sys.executable, "data/silver/noaa_oni/limpieza_oni.py"])
     run_step("Silver: Limpieza Open-Meteo", [sys.executable, "data/silver/open_meteo/limpieza_open_meteo.py"])
     run_step("Silver: Limpieza USGS", [sys.executable, "data/silver/usgs/limpieza_usgs.py"])
-    
+
     # QA Data Quality Validation Gate
     run_step("Silver QA: Control de Calidad de Datos", [sys.executable, "data/quality/validar_silver.py"])
 
@@ -97,8 +104,17 @@ def main():
     run_step("Gold: Dimensión Tiempo", [sys.executable, "data/gold/dim_tiempo.py"])
     run_step("Gold: Dimensión Fenómeno", [sys.executable, "data/gold/dim_fenomeno.py"])
     run_step("Gold: Hechos Emergencias SINPAD", [sys.executable, "data/gold/fact_emergencias.py"])
-    run_step("Gold: Hechos Gasto PREVAED MEF", [sys.executable, "data/gold/fact_gasto_prevaed.py"])
+    if not daily:
+        run_step("Gold: Hechos Gasto PREVAED MEF", [sys.executable, "data/gold/fact_gasto_prevaed.py"])
     run_step("Gold: Hechos Monitoreo Diario Satelital", [sys.executable, "data/gold/fact_monitoreo_diario.py"])
+
+    if daily:
+        # En modo diario el objetivo es refrescar el data lake Gold en ADLS.
+        run_step("ADLS: Sincronizar capa Gold", [sys.executable, "scripts/sync_gold_to_adls.py"])
+        logging.info("\n" + "=" * 80)
+        logging.info("PIPELINE DIARIO COMPLETADO: capa Gold refrescada y sincronizada a ADLS.")
+        logging.info("=" * 80)
+        return
 
     # -------------------------------------------------------------------------
     # CAPA 4: PUBLICACIÓN & EXPORTACIÓN
@@ -112,9 +128,18 @@ def main():
     logging.info("\n--- 5. DESPACHO DE ALERTAS TEMPRANAS ---")
     run_step("Alerts: Evaluación y Envío de Alertas Tempranas", [sys.executable, "data/pipelines/alert_dispatcher.py"])
 
+    if upload_adls:
+        run_step("ADLS: Sincronizar capa Gold", [sys.executable, "scripts/sync_gold_to_adls.py"])
+
     logging.info("\n" + "=" * 80)
-    logging.info("PIPELINE AUTOMATIZADO COMPLETADO CON ÉXITO CERO ERRORES ")
+    logging.info("PIPELINE AUTOMATIZADO COMPLETADO SIN ERRORES")
     logging.info("=" * 80)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Orquestador del pipeline Medallón CENEPRED.")
+    parser.add_argument("--daily", action="store_true",
+                        help="Modo diario: solo telemetría dinámica (omite MEF anual/manual) y sincroniza Gold a ADLS.")
+    parser.add_argument("--upload-adls", action="store_true",
+                        help="En modo completo, sincroniza también la capa Gold a ADLS al finalizar.")
+    args = parser.parse_args()
+    main(daily=args.daily, upload_adls=args.upload_adls)
