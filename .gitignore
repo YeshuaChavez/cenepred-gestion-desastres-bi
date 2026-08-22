@@ -72,6 +72,8 @@ data/ml/models/
 # ------------------------------------------
 # Power BI & Office Locks
 # ------------------------------------------
+# El .pbix es binario y se regenera desde el .pbids conectado a ADLS; no se versiona.
+*.pbix
 *.pbix.bak
 ~$*.docx
 ~$*.xlsx
