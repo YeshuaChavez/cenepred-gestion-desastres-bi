@@ -1,0 +1,14 @@
+{
+  "version": "0.1",
+  "connections": [
+    {
+      "details": {
+        "protocol": "azure-datalake-storage",
+        "address": {
+          "url": "https://stcenepreddev1.dfs.core.windows.net/gold"
+        }
+      },
+      "mode": "Import"
+    }
+  ]
+}
