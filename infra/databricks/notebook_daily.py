@@ -29,3 +29,13 @@ if r.returncode != 0:
     tail = (r.stdout[-2500:] + " || STDERR: " + r.stderr[-1500:]).replace(chr(10), " | ")
     raise SystemExit("PIPELINE FALLO: " + tail)
 print("OK: pipeline diario completado")
+
+# Publicar el fact dinámico en la tabla Delta de Unity Catalog que consume Power BI
+# (dbw_cenepred_dev.default.fact_monitoreo_diario). Así el .pbix solo necesita "Actualizar".
+import pandas as pd  # noqa: E402
+
+_fm = pd.read_parquet("/tmp/cenepred/data/gold/local_data/fact_monitoreo_diario.parquet")
+(spark.createDataFrame(_fm)  # noqa: F821  (spark lo provee Databricks)
+      .write.mode("overwrite").option("overwriteSchema", "true")
+      .saveAsTable("dbw_cenepred_dev.default.fact_monitoreo_diario"))
+print(f"Tabla Delta fact_monitoreo_diario actualizada en Unity Catalog: {_fm.shape[0]} filas")
