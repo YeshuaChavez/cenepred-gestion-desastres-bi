@@ -1,4 +1,4 @@
-# Sistema de Alerta Temprana de Riesgo Dinámico ante Emergencias Climáticas — Perú
+# Sistema de Alerta Temprana de Riesgo Dinámico ante Emergencias Climáticas - Perú
 
 Plataforma de **Business Intelligence + Machine Learning** que estima y comunica el **riesgo dinámico** de emergencias hidrometeorológicas por departamento en el Perú, sobre una **arquitectura Lakehouse (Medallion) en Azure**, con dashboards en Power BI y una aplicación web pública.
 
@@ -6,7 +6,7 @@ Plataforma de **Business Intelligence + Machine Learning** que estima y comunica
 
 ## 1. Problema y propuesta
 
-El **SIGRID (CENEPRED)** evalúa el riesgo de forma **estructural/estática** (geología, pendientes, zonificación). Este sistema **complementa** esa visión con **riesgo dinámico**: cruza el historial oficial de emergencias (INDECI/SINPAD, 2012–2023) con **telemetría actual** (clima, sismos, focos de calor, El Niño/ONI) para estimar, por departamento y a corto plazo, la probabilidad de una emergencia hidrometeorológica severa y sus **factores determinantes** (SHAP), además de dar seguimiento a la ejecución del **Programa Presupuestal 0068 (PREVAED)** del MEF.
+El **SIGRID (CENEPRED)** evalúa el riesgo de forma **estructural/estática** (geología, pendientes, zonificación). Este sistema **complementa** esa visión con **riesgo dinámico**: cruza el historial oficial de emergencias (INDECI/SINPAD, 2012-2023) con **telemetría actual** (clima, sismos, focos de calor, El Niño/ONI) para estimar, por departamento y a corto plazo, la probabilidad de una emergencia hidrometeorológica severa y sus **factores determinantes** (SHAP), además de dar seguimiento a la ejecución del **Programa Presupuestal 0068 (PREVAED)** del MEF.
 
 ---
 
@@ -36,9 +36,9 @@ Azure Databricks (job diario, cluster single-node)
 Cada mañana, sin intervención manual: el pipeline refresca los datos, Power BI y el WebApp se actualizan solos.
 
 ### Capas Medallion (Lakehouse en ADLS Gen2)
-- **Bronze** — datos crudos tal cual los entregan las APIs (JSON/CSV/GeoJSON/ZIP).
-- **Silver** — limpieza, tipado, normalización de nombres departamentales, join geoespacial (focos/sismos → departamento) y reglas de calidad (**pandera**).
-- **Gold** — modelo dimensional (galaxy schema) en Parquet + tablas Delta en Unity Catalog para Power BI.
+- **Bronze** - datos crudos tal cual los entregan las APIs (JSON/CSV/GeoJSON/ZIP).
+- **Silver** - limpieza, tipado, normalización de nombres departamentales, join geoespacial (focos/sismos → departamento) y reglas de calidad (**pandera**).
+- **Gold** - modelo dimensional (galaxy schema) en Parquet + tablas Delta en Unity Catalog para Power BI.
 
 ---
 
@@ -46,7 +46,7 @@ Cada mañana, sin intervención manual: el pipeline refresca los datos, Power BI
 
 | Fuente | Contenido | Cadencia |
 |---|---|---|
-| **INDECI / SINPAD** (CKAN datosabiertos) | Emergencias históricas: afectados, damnificados, fallecidos, viviendas | Histórico 2012–2023 |
+| **INDECI / SINPAD** (CKAN datosabiertos) | Emergencias históricas: afectados, damnificados, fallecidos, viviendas | Histórico 2012-2023 |
 | **Open-Meteo** (ERA5 archive) | Clima diario por región (temp máx/mín, precipitación) | Dinámica (a hoy) |
 | **USGS** | Sismicidad (epicentro, profundidad, magnitud); join costa `sjoin_nearest` | Dinámica |
 | **NASA FIRMS** (VIIRS) | Focos de calor satelitales; join geoespacial por departamento | Dinámica |
@@ -54,33 +54,33 @@ Cada mañana, sin intervención manual: el pipeline refresca los datos, Power BI
 | **INEI** | Límites departamentales (shapefile) para los joins geoespaciales | Estático |
 | **MEF PP0068 (PREVAED)** | PIM y devengado por departamento (Consulta Amigable, export manual) | Anual |
 
-> La **ventana etiquetada del modelo** es 2012–2023 (rango real de INDECI). La telemetría (`fact_monitoreo_diario`) se extiende **hasta hoy** de forma incremental para el monitoreo dinámico; emergencias y gasto se mantienen históricos.
+> La **ventana etiquetada del modelo** es 2012-2023 (rango real de INDECI). La telemetría (`fact_monitoreo_diario`) se extiende **hasta hoy** de forma incremental para el monitoreo dinámico; emergencias y gasto se mantienen históricos.
 
 ---
 
 ## 4. Modelo dimensional (Gold)
 
-- `DIM_REGION` — 25 departamentos, región natural predominante y `cluster_riesgo` (K-Means).
-- `DIM_TIEMPO` — calendario diario (2012 → hoy), con temporadas del hemisferio sur.
-- `DIM_FENOMENO` — categorías de fenómenos (con foco en Hidrometeorológico y Oceanográfico).
-- `FACT_EMERGENCIAS` — eventos SINPAD con impacto humano y físico (grano evento).
-- `FACT_MONITOREO_DIARIO` — telemetría por región×día (clima, sismos 7d, focos, ONI). **Tabla dinámica**.
-- `FACT_GASTO_PREVAED` — ejecución MEF PP0068 por región×año.
+- `DIM_REGION` - 25 departamentos, región natural predominante y `cluster_riesgo` (K-Means).
+- `DIM_TIEMPO` - calendario diario (2012 → hoy), con temporadas del hemisferio sur.
+- `DIM_FENOMENO` - categorías de fenómenos (con foco en Hidrometeorológico y Oceanográfico).
+- `FACT_EMERGENCIAS` - eventos SINPAD con impacto humano y físico (grano evento).
+- `FACT_MONITOREO_DIARIO` - telemetría por región×día (clima, sismos 7d, focos, ONI). **Tabla dinámica**.
+- `FACT_GASTO_PREVAED` - ejecución MEF PP0068 por región×año.
 
 ---
 
 ## 5. Machine Learning (`ml/`)
 
-Target real: **¿ocurrirá una emergencia MEDIO/ALTO de origen Hidrometeorológico y Oceanográfico en la región dentro de los próximos 7 días?** Split **temporal** (train 2012–2020 / test 2021–2023), sin fuga de datos (features históricas calculadas solo sobre train; ventanas `reciente_Xd` con `shift(1)`).
+Target real: **¿ocurrirá una emergencia MEDIO/ALTO de origen Hidrometeorológico y Oceanográfico en la región dentro de los próximos 7 días?** Split **temporal** (train 2012-2020 / test 2021-2023), sin fuga de datos (features históricas calculadas solo sobre train; ventanas `reciente_Xd` con `shift(1)`).
 
 | Modelo | F1 | AUC-ROC | Recall | Notas |
 |---|---|---|---|---|
-| Regresión Logística (baseline) | 0.560 | 0.650 | — | referencia |
+| Regresión Logística (baseline) | 0.560 | 0.650 | - | referencia |
 | **Random Forest** | **0.773** | **0.882** | 0.785 | cumple las 3 metas |
 | **XGBoost** | **~0.751** | **0.860** | 0.845 | modelo servido |
 | LSTM (comparación) | 0.626 | 0.723 | 0.740 | documentado: no supera a XGBoost/RF |
 
-Metas (sección 11.1 del informe): F1 ≥ 0.75, AUC ≥ 0.80, recall ≥ 0.70 — **cumplidas** por RF y XGBoost.
+Metas (sección 11.1 del informe): F1 ≥ 0.75, AUC ≥ 0.80, recall ≥ 0.70 - **cumplidas** por RF y XGBoost.
 
 Además: **K-Means** (segmentación regional), **Isolation Forest** (anomalías de monitoreo), **SHAP nativo de XGBoost** (explicabilidad, `pred_contribs`). *(El forecasting Prophet/SARIMA fue evaluado y descartado por no superar al baseline naive.)*
 
@@ -88,13 +88,13 @@ Además: **K-Means** (segmentación regional), **Isolation Forest** (anomalías 
 
 ---
 
-## 6. Aplicación web (`apps/webapp/`) — Next.js 14
+## 6. Aplicación web (`apps/webapp/`) - Next.js 14
 
 Seis vistas (Home, Monitoreo Diario, Histórico y Tendencias, Riesgo Predictivo, Comparativo Regional, Presupuesto MEF) alimentadas por `realData.json` (agregados reales del Gold). Rutas API reales:
 
-- **`/api/chat`** — Asistente analítico con **Azure OpenAI (GPT-4o)** y guardrails institucionales.
-- **`/api/report`** — Generador de diagnóstico ejecutivo con **Google Gemini** (`gemini-3.6-flash`), a partir de datos reales del departamento.
-- **`/api/alerts`** — Alertas de riesgo Alto/Crítico por **Telegram** (bot `@Cenepred_bot`) y correo (SMTP opcional).
+- **`/api/chat`** - Asistente analítico con **Azure OpenAI (GPT-4o)** y guardrails institucionales.
+- **`/api/report`** - Generador de diagnóstico ejecutivo con **Google Gemini** (`gemini-3.6-flash`), a partir de datos reales del departamento.
+- **`/api/alerts`** - Alertas de riesgo Alto/Crítico por **Telegram** (bot `@Cenepred_bot`) y correo (SMTP opcional).
 - **Mapa interactivo** (Leaflet) con infraestructura crítica **real** (hospitales, puentes, albergues verificados); el `estado` operativo se **deriva del riesgo real** del departamento.
 
 Stack: Next.js App Router, React 18, **Tailwind CSS** (build real con PostCSS, no CDN), Leaflet, Recharts. Diseño responsive; sin datos inventados (las series históricas provienen de `fact_emergencias`).
@@ -167,9 +167,9 @@ Requiere `apps/webapp/.env.local` con `AZURE_OPENAI_*`, `GEMINI_API_KEY`, `TELEG
 
 ## 10. CI/CD (`.github/workflows/`)
 
-- **`ci.yml`** — lint (ruff) + `py_compile` + `pytest` + smoke import, en cada push/PR.
-- **`azure_adf_ci_cd.yml`** — tests + despliegue ADF (opt-in vía `vars.DEPLOY_ADF`).
-- **`daily_pipeline_sync.yml`** — regeneración diaria de `realData.json` desde ADLS (requiere secret `AZURE_STORAGE_KEY`).
+- **`ci.yml`** - lint (ruff) + `py_compile` + `pytest` + smoke import, en cada push/PR.
+- **`azure_adf_ci_cd.yml`** - tests + despliegue ADF (opt-in vía `vars.DEPLOY_ADF`).
+- **`daily_pipeline_sync.yml`** - regeneración diaria de `realData.json` desde ADLS (requiere secret `AZURE_STORAGE_KEY`).
 
 ---
 
@@ -209,5 +209,5 @@ Requiere `apps/webapp/.env.local` con `AZURE_OPENAI_*`, `GEMINI_API_KEY`, `TELEG
 
 - **Operativo y verificado:** pipeline diario ADF→Databricks→ADLS+Unity Catalog, Power BI (refresh programado), WebApp en producción (chat/alertas/reportes probados en vivo), 68 tests en verde.
 - **Pendiente:** integración completa de Key Vault (requiere rol de secretos); el despliegue de Azure ML necesita empaquetar el snapshot junto al modelo; módulos Terraform parciales.
-- **Alcance de datos:** emergencias y gasto MEF son históricos (2012–2023, límites reales de las fuentes); solo la telemetría de monitoreo es dinámica hasta hoy.
+- **Alcance de datos:** emergencias y gasto MEF son históricos (2012-2023, límites reales de las fuentes); solo la telemetría de monitoreo es dinámica hasta hoy.
 ```
