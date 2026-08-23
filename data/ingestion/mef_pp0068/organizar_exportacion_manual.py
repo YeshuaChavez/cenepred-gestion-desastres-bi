@@ -8,6 +8,15 @@ del gasto público (~7-10 GB por año, sin filtrar por programa presupuestal), y
 filtrar y exportar a mano: Año -> "¿En qué se gasta?" -> Programas Presupuestales -> 0068 ->
 "¿Dónde se gasta?" -> Departamento -> Exportar.
 
+Por qué NO se automatiza el scraping (decisión, no descuido): se verificó (2026-08) que el portal
+está detrás de Imperva Incapsula (bot-protection / WAF): tanto default.aspx como Navegar.aspx
+devuelven recursos de Incapsula (_Incapsula_Resource). Automatizar la extracción sin intervención
+exigiría evadir esa detección de bots, lo que no se hace. Además, el presupuesto del PP0068 es un
+dato ANUAL (no diario), de modo que el pipeline diario no lo necesita en tiempo real: exportarlo a
+mano una vez al año, con su sesión de navegador real, es el proceso correcto y suficiente. Este
+script hace que ese paso anual sea rápido y verificable (valida el filtro PP0068, los 25
+departamentos y el año, y reporta la cobertura), pero la descarga en sí es deliberadamente manual.
+
 Cada exportación llega como un archivo con extensión .xls que en realidad es una tabla HTML (no
 un binario de Excel real) — se preserva tal cual en Bronze, sin transformar el formato. Este
 script solo mueve esos archivos exportados manualmente a data/bronze/mef_pp0068/local_data/,
@@ -122,6 +131,14 @@ def main() -> None:
     print(f"Años cubiertos en total: {anios_totales}")
     if anios_faltantes:
         print(f"Años FALTANTES en la ventana 2012-2023: {anios_faltantes}")
+        print("\nPara cada año faltante, exporta a mano desde tu navegador (sesión real):")
+        print(f"  1. Abre {URL_ORIGEN}")
+        for anio in anios_faltantes:
+            print(
+                f"  2. Año {anio} -> ¿En qué se gasta? -> Programas Presupuestales -> 0068 "
+                f"-> ¿Dónde se gasta? -> Departamento -> Exportar"
+            )
+        print(f"  3. Copia los .xls a {ORIGEN_MANUAL} y vuelve a correr este script.")
     else:
         print("Ventana 2012-2023 completa.")
 

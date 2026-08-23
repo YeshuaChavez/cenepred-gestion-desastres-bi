@@ -230,7 +230,6 @@ tests/           68 pruebas (pytest)
 
 ## Hacia dónde puede crecer
 
-- Sustituir el export manual del presupuesto MEF por una ingesta automatizada.
 - Reincorporar el portal de INDECI cuando el acceso desde la nube lo permita, para acortar el rezago del histórico.
 - Promover el endpoint de Azure ML a un despliegue gestionado con escalado.
 - Añadir pronóstico probabilístico por horizonte una vez que haya suficiente telemetría dinámica acumulada para que supere al baseline.
