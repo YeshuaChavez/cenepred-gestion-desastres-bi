@@ -216,8 +216,10 @@ def process_gold_data():
     pliegos = []
     for r in mef_dept_agg.sort_values("monto_pim", ascending=False).head(6).itertuples():
         pct = round(float(r.pct_ejecucion), 1)
-        color = ("bg-emerald-500" if pct >= 70 else "bg-secondary" if pct >= 55
-                 else "bg-tertiary" if pct >= 40 else "bg-error")
+        # Clases estándar de Tailwind (verde -> rojo por nivel de ejecución). Deben coincidir
+        # con barColorClass() en PresupuestoMEFView.tsx, que es quien realmente pinta la barra.
+        color = ("bg-emerald-500" if pct >= 70 else "bg-sky-500" if pct >= 55
+                 else "bg-amber-500" if pct >= 40 else "bg-red-500")
         pliegos.append({
             "nombre": f"GOBIERNO REGIONAL DE {r.departamento}",
             "monto": f"S/ {round(r.monto_pim / 1e6, 1)}M ({int(round(pct))}%)",

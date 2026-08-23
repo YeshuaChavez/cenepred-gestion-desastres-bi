@@ -1726,14 +1726,14 @@
       "nombre": "GOBIERNO REGIONAL DE PIURA",
       "monto": "S/ 3900.7M (61%)",
       "pct": 61,
-      "color": "bg-secondary",
+      "color": "bg-sky-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE ANCASH",
       "monto": "S/ 1764.1M (52%)",
       "pct": 52,
-      "color": "bg-tertiary",
+      "color": "bg-amber-500",
       "isAlert": false
     },
     {
@@ -1747,14 +1747,14 @@
       "nombre": "GOBIERNO REGIONAL DE ICA",
       "monto": "S/ 1504.9M (65%)",
       "pct": 65,
-      "color": "bg-secondary",
+      "color": "bg-sky-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE LA LIBERTAD",
       "monto": "S/ 1358.8M (66%)",
       "pct": 66,
-      "color": "bg-secondary",
+      "color": "bg-sky-500",
       "isAlert": false
     }
   ],

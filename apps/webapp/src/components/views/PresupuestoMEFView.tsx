@@ -425,7 +425,7 @@ export default function PresupuestoMEFView() {
                     <span className="text-slate-900 dark:text-white font-extrabold">{pliego.monto}</span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                    <div className={`h-2 rounded-full transition-all duration-500 ${pliego.color}`} style={{ width: `${pliego.pct}%` }}></div>
+                    <div className={`h-2 rounded-full transition-all duration-500 ${barColorClass(pliego.pct)}`} style={{ width: `${pliego.pct}%` }}></div>
                   </div>
                 </div>
               );
@@ -436,6 +436,16 @@ export default function PresupuestoMEFView() {
       </div>
     </div>
   );
+}
+
+// Color de la barra según el % de ejecución presupuestal. Se computa aquí con clases
+// literales de Tailwind (no desde el JSON) para que el JIT siempre las genere y la barra
+// se vea en TODOS los pliegos (verde: buena ejecución -> rojo: baja).
+function barColorClass(pct: number): string {
+  if (pct >= 70) return 'bg-emerald-500';
+  if (pct >= 55) return 'bg-sky-500';
+  if (pct >= 40) return 'bg-amber-500';
+  return 'bg-red-500';
 }
 
 function roundNum(num: number): string {
