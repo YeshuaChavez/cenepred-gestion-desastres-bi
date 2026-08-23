@@ -4,9 +4,10 @@
 #   policies), que es el modelo que consume common/secrets.py vía DefaultAzureCredential.
 # - secret_reader_principal_ids: identidades (ADF, Databricks, el usuario) a las que se les
 #   concede "Key Vault Secrets User" (lectura de secretos).
-# - secrets: mapa opcional nombre -> valor para materializar secretos. Por defecto vacío para
-#   NO meter valores sensibles en el state de Terraform; en ese caso se cargan aparte con
-#   `az keyvault secret set` (ver infra/README.md).
+#
+# Los VALORES de los secretos NO se gestionan desde Terraform a propósito: meterlos aquí los
+# dejaría en texto plano en el state. Se cargan aparte con `az keyvault secret set`
+# (ver infra/README.md).
 
 variable "name" { type = string }
 variable "resource_group_name" { type = string }
@@ -20,12 +21,6 @@ variable "secret_reader_principal_ids" {
   type        = map(string)
   default     = {}
   description = "Mapa etiqueta -> objectId de las identidades que podrán LEER secretos."
-}
-variable "secrets" {
-  type        = map(string)
-  default     = {}
-  sensitive   = true
-  description = "Opcional: secretos a crear (nombre -> valor). Déjalo vacío para no ponerlos en el state."
 }
 
 resource "azurerm_key_vault" "this" {
@@ -45,13 +40,6 @@ resource "azurerm_role_assignment" "secrets_user" {
   scope                = azurerm_key_vault.this.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = each.value
-}
-
-resource "azurerm_key_vault_secret" "this" {
-  for_each     = var.secrets
-  name         = each.key
-  value        = each.value
-  key_vault_id = azurerm_key_vault.this.id
 }
 
 output "id" { value = azurerm_key_vault.this.id }
