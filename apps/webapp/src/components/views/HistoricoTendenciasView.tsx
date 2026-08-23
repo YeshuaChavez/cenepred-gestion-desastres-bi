@@ -46,6 +46,9 @@ export default function HistoricoTendenciasView() {
     eventoClave: r.emergencias === maxEmgAnual ? "Pico histórico de emergencias" : "",
   }));
 
+  // Total nacional real de viviendas colapsadas 2012-2023 (no hay campo en meta; se suma la serie).
+  const totalViviendasDestruidas = HISTORICO_ANUAL.reduce((a, r) => a + (r.viviendasDestruidas || 0), 0);
+
   const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   const getMonthlyBreakdown = (anio: number): MonthlyData[] => {
@@ -236,7 +239,7 @@ export default function HistoricoTendenciasView() {
                 ? monthlyList[selectedMesIdx]?.afectados.toLocaleString()
                 : selectedItem
                 ? selectedItem.afectados.toLocaleString()
-                : '1,680,000'}
+                : NATIONAL_META.totalAfectados.toLocaleString()}
             </span>
           </div>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
@@ -258,7 +261,7 @@ export default function HistoricoTendenciasView() {
                 ? monthlyList[selectedMesIdx]?.damnificados.toLocaleString()
                 : selectedItem
                 ? selectedItem.damnificados.toLocaleString()
-                : '295,000'}
+                : NATIONAL_META.totalDamnificados.toLocaleString()}
             </span>
           </div>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Pérdida total de vivienda habitual</span>
@@ -274,7 +277,7 @@ export default function HistoricoTendenciasView() {
           </div>
           <div className="my-3">
             <span className="text-3xl md:text-4xl font-extrabold text-amber-600 dark:text-amber-400 tracking-tight">
-              {selectedItem ? selectedItem.viviendasDestruidas.toLocaleString() : '28,400'}
+              {selectedItem ? selectedItem.viviendasDestruidas.toLocaleString() : totalViviendasDestruidas.toLocaleString()}
             </span>
           </div>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Infraestructura destruida</span>
@@ -299,7 +302,7 @@ export default function HistoricoTendenciasView() {
           {hoveredYear && (
             <div className="px-3 py-1 bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800 rounded-xl text-xs font-bold text-sky-900 dark:text-sky-200 animate-fade-in flex items-center gap-2">
               <span className="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400">info</span>
-              <span>{hoveredYear.anio}: {hoveredYear.emergencias.toLocaleString()} emergencias • {hoveredYear.eventoClave}</span>
+              <span>{hoveredYear.anio}: {hoveredYear.emergencias.toLocaleString()} emergencias{hoveredYear.eventoClave ? ` • ${hoveredYear.eventoClave}` : ''}</span>
             </div>
           )}
         </div>
@@ -328,7 +331,7 @@ export default function HistoricoTendenciasView() {
                 {/* Floating Tooltip Header */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute -top-12 z-20 pointer-events-none bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg shadow-xl whitespace-nowrap flex flex-col items-center border border-slate-700">
                   <span>{item.emergencias.toLocaleString()} eventos</span>
-                  <span className="text-[9px] text-sky-300 font-normal">{item.eventoClave.split('-')[0]}</span>
+                  {item.eventoClave && <span className="text-[9px] text-sky-300 font-normal">{item.eventoClave}</span>}
                 </div>
 
                 <div className="w-full flex items-end justify-center h-full px-0.5 sm:px-1">
@@ -510,27 +513,26 @@ export default function HistoricoTendenciasView() {
 
           {/* Ficha Oficial de Emergencia SINPAD para el Día Seleccionado */}
           {selectedDayData && (
-            <div className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 text-white rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in border border-slate-700">
+            <div className="p-5 bg-slate-50 dark:bg-gradient-to-r dark:from-slate-950 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in transition-colors">
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                  <span className="px-2 py-0.5 bg-white/10 text-sky-300 rounded text-[10px] font-bold uppercase tracking-wider border border-white/10">Reporte Técnico SINPAD</span>
-                  <h4 className="font-bold text-sm text-white">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 bg-sky-100 dark:bg-white/10 text-sky-700 dark:text-sky-300 rounded text-[10px] font-bold uppercase tracking-wider border border-sky-200 dark:border-white/10">Reporte Técnico SINPAD</span>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">
                     Emergencia del Día {selectedDayData.dia} de {MESES[selectedMesIdx]} {selectedAnio}
                   </h4>
                 </div>
-                <p className="text-xs text-slate-300 font-medium">
-                  {selectedDayData.descripcion} en las regiones de <b className="text-sky-300">{selectedDayData.regionPico}</b>.
+                <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                  {selectedDayData.descripcion} en las regiones de <b className="text-sky-700 dark:text-sky-300">{selectedDayData.regionPico}</b>.
                 </p>
               </div>
               <div className="flex items-center gap-6 text-xs font-semibold shrink-0">
-                <div className="bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
-                  <span className="text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Emergencias</span>
-                  <span className="text-white font-extrabold text-base">{selectedDayData.emergencias}</span>
+                <div className="bg-white dark:bg-white/10 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/10">
+                  <span className="text-slate-400 dark:text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Emergencias</span>
+                  <span className="text-slate-900 dark:text-white font-extrabold text-base">{selectedDayData.emergencias}</span>
                 </div>
-                <div className="bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
-                  <span className="text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Población Afectada</span>
-                  <span className="text-red-400 font-extrabold text-base">{selectedDayData.afectados.toLocaleString()}</span>
+                <div className="bg-white dark:bg-white/10 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/10">
+                  <span className="text-slate-400 dark:text-slate-400 block text-[9px] uppercase font-bold tracking-wider">Población Afectada</span>
+                  <span className="text-red-600 dark:text-red-400 font-extrabold text-base">{selectedDayData.afectados.toLocaleString()}</span>
                 </div>
               </div>
             </div>
