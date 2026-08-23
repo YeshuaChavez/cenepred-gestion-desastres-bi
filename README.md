@@ -6,13 +6,13 @@ El sistema toma emergencias oficiales (INDECI/SINPAD), clima, sismos, focos de c
 
 ---
 
-## El problema
+## Contexto y problema
 
 En el Perú, la evaluación del riesgo de desastres (a cargo del CENEPRED, a través del SIGRID) es sobre todo **estructural**: geología, pendientes, zonificación urbana, materiales de construcción. Es información valiosa pero **estática**: describe qué tan vulnerable es un territorio en general, no si el riesgo está subiendo *esta semana* porque lleva cinco días lloviendo, hay focos de calor activos o el índice ENSO entró en fase de El Niño.
 
 Esta plataforma no reemplaza esa mirada estructural: la **complementa con riesgo dinámico**. Cruza el registro histórico de emergencias con la telemetría más reciente para estimar, región por región y a corto plazo, la probabilidad de una emergencia hidrometeorológica severa, señalar los factores que más pesan en esa estimación, y darle seguimiento a si el presupuesto de prevención (Programa Presupuestal 0068, PREVAED) se está ejecutando donde el riesgo lo justifica.
 
-## Qué entrega
+## Funcionalidades principales
 
 - **Un mapa de riesgo vivo** por los 25 departamentos, con el nivel operativo derivado del riesgo real (no de valores fijos).
 - **Un modelo predictivo** que responde "¿emergencia climática severa en 7 días?" con explicaciones por región (qué variable empuja el riesgo hacia arriba).
@@ -24,7 +24,7 @@ Esta plataforma no reemplaza esa mirada estructural: la **complementa con riesgo
 
 ---
 
-## Cómo está construido
+## Arquitectura
 
 La columna vertebral es un **Lakehouse con arquitectura Medallion** (Bronze, Silver, Gold) sobre Azure Data Lake Storage Gen2. Cada capa tiene una responsabilidad clara y los datos solo avanzan cuando pasan sus controles de calidad.
 
@@ -44,11 +44,11 @@ Fuentes externas
             en Parquet y en tablas Delta dentro de Unity Catalog
 ```
 
-### El viaje de un dato
+### Flujo de datos (Bronze, Silver, Gold)
 
 Un foco de calor detectado por el satélite VIIRS llega a **Bronze** como una fila con latitud y longitud. En **Silver** se le hace un *join* espacial contra los límites departamentales del INEI para saber a qué región pertenece, se descartan coordenadas fuera del país y se agrega a la ventana móvil de 7 días de esa región. En **Gold** termina como una columna (`num_focos_calor_activos`) de `fact_monitoreo_diario`, la tabla que el modelo lee para estimar el riesgo y que Power BI consume para pintar el mapa. El mismo camino recorren la precipitación, los sismos y el índice ENSO.
 
-### Un día en el sistema
+### Orquestación y automatización diaria
 
 La parte que hace que todo esto sea sostenible es que **se ejecuta solo**. No hay pasos manuales entre que amanece y que los tableros muestran datos nuevos:
 
@@ -63,7 +63,7 @@ Si algo falla, Azure Monitor (para ADF) y la notificación del job (para Databri
 
 ---
 
-## El modelo predictivo
+## Modelo predictivo
 
 El corazón analítico responde una pregunta concreta y con valor operativo:
 
@@ -92,7 +92,7 @@ El modelo se **sirve** con FastAPI siguiendo el contrato `init()/run()` de Azure
 
 ---
 
-## La aplicación web
+## Aplicación web
 
 Construida en **Next.js 14** (App Router) con **Tailwind CSS**, la app tiene seis vistas (Inicio, Monitoreo Diario, Histórico y Tendencias, Riesgo Predictivo, Comparativo Regional y Presupuesto de Prevención) alimentadas por agregados reales del Gold. Detrás de la interfaz corren rutas API propias:
 
@@ -105,7 +105,7 @@ El diseño es responsive: navegación con menú lateral en escritorio y menú de
 
 ---
 
-## De dónde vienen los datos
+## Fuentes de datos
 
 | Fuente | Qué aporta | Cadencia |
 |--------|------------|----------|
@@ -119,7 +119,7 @@ El diseño es responsive: navegación con menú lateral en escritorio y menú de
 
 Las emergencias y el gasto son históricos porque ese es el rango real de sus fuentes; solo la telemetría de monitoreo se extiende de forma incremental hasta la fecha actual, que es justo lo que da sentido al "riesgo dinámico".
 
-### El modelo dimensional (Gold)
+### Modelo dimensional (capa Gold)
 
 - `DIM_REGION`: 25 departamentos, región natural predominante y cluster de riesgo (K-Means).
 - `DIM_TIEMPO`: calendario diario desde 2012 hasta hoy, con temporadas del hemisferio sur.
@@ -143,13 +143,13 @@ Todo vive en el grupo de recursos `rg-cenepred-dev`:
 | Azure OpenAI | recurso dedicado | asistente conversacional |
 | Azure Monitor | `alert-adf-daily-failures` | avisa si el pipeline falla |
 
-### Seguridad y secretos
+### Gestión de secretos y seguridad
 
 Ningún secreto vive en el repositorio. En local se cargan desde `apps/webapp/.env.local` (ignorado por git); en Databricks desde el secret scope; en Vercel y GitHub como variables del proyecto. Los artefactos derivados (parquet, modelos `.pkl`, binarios `.pbix`) también están fuera del control de versiones y se regeneran desde el pipeline.
 
 ---
 
-## Correrlo en local
+## Ejecución local
 
 **Pipeline y modelo (Python):**
 
@@ -180,7 +180,7 @@ npm run dev        # http://localhost:3000
 
 La web necesita un `apps/webapp/.env.local` con las claves del asistente, del generador de diagnósticos y del bot de alertas (ver `.env.example`).
 
-### Pruebas y calidad
+### Pruebas y calidad de código
 
 La misma suite que corre en CI:
 
@@ -193,7 +193,7 @@ El typecheck de la web se valida con `npx tsc --noEmit` dentro de `apps/webapp`.
 
 ---
 
-## El repositorio de un vistazo
+## Estructura del repositorio
 
 ```text
 apps/
@@ -220,7 +220,7 @@ tests/           68 pruebas (pytest)
 
 ---
 
-## Estado actual, con honestidad
+## Estado actual
 
 **Funcionando y verificado:** el pipeline diario completo (ADF -> Databricks -> ADLS + Unity Catalog), el refresh programado de Power BI, la web en producción con asistente, alertas y diagnósticos probados en vivo, y las 68 pruebas en verde.
 
@@ -228,7 +228,7 @@ tests/           68 pruebas (pytest)
 
 **Alcance de datos:** emergencias y gasto son históricos por límite de las fuentes; solo la telemetría de monitoreo es dinámica hasta hoy. Esa es una decisión consciente, no un defecto: el valor del sistema está precisamente en cruzar un historial estable con señales frescas.
 
-## Hacia dónde puede crecer
+## Trabajo futuro
 
 - Reincorporar el portal de INDECI cuando el acceso desde la nube lo permita, para acortar el rezago del histórico.
 - Promover el endpoint de Azure ML a un despliegue gestionado con escalado.
