@@ -21,7 +21,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: 'home', icon: 'home', label: 'Home' },
   { path: 'monitoreo-diario', icon: 'wb_sunny', label: 'Monitoreo Diario' },
   { path: 'historico-tendencias', icon: 'trending_up', label: 'Histórico & Tendencias' },
-  { path: 'riesgo-predictivo', icon: 'smart_toy', label: 'Riesgo Predictivo & SHAP' },
+  { path: 'riesgo-predictivo', icon: 'smart_toy', label: 'Riesgo Predictivo' },
   { path: 'comparativo-regional', icon: 'bar_chart', label: 'Comparativo Regional' },
   { path: 'presupuesto-mef', icon: 'payments', label: 'Presupuesto MEF PP 0068' }
 ];

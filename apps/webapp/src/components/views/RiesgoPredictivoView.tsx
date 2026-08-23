@@ -54,12 +54,12 @@ export default function RiesgoPredictivoView() {
         setGeneratedReport(data.report);
       } else {
         setGeneratedReport(
-          `No se pudo generar el diagnóstico con Gemini: ${data.error || res.statusText}` +
+          `No se pudo generar el diagnóstico: ${data.error || res.statusText}` +
           (data.detail ? `\n${data.detail}` : '')
         );
       }
     } catch {
-      setGeneratedReport('Error de red al contactar el servicio de generación (Gemini).');
+      setGeneratedReport('Error de red al contactar el servicio de generación de diagnósticos.');
     } finally {
       setIsGeneratingReport(false);
     }
@@ -170,7 +170,7 @@ export default function RiesgoPredictivoView() {
         <div className="flex flex-col space-y-1">
           <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Inferencia y Diagnóstico de Riesgo</h2>
           <p className="font-body-md text-sm text-slate-600 dark:text-slate-400 max-w-2xl mt-1">
-            Evaluación analítica del riesgo de desastres basada en modelos de Machine Learning, interpretabilidad SHAP y generación de diagnósticos ejecutivos.
+            Evaluación analítica del riesgo de desastres basada en modelos predictivos, factores explicativos por región y generación de diagnósticos ejecutivos.
           </p>
         </div>
         
@@ -272,8 +272,8 @@ export default function RiesgoPredictivoView() {
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave (SHAP)</h3>
-                  <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de cada variable a la predicción del modelo</p>
+                  <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave</h3>
+                  <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de cada variable al nivel de riesgo estimado</p>
                 </div>
 
                 {/* Scope Switcher: National vs Regional */}
@@ -336,8 +336,8 @@ export default function RiesgoPredictivoView() {
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex justify-between">
-              <span>Modelo: XGBoost</span>
-              <span>Explicabilidad: TreeSHAP (XGBoost)</span>
+              <span>Modelo predictivo validado</span>
+              <span>Factores explicativos por región</span>
             </div>
           </div>
         </div>
@@ -436,10 +436,10 @@ export default function RiesgoPredictivoView() {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 text-white flex items-center justify-center shadow-xs">
                 <span className="material-symbols-outlined text-lg">auto_awesome</span>
               </div>
-              Generador de Reportes de Inteligencia Predictiva (Gemini AI)
+              Generador de Reportes de Inteligencia Predictiva
             </h3>
             <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">
-              Generación de diagnósticos analíticos estructurados utilizando inteligencia artificial avanzada (API Gemini protegida server-side)
+              Generación de diagnósticos analíticos estructurados con inteligencia artificial avanzada
             </p>
           </div>
 
@@ -469,7 +469,7 @@ export default function RiesgoPredictivoView() {
               ) : (
                 <>
                   <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                  Generar Diagnóstico Gemini
+                  Generar Diagnóstico
                 </>
               )}
             </button>

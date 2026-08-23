@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
     if (!GEMINI_API_KEY) {
       return NextResponse.json(
-        { error: 'GEMINI_API_KEY no está configurada en el servidor.' },
+        { error: 'El servicio de generación de diagnósticos no está configurado en el servidor.' },
         { status: 500 }
       );
     }
@@ -24,18 +24,18 @@ export async function POST(request: Request) {
 
 Usa EXCLUSIVAMENTE estos datos reales; no inventes cifras:
 - Departamento: ${d.name} (zona ${d.tag})
-- Score de riesgo climático (modelo XGBoost real; F1 0.751 / AUC-ROC 0.860; validación temporal 2012-20 / 21-23): ${d.prob}%
+- Score de riesgo climático (modelo predictivo validado; F1 0.751 / AUC-ROC 0.860; validación temporal 2012-20 / 21-23): ${d.prob}%
 - Emergencias históricas registradas (SINPAD): ${d.emergencias}
 - Población afectada: ${d.afectados}
 - Población damnificada: ${d.damnificados}
 - Telemetría 24h: precipitación ${d.precipitacionMm} mm, ${d.focosCalor} focos de calor activos, ${d.sismos7d ?? 'n/d'} sismos en 7 días
-- Factores determinantes (SHAP):
+- Factores determinantes del riesgo:
 ${factores}
 - Presupuesto MEF PP0068: PIM S/ ${d.pimM}M, devengado S/ ${d.devengadoM}M, ejecución ${d.pctEjecucion}%
 
 Estructura la respuesta en 4 secciones numeradas:
 1) Diagnóstico territorial y vulnerabilidad
-2) Interpretación de los factores determinantes (SHAP)
+2) Interpretación de los factores determinantes del riesgo
 3) Recomendaciones de acción preventiva priorizadas
 4) Evaluación financiera de la prevención (usa el PP0068 y la brecha por ejecutar)`;
 
@@ -52,7 +52,7 @@ Estructura la respuesta en 4 secciones numeradas:
     if (!geminiRes.ok) {
       const detail = await geminiRes.text();
       return NextResponse.json(
-        { error: `Error de la API Gemini (${geminiRes.status}).`, detail: detail.slice(0, 300) },
+        { error: `El servicio de generación de diagnósticos respondió con un error (${geminiRes.status}).`, detail: detail.slice(0, 300) },
         { status: 502 }
       );
     }
@@ -62,10 +62,10 @@ Estructura la respuesta en 4 secciones numeradas:
     const report = parts.map((p: { text?: string }) => p.text).filter(Boolean).join('\n').trim();
 
     if (!report) {
-      return NextResponse.json({ error: 'Gemini no devolvió contenido.' }, { status: 502 });
+      return NextResponse.json({ error: 'El servicio de generación no devolvió contenido.' }, { status: 502 });
     }
 
-    return NextResponse.json({ report, provider: `Google Gemini (${GEMINI_MODEL})` });
+    return NextResponse.json({ report, provider: 'CENEPRED' });
   } catch (err) {
     console.error('Error en /api/report:', err);
     return NextResponse.json({ error: 'Error interno generando el reporte.' }, { status: 500 });

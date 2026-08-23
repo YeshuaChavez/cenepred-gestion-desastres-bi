@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
             </tbody>
           </table>
 
-          <h3 style="color: #0f172a; font-size: 14px; margin: 0 0 10px 0;">Factores Determinantes (Explicabilidad SHAP):</h3>
+          <h3 style="color: #0f172a; font-size: 14px; margin: 0 0 10px 0;">Factores Determinantes del Riesgo:</h3>
           <ul style="padding-left: 20px; color: #475569; margin: 0 0 24px 0; font-size: 13px; line-height: 1.6;">
             ${factoresRiesgo.map((f: string) => `<li style="margin-bottom: 6px;">${f}</li>`).join("")}
           </ul>

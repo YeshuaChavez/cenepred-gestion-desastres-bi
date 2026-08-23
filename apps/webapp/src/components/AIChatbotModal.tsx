@@ -140,10 +140,10 @@ export default function AIChatbotModal() {
               <span className="material-symbols-outlined text-lg text-sky-200">smart_toy</span>
             </div>
             <div>
-              <h3 className="font-bold text-sm leading-tight">Asistente Azure AI CENEPRED</h3>
+              <h3 className="font-bold text-sm leading-tight">Asistente de Inteligencia CENEPRED</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-[10px] text-sky-200 font-medium">Azure OpenAI (GPT-4o) • En línea</span>
+                <span className="text-[10px] text-sky-200 font-medium">Asistente inteligente • En línea</span>
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function AIChatbotModal() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder={isListening ? "Escuchando voz..." : "Consulta a Azure AI sobre riesgos o MEF..."}
+              placeholder={isListening ? "Escuchando voz..." : "Consulta sobre riesgos, regiones o presupuesto..."}
               className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full py-2 pl-3.5 pr-18 text-slate-800 dark:text-slate-100 text-[11px] focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/30 transition-all placeholder:text-slate-400 font-medium"
             />
 
