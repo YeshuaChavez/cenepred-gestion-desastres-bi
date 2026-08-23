@@ -22,10 +22,7 @@ import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Point
 
-BRONZE_FILE = (
-    Path(__file__).parent.parent.parent
-    / "bronze" / "usgs" / "local_data" / "usgs_2012-01-01_2023-12-31.geojson"
-)
+BRONZE_DIR = Path(__file__).parent.parent.parent / "bronze" / "usgs" / "local_data"
 INEI_LIMITES_ZIP = (
     Path(__file__).parent.parent.parent
     / "bronze" / "inei_limites" / "local_data" / "inei_departamentos_limites.zip"
@@ -36,9 +33,11 @@ META_COMPLETITUD_MINIMA = 0.98  # sección 11.1 del informe
 
 
 def cargar_historico() -> pd.DataFrame:
-    if not BRONZE_FILE.exists():
-        raise FileNotFoundError(f"No existe {BRONZE_FILE}")
-    data = json.loads(BRONZE_FILE.read_text(encoding="utf-8"))
+    # Toma el geojson más reciente (nombre con rango de fechas): soporta ventana histórica e incremental.
+    archivos = sorted(BRONZE_DIR.glob("usgs_*.geojson"))
+    if not archivos:
+        raise FileNotFoundError(f"No hay archivos usgs_*.geojson en {BRONZE_DIR}")
+    data = json.loads(archivos[-1].read_text(encoding="utf-8"))
 
     filas = []
     for feature in data["features"]:

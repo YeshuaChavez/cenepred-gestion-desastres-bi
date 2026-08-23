@@ -108,8 +108,17 @@ def agregar_oni(base: pd.DataFrame) -> pd.DataFrame:
 
 
 def construir() -> pd.DataFrame:
+    import os
+
     dim_tiempo = pd.read_parquet(GOLD_DIR / "dim_tiempo.parquet")
     dim_region = pd.read_parquet(GOLD_DIR / "dim_region.parquet")
+
+    # Modo incremental: si FACT_MONITOREO_DESDE está definido (YYYY-MM-DD), se construye solo la
+    # ventana reciente (para hacer MERGE/upsert en la tabla, sin recomputar 12 años ni generar
+    # filas nulas para fechas históricas).
+    desde = os.getenv("FACT_MONITOREO_DESDE")
+    if desde:
+        dim_tiempo = dim_tiempo[pd.to_datetime(dim_tiempo["fecha"]) >= pd.Timestamp(desde)]
 
     base = construir_base(dim_tiempo, dim_region)
     base = agregar_clima(base)

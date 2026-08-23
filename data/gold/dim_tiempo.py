@@ -11,7 +11,8 @@ Uso:
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+import os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -19,7 +20,10 @@ import pandas as pd
 OUTPUT_DIR = Path(__file__).parent / "local_data"
 
 FECHA_INICIO = "2012-01-01"
-FECHA_FIN = "2023-12-31"
+# Se extiende hasta hoy + buffer para cubrir la telemetría dinámica diaria (fact_monitoreo_diario
+# ahora llega hasta la fecha actual). Se puede fijar con DIM_TIEMPO_FECHA_FIN (ej. "2023-12-31"
+# para reproducir la ventana histórica del informe).
+FECHA_FIN = os.getenv("DIM_TIEMPO_FECHA_FIN") or (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
 
 # Temporadas meteorológicas del hemisferio sur, por mes (aproximación estándar, no por
 # solsticio/equinoccio exacto).

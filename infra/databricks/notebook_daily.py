@@ -30,12 +30,19 @@ if r.returncode != 0:
     raise SystemExit("PIPELINE FALLO: " + tail)
 print("OK: pipeline diario completado")
 
-# Publicar el fact dinámico en la tabla Delta de Unity Catalog que consume Power BI
-# (dbw_cenepred_dev.default.fact_monitoreo_diario). Así el .pbix solo necesita "Actualizar".
+# MERGE incremental de la ventana reciente en la tabla Delta de Unity Catalog que consume Power BI
+# (dbw_cenepred_dev.default.fact_monitoreo_diario): conserva la historia y hace upsert de los
+# dias recientes por (region_id, fecha_id). El .pbix solo necesita "Actualizar".
 import pandas as pd  # noqa: E402
 
 _fm = pd.read_parquet("/tmp/cenepred/data/gold/local_data/fact_monitoreo_diario.parquet")
-(spark.createDataFrame(_fm)  # noqa: F821  (spark lo provee Databricks)
-      .write.mode("overwrite").option("overwriteSchema", "true")
-      .saveAsTable("dbw_cenepred_dev.default.fact_monitoreo_diario"))
-print(f"Tabla Delta fact_monitoreo_diario actualizada en Unity Catalog: {_fm.shape[0]} filas")
+_sdf = spark.createDataFrame(_fm)  # noqa: F821  (spark lo provee Databricks)
+_sdf.createOrReplaceTempView("recent_monitoreo")
+spark.sql("""
+  MERGE INTO dbw_cenepred_dev.default.fact_monitoreo_diario t
+  USING recent_monitoreo s
+  ON t.region_id = s.region_id AND t.fecha_id = s.fecha_id
+  WHEN MATCHED THEN UPDATE SET *
+  WHEN NOT MATCHED THEN INSERT *
+""")  # noqa: F821
+print(f"MERGE en fact_monitoreo_diario (Unity Catalog): {_fm.shape[0]} filas de la ventana reciente")

@@ -17,7 +17,7 @@ import sys
 import os
 import subprocess
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 # Asegurar codificación UTF-8 en consola Windows
 if hasattr(sys.stdout, 'reconfigure'):
@@ -67,33 +67,40 @@ def main(daily: bool = False, upload_adls: bool = False):
     logging.info("=" * 80)
 
     if daily:
-        # Modo DIARIO: refresca SOLO la telemetría dinámica -> fact_monitoreo_diario.
-        # No se reconstruyen las dims ni las tablas históricas (emergencias/INDECI,
-        # gasto/MEF): dependen de fuentes históricas o manuales y de portales que
-        # bloquean la IP de la nube. dim_region/dim_tiempo se descargan estáticas de ADLS.
-        logging.info("\n--- 1. INGESTA BRONZE (telemetría dinámica) ---")
-        run_step("Bronze: NASA FIRMS (Focos de Calor)", [sys.executable, "data/ingestion/nasa_firms/fetch_nasa_firms.py"])
-        run_step("Bronze: NOAA ONI (Índice El Niño)", [sys.executable, "data/ingestion/noaa_oni/fetch_oni.py"])
-        run_step("Bronze: Open-Meteo (Telemetría Satelital)", [sys.executable, "data/ingestion/open_meteo/fetch_open_meteo.py"])
-        run_step("Bronze: USGS (Sismicidad Nacional)", [sys.executable, "data/ingestion/usgs/fetch_usgs.py"])
-        # Los polígonos INEI son necesarios para el join geoespacial de Silver (asignar focos
-        # de calor y sismos a su departamento). Su fuente no bloquea la IP de la nube.
+        # Modo DIARIO INCREMENTAL: baja SOLO una ventana reciente (hoy - LOOKBACK -> hoy) y
+        # construye fact_monitoreo_diario para esa ventana. La historia (2012-...) se conserva:
+        # el notebook de Databricks hace MERGE/upsert en la tabla Delta de Unity Catalog que
+        # consume Power BI. Las tablas históricas (emergencias/INDECI, gasto/MEF) no se tocan.
+        LOOKBACK_DIAS = 60
+        hoy = datetime.now(timezone.utc).date()
+        inicio = hoy - timedelta(days=LOOKBACK_DIAS)
+        START, END = inicio.isoformat(), hoy.isoformat()
+        logging.info(f"Ventana incremental: {START} -> {END}")
+
+        logging.info("\n--- 1. INGESTA BRONZE (ventana reciente) ---")
+        run_step("Bronze: NASA FIRMS", [sys.executable, "data/ingestion/nasa_firms/fetch_nasa_firms.py", "--start", START, "--end", END])
+        run_step("Bronze: NOAA ONI", [sys.executable, "data/ingestion/noaa_oni/fetch_oni.py"])
+        run_step("Bronze: Open-Meteo", [sys.executable, "data/ingestion/open_meteo/fetch_open_meteo.py", "--start", START, "--end", END])
+        run_step("Bronze: USGS", [sys.executable, "data/ingestion/usgs/fetch_usgs.py", "--start", START, "--end", END])
+        # Polígonos INEI: necesarios para el join geoespacial de Silver (focos/sismos -> departamento).
         run_step("Bronze: INEI Límites Regionales", [sys.executable, "data/ingestion/inei_limites/fetch_inei_limites.py"])
 
-        logging.info("\n--- 2. LIMPIEZA SILVER (telemetría) ---")
+        logging.info("\n--- 2. LIMPIEZA SILVER (ventana reciente) ---")
         run_step("Silver: NASA FIRMS", [sys.executable, "data/silver/nasa_firms/limpieza_nasa_firms.py"])
         run_step("Silver: NOAA ONI", [sys.executable, "data/silver/noaa_oni/limpieza_oni.py"])
         run_step("Silver: Open-Meteo", [sys.executable, "data/silver/open_meteo/limpieza_open_meteo.py"])
         run_step("Silver: USGS", [sys.executable, "data/silver/usgs/limpieza_usgs.py"])
 
-        logging.info("\n--- 3. DIMS ESTÁTICAS (desde ADLS) + GOLD MONITOREO ---")
-        run_step("ADLS: Descargar dims estáticas", [sys.executable, "scripts/fetch_gold_dims_from_adls.py"])
-        run_step("Gold: Monitoreo Diario Satelital", [sys.executable, "data/gold/fact_monitoreo_diario.py"])
+        logging.info("\n--- 3. DIMS + GOLD MONITOREO (ventana reciente) ---")
+        # dim_region viene de ADLS (depende de fuentes históricas); dim_tiempo se regenera para
+        # que el calendario llegue hasta HOY (si no, las fechas nuevas no tendrían fecha_id).
+        run_step("ADLS: Descargar dim_region", [sys.executable, "scripts/fetch_gold_dims_from_adls.py"])
+        run_step("Gold: Dimensión Tiempo (extendida a hoy)", [sys.executable, "data/gold/dim_tiempo.py"])
+        os.environ["FACT_MONITOREO_DESDE"] = START
+        run_step("Gold: Monitoreo Diario (incremental)", [sys.executable, "data/gold/fact_monitoreo_diario.py"])
 
-        logging.info("\n--- 4. PUBLICACIÓN ADLS ---")
-        run_step("ADLS: Sincronizar capa Gold", [sys.executable, "scripts/sync_gold_to_adls.py"])
         logging.info("\n" + "=" * 80)
-        logging.info("PIPELINE DIARIO COMPLETADO: fact_monitoreo_diario refrescado y sincronizado a ADLS.")
+        logging.info(f"PIPELINE DIARIO INCREMENTAL LISTO: fact_monitoreo_diario {START}..{END} para MERGE en Unity Catalog.")
         logging.info("=" * 80)
         return
 

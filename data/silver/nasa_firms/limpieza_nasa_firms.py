@@ -21,10 +21,7 @@ from tempfile import TemporaryDirectory
 import geopandas as gpd
 import pandas as pd
 
-BRONZE_FILE = (
-    Path(__file__).parent.parent.parent
-    / "bronze" / "nasa_firms" / "local_data" / "nasa_firms_2012-01-20_2023-12-31.csv"
-)
+BRONZE_DIR = Path(__file__).parent.parent.parent / "bronze" / "nasa_firms" / "local_data"
 INEI_LIMITES_ZIP = (
     Path(__file__).parent.parent.parent
     / "bronze" / "inei_limites" / "local_data" / "inei_departamentos_limites.zip"
@@ -35,9 +32,11 @@ META_COMPLETITUD_MINIMA = 0.98  # sección 11.1 del informe
 
 
 def cargar_historico() -> pd.DataFrame:
-    if not BRONZE_FILE.exists():
-        raise FileNotFoundError(f"No existe {BRONZE_FILE}")
-    df = pd.read_csv(BRONZE_FILE)
+    # Toma el csv más reciente (nombre con rango de fechas): soporta ventana histórica e incremental.
+    archivos = sorted(f for f in BRONZE_DIR.glob("nasa_firms_*.csv") if "manifest" not in f.name)
+    if not archivos:
+        raise FileNotFoundError(f"No hay archivos nasa_firms_*.csv en {BRONZE_DIR}")
+    df = pd.read_csv(archivos[-1])
     return df.rename(
         columns={
             "latitude": "latitud",

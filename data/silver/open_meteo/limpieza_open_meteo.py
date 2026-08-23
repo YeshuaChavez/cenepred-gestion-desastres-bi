@@ -18,19 +18,23 @@ from pathlib import Path
 
 import pandas as pd
 
-BRONZE_FILE = (
-    Path(__file__).parent.parent.parent
-    / "bronze" / "open_meteo" / "local_data" / "open_meteo_2012-01-01_2023-12-31.json"
-)
+BRONZE_DIR = Path(__file__).parent.parent.parent / "bronze" / "open_meteo" / "local_data"
 OUTPUT_DIR = Path(__file__).parent / "local_data"
 
 META_COMPLETITUD_MINIMA = 0.98  # sección 11.1 del informe
 
 
+def _ultimo_bronze() -> Path:
+    """Toma el archivo bronze más reciente (por nombre, que incluye el rango de fechas),
+    para soportar tanto la ventana histórica como la ventana incremental diaria."""
+    archivos = sorted(f for f in BRONZE_DIR.glob("open_meteo_*.json") if "manifest" not in f.name)
+    if not archivos:
+        raise FileNotFoundError(f"No hay archivos open_meteo_*.json en {BRONZE_DIR}")
+    return archivos[-1]
+
+
 def cargar_historico() -> pd.DataFrame:
-    if not BRONZE_FILE.exists():
-        raise FileNotFoundError(f"No existe {BRONZE_FILE}")
-    data = json.loads(BRONZE_FILE.read_text(encoding="utf-8"))
+    data = json.loads(_ultimo_bronze().read_text(encoding="utf-8"))
 
     partes = []
     for entrada in data:
