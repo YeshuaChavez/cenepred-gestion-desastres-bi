@@ -1,6 +1,9 @@
 # ==============================================================================
-# Entorno PROD de CENEPRED BI, compuesto a partir de los módulos de infra/modules.
-# Mismo diseño que dev; cambian los nombres (var defaults en variables.tf).
+# Entorno DEV de CENEPRED BI, compuesto a partir de los módulos de infra/modules.
+#
+# NOTA DE ADOPCIÓN: los recursos dev ya existen (se crearon de forma imperativa). Para que
+# Terraform los gestione sin recrearlos, hay que importarlos una vez (ver infra/README.md,
+# sección "Adoptar infraestructura existente"). En un entorno nuevo, `apply` los crea.
 # ==============================================================================
 
 terraform {
@@ -57,12 +60,14 @@ module "key_vault" {
   tenant_id           = data.azurerm_client_config.current.tenant_id
   tags                = var.tags
 
+  # Quién puede LEER secretos: la identidad de ADF y el propio usuario que despliega.
   secret_reader_principal_ids = {
     data_factory = module.data_factory.principal_id
     deployer     = data.azurerm_client_config.current.object_id
   }
 }
 
+# La identidad de ADF puede leer/escribir el data lake (Bronze/Silver/Gold).
 resource "azurerm_role_assignment" "adf_storage_contributor" {
   scope                = module.lakehouse.id
   role_definition_name = "Storage Blob Data Contributor"

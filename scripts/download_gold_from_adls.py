@@ -3,18 +3,23 @@
 Lo usa el GitHub Action (daily_pipeline_sync) para regenerar realData.json del webapp desde el
 Gold fresco que dejó el pipeline diario de Databricks, sin recomputar nada.
 
-Requiere AZURE_STORAGE_ACCOUNT + AZURE_STORAGE_KEY en el entorno.
+La key de datos se toma de Key Vault (secreto "adls-key") o, con prioridad, de la variable de
+entorno AZURE_STORAGE_KEY (lo que usa el GitHub Action). Ver common/secrets.py.
 """
 
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from common.secrets import get_secret  # noqa: E402
 
 GOLD_DIR = Path(__file__).resolve().parents[1] / "data" / "gold" / "local_data"
 ACCOUNT = os.getenv("AZURE_STORAGE_ACCOUNT", "stcenepreddev1")
 CONTAINER = os.getenv("ADLS_GOLD_CONTAINER", "gold")
-KEY = os.getenv("AZURE_STORAGE_KEY")
+KEY = get_secret("adls-key", env="AZURE_STORAGE_KEY")
 
 
 def main() -> int:

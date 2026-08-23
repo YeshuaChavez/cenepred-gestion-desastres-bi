@@ -1,49 +1,48 @@
-# Aplicación Web Final — CENEPRED SAT Riesgo Dinámico
+# Aplicación web · CENEPRED · Alerta Temprana de Riesgo Dinámico
 
-Esta carpeta contiene la **aplicación web unificada (Portal Ejecutivo)** del Sistema de Alerta Temprana de CENEPRED, construida bajo el estándar **Vanilla HTML5 / CSS3 Dark Glassmorphism / JavaScript (ES6+)**.
+Portal web del Sistema de Alerta Temprana de CENEPRED. Presenta el riesgo de desastres por departamento, el monitoreo diario, el histórico de emergencias, la estimación predictiva de riesgo y el seguimiento del presupuesto de prevención, con un asistente analítico y alertas automáticas.
 
----
+Construido con **Next.js 14** (App Router), **React 18**, **Tailwind CSS**, **Leaflet** (mapa) y **Recharts** (gráficos).
 
-## Características de la Aplicación Web
+## Qué incluye
 
-1. **Header & Navigation Bar:** Estado de conexión en tiempo real a Azure Databricks SQL Warehouse Serverless (`dbw_cenepred_dev`).
-2. **5 Dashboards Tab System:** Navegación fluida entre los 5 dashboards de Power BI:
-   * *Monitoreo Diario*
-   * *Histórico & Tendencias (2012-2023)*
-   * *Riesgo Predictivo (XGBoost) & Explicabilidad SHAP*
-   * *Comparativo Regional (Heatmap)*
-   * *Impacto Socioeconómico y Presupuestal MEF (PP 0068)*
-3. **Panel Interactivo de Explicabilidad SHAP:**
-   * Selector dinámico para las **25 regiones del Perú**.
-   * Medidor de nivel de riesgo predictivo (Gauge Meter con etiquetas de riesgo ALTO , MODERADO , BAJO ).
-   * Desglose visual interactivo de los factores explicativos SHAP en porcentaje (Precipitación Open-Meteo, Focos de Calor NASA FIRMS, Sismos 7d USGS, Histórico INDECI SINPAD).
-4. **Chatbot Conversacional RAG Flotante (Widget AI):**
-   * Asistente virtual embebido en la esquina inferior derecha.
-   * Responde preguntas en lenguaje natural traduciendo las explicaciones SHAP y datos del Lakehouse a un lenguaje comprensible para tomadores de decisión del SINAGERD.
+Seis vistas alimentadas con datos reales de la plataforma:
 
----
+- **Inicio:** panorama nacional y mapa de riesgo por departamento.
+- **Monitoreo Diario:** clima, sismos y focos de calor recientes por región.
+- **Histórico y Tendencias:** serie de emergencias 2012 a 2023.
+- **Riesgo Predictivo:** nivel de riesgo estimado por región, factores que lo explican y generación de diagnósticos ejecutivos.
+- **Comparativo Regional:** contraste entre departamentos.
+- **Presupuesto de Prevención:** ejecución de la inversión en prevención por gobierno regional.
 
-## Ejecución Local
+Además:
 
-Para previsualizar la aplicación web localmente en cualquier navegador:
+- **Asistente analítico** flotante que responde en lenguaje natural sobre regiones, riesgo y presupuesto.
+- **Alertas automáticas** de riesgo Alto y Crítico por Telegram y correo (se despachan solas, sin acción manual).
+- **Mapa interactivo** con infraestructura crítica real (hospitales, puentes y albergues).
+- **Diseño responsive** y modo claro/oscuro.
+
+## Correrlo en local
 
 ```bash
-# Opción 1: Abrir directamente el archivo index.html en tu navegador
-# C:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\apps\webapp\index.html
-
-# Opción 2: Usar un servidor HTTP simple con Python
-cd "C:\Users\yeshu\Documents\Inteligencia de Negocios\Proyecto\apps\webapp"
-python -m http.server 8000
+npm install
+npm run dev        # http://localhost:3000
 ```
-Luego entra a `http://localhost:8000` en tu navegador.
 
----
+Crea un archivo `.env.local` con las claves que usan las rutas API (asistente, generador de diagnósticos y bot de alertas). Toma `.env.example` como referencia. Sin esas claves, la app funciona igual pero esas funciones caen a un modo de respaldo.
 
-## Despliegue en Azure (Azure Static Web Apps)
+Otros comandos:
 
-La aplicación está lista para ser desplegada en **Azure Static Web Apps**:
+```bash
+npm run build      # build de producción (salida standalone)
+npm run start      # sirve el build
+npx tsc --noEmit   # chequeo de tipos
+```
 
-1. En Azure Portal → Crear **Static Web App**.
-2. Vincular el repositorio GitHub (`YeshuaChavez/cenepred-gestion-desastres-bi`).
-3. App location: `apps/webapp`
-4. Output location: `` (raíz de `apps/webapp`).
+## Datos
+
+Las vistas se alimentan de `src/data/realData.json`, un agregado de datos reales que el pipeline regenera automáticamente cada día y publica en el repositorio; el despliegue se actualiza solo al detectar ese cambio. No hay datos inventados: las series históricas provienen del registro oficial de emergencias.
+
+## Despliegue
+
+La aplicación se despliega en **Vercel**, conectada al repositorio: cada push a la rama principal genera un nuevo despliegue. La app usa salida `standalone` de Next.js, por lo que también puede empaquetarse en contenedor (ver el `Dockerfile` de esta carpeta).

@@ -224,7 +224,7 @@ tests/           68 pruebas (pytest)
 
 **Funcionando y verificado:** el pipeline diario completo (ADF -> Databricks -> ADLS + Unity Catalog), el refresh programado de Power BI, la web en producción con asistente, alertas y diagnósticos probados en vivo, y las 68 pruebas en verde.
 
-**En curso o pendiente:** cerrar la integración de Key Vault (requiere el rol de secretos), empaquetar el snapshot junto al modelo para el despliegue en Azure ML, y completar los módulos de Terraform.
+**Listo en código, pendiente de ejecutar contra Azure:** el modelo ya se empaqueta autocontenido (pkl + snapshot + metadata) y se registra como carpeta para el endpoint de Azure ML; la lectura centralizada de secretos vía Key Vault está implementada (`common/secrets.py`, con fallback a variables de entorno) y la infraestructura está descrita en módulos de Terraform reutilizables (`infra/modules` + `infra/environments`). Lo que queda es del lado de la nube: asignar los roles de Key Vault y cargar los secretos, y correr `terraform init/plan/apply` (o importar los recursos existentes). Ver `infra/README.md`.
 
 **Alcance de datos:** emergencias y gasto son históricos por límite de las fuentes; solo la telemetría de monitoreo es dinámica hasta hoy. Esa es una decisión consciente, no un defecto: el valor del sistema está precisamente en cruzar un historial estable con señales frescas.
 

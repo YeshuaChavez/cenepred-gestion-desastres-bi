@@ -10,6 +10,7 @@ shap
 mlflow
 azure-storage-blob
 azure-identity
+azure-keyvault-secrets
 fastapi
 uvicorn
 pydantic
