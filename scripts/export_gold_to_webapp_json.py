@@ -212,14 +212,65 @@ def process_gold_data():
             "alertMsg": msg
         })
 
-    # Pliegos ejecutores
-    pliegos = [
-        {"nombre": "MINDEF - Ejército del Perú (Gestión de Riesgos)", "monto": "S/ 540M (84%)", "pct": 84, "color": "bg-emerald-500"},
-        {"nombre": "MINSA - DIGESA (Atención de Emergencias)", "monto": "S/ 310M (78%)", "pct": 78, "color": "bg-emerald-500"},
-        {"nombre": "MTC - Provías Nacional (Infraestructura)", "monto": "S/ 820M (64%)", "pct": 64, "color": "bg-secondary"},
-        {"nombre": "Autoridad Nacional del Agua (ANA)", "monto": "S/ 190M (48%)", "pct": 48, "color": "bg-tertiary"},
-        {"nombre": "INDECI (Respuesta ante Desastres)", "monto": "S/ 240M (32%)", "pct": 32, "color": "bg-error", "isAlert": True}
+    # Pliegos = top regiones por PIM (datos REALES del MEF gold, no entidades inventadas).
+    pliegos = []
+    for r in mef_dept_agg.sort_values("monto_pim", ascending=False).head(6).itertuples():
+        pct = round(float(r.pct_ejecucion), 1)
+        color = ("bg-emerald-500" if pct >= 70 else "bg-secondary" if pct >= 55
+                 else "bg-tertiary" if pct >= 40 else "bg-error")
+        pliegos.append({
+            "nombre": f"GOBIERNO REGIONAL DE {r.departamento}",
+            "monto": f"S/ {round(r.monto_pim / 1e6, 1)}M ({int(round(pct))}%)",
+            "pct": int(round(pct)),
+            "color": color,
+            "isAlert": pct < 40,
+        })
+
+    # ---- Series temporales REALES para la vista Histórico y Tendencias ----
+    # Derivadas de fact_emergencias (fecha_id = YYYYMMDD). Reemplazan los datos hardcodeados.
+    fe = fact_emergencias.copy()
+    fe["anio"] = fe["fecha_id"] // 10000
+    fe["mes"] = (fe["fecha_id"] // 100) % 100
+    fe["dia"] = fe["fecha_id"] % 100
+
+    anual = fe.groupby("anio").agg(
+        emergencias=("emergencia_id", "count"),
+        afectados=("cantidad_afectados", "sum"),
+        damnificados=("cantidad_damnificados", "sum"),
+        viviendasDestruidas=("viviendas_destruidas", "sum"),
+    ).reset_index()
+    serie_anual = [
+        {"anio": int(r.anio), "emergencias": int(r.emergencias), "afectados": int(r.afectados),
+         "damnificados": int(r.damnificados), "viviendasDestruidas": int(r.viviendasDestruidas)}
+        for r in anual.itertuples()
     ]
+
+    mensual = fe.groupby(["anio", "mes"]).agg(
+        emergencias=("emergencia_id", "count"),
+        afectados=("cantidad_afectados", "sum"),
+        damnificados=("cantidad_damnificados", "sum"),
+    ).reset_index()
+    serie_mensual = {}
+    for anio in sorted(fe["anio"].unique()):
+        meses = []
+        for m in range(1, 13):
+            sub = mensual[(mensual["anio"] == anio) & (mensual["mes"] == m)]
+            if len(sub):
+                meses.append({"mesIdx": m - 1, "emergencias": int(sub["emergencias"].iloc[0]),
+                              "afectados": int(sub["afectados"].iloc[0]), "damnificados": int(sub["damnificados"].iloc[0])})
+            else:
+                meses.append({"mesIdx": m - 1, "emergencias": 0, "afectados": 0, "damnificados": 0})
+        serie_mensual[str(int(anio))] = meses
+
+    diaria = fe.groupby(["anio", "mes", "dia"]).agg(
+        emergencias=("emergencia_id", "count"),
+        afectados=("cantidad_afectados", "sum"),
+    ).reset_index()
+    serie_diaria = {}
+    for r in diaria.itertuples():
+        serie_diaria.setdefault(f"{int(r.anio)}-{int(r.mes) - 1}", []).append(
+            {"dia": int(r.dia), "emergencias": int(r.emergencias), "afectados": int(r.afectados)}
+        )
 
     final_payload = {
         "meta": {
@@ -234,7 +285,10 @@ def process_gold_data():
         "departamentos": departamentos_data,
         "matrizEstacional": matriz_estacional,
         "tablaMef": tabla_mef,
-        "pliegosEjecutores": pliegos
+        "pliegosEjecutores": pliegos,
+        "serieAnual": serie_anual,
+        "serieMensual": serie_mensual,
+        "serieDiaria": serie_diaria
     }
 
     os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)

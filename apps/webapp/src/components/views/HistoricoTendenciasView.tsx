@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { NATIONAL_META } from '../../data/mockData';
+import realData from '../../data/realData.json';
 
 interface YearlyTrend {
   anio: number;
@@ -36,65 +37,40 @@ export default function HistoricoTendenciasView() {
   const [quarterFilter, setQuarterFilter] = useState<'todos' | 'Q1' | 'Q2' | 'Q3' | 'Q4'>('todos');
   const [hoveredYear, setHoveredYear] = useState<YearlyTrend | null>(null);
 
-  // 1. Multianual Data (2012 - 2023)
-  const HISTORICO_ANUAL: YearlyTrend[] = [
-    { anio: 2012, emergencias: 5820, afectados: 412000, damnificados: 48000, viviendasDestruidas: 4200, eventoClave: "Lluvias Intensas del Sur" },
-    { anio: 2013, emergencias: 6140, afectados: 435000, damnificados: 52000, viviendasDestruidas: 4600, eventoClave: "Heladas y Friajes Atípicos" },
-    { anio: 2014, emergencias: 5980, afectados: 398000, damnificados: 41000, viviendasDestruidas: 3800, eventoClave: "Sismo Parinacochas" },
-    { anio: 2015, emergencias: 6850, afectados: 580000, damnificados: 64000, viviendasDestruidas: 5900, eventoClave: "Fase Previa El Niño" },
-    { anio: 2016, emergencias: 7210, afectados: 620000, damnificados: 71000, viviendasDestruidas: 6800, eventoClave: "Déficit Hídrico y Heladas" },
-    { anio: 2017, emergencias: 12450, afectados: 1680000, damnificados: 295000, viviendasDestruidas: 28400, eventoClave: "El Niño Costero - Pico Histórico" },
-    { anio: 2018, emergencias: 7450, afectados: 540000, damnificados: 58000, viviendasDestruidas: 5100, eventoClave: "Huaycos en Chosica y Piura" },
-    { anio: 2019, emergencias: 7890, afectados: 610000, damnificados: 62000, viviendasDestruidas: 5400, eventoClave: "Lluvias del Norte y Sur" },
-    { anio: 2020, emergencias: 7120, afectados: 480000, damnificados: 45000, viviendasDestruidas: 4100, eventoClave: "Inundaciones en la Selva" },
-    { anio: 2021, emergencias: 7650, afectados: 530000, damnificados: 51000, viviendasDestruidas: 4700, eventoClave: "Sismo de Amazonas M7.5" },
-    { anio: 2022, emergencias: 8120, afectados: 670000, damnificados: 74000, viviendasDestruidas: 6200, eventoClave: "Desbordes en San Martín y Puno" },
-    { anio: 2023, emergencias: 11680, afectados: 1420000, damnificados: 210000, viviendasDestruidas: 21500, eventoClave: "Ciclón Yaku y El Niño Global" }
-  ];
+  // Datos REALES de la capa Gold (fact_emergencias 2012-2023), vía realData.json.
+  // INDECI publica el histórico oficial hasta 2023; por eso este rango es real, no desactualizado.
+  const serieAnual = ((realData as { serieAnual?: Omit<YearlyTrend, "eventoClave">[] }).serieAnual) ?? [];
+  const maxEmgAnual = serieAnual.length ? Math.max(...serieAnual.map((r) => r.emergencias)) : 0;
+  const HISTORICO_ANUAL: YearlyTrend[] = serieAnual.map((r) => ({
+    ...r,
+    eventoClave: r.emergencias === maxEmgAnual ? "Pico histórico de emergencias" : "",
+  }));
 
   const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   const getMonthlyBreakdown = (anio: number): MonthlyData[] => {
-    const isPico = anio === 2017 || anio === 2023;
-    const base = isPico ? 1100 : 550;
-
+    const meses = (((realData as { serieMensual?: Record<string, { mesIdx: number; emergencias: number; afectados: number; damnificados: number }[]> }).serieMensual) ?? {})[String(anio)] ?? [];
     return MESES.map((mes, idx) => {
-      let factor = 1.0;
-      if (idx === 0 || idx === 1 || idx === 2) factor = isPico ? 2.4 : 1.7;
-      else if (idx === 5 || idx === 6) factor = 1.3;
-      else factor = 0.6;
-
-      const emergencias = Math.round(base * factor);
-      const afectados = emergencias * (isPico ? 140 : 80);
-      const damnificados = Math.round(emergencias * (isPico ? 22 : 10));
-
-      let fenomeno = "Precipitaciones Mod.";
-      if (idx <= 2) fenomeno = isPico ? "Inundaciones y Huaycos Severos" : "Lluvias de Verano";
-      else if (idx >= 5 && idx <= 7) fenomeno = "Heladas y Friajes Atípicos";
-
-      return { mes, mesIdx: idx, emergencias, afectados, damnificados, fenomeno };
+      const m = meses.find((x) => x.mesIdx === idx);
+      return {
+        mes, mesIdx: idx,
+        emergencias: m?.emergencias ?? 0,
+        afectados: m?.afectados ?? 0,
+        damnificados: m?.damnificados ?? 0,
+        fenomeno: "Emergencias registradas (SINPAD)",
+      };
     });
   };
 
   const getDailyBreakdown = (anio: number, mesIdx: number): DailyData[] => {
-    const isPicoMonth = (anio === 2017 || anio === 2023) && (mesIdx === 1 || mesIdx === 2);
-    const daysCount = mesIdx === 1 ? (anio % 4 === 0 ? 29 : 28) : (mesIdx === 3 || mesIdx === 5 || mesIdx === 8 || mesIdx === 10 ? 30 : 31);
-    
-    const days: DailyData[] = [];
-    for (let d = 1; d <= daysCount; d++) {
-      const isPeakDay = isPicoMonth && (d === 15 || d === 16 || d === 17);
-      const emergencias = isPeakDay ? Math.floor(Math.random() * 80) + 120 : Math.floor(Math.random() * 25) + 10;
-      const afectados = emergencias * 45;
-      
-      days.push({
-        dia: d,
-        emergencias,
-        afectados,
-        regionPico: isPeakDay ? 'Piura & Lambayeque' : d % 2 === 0 ? 'Arequipa & Cusco' : 'Loreto & San Martín',
-        descripcion: isPeakDay ? 'Desborde de río y activación de quebradas' : 'Lluvias locales y vientos moderados'
-      });
-    }
-    return days;
+    const dias = (((realData as { serieDiaria?: Record<string, { dia: number; emergencias: number; afectados: number }[]> }).serieDiaria) ?? {})[`${anio}-${mesIdx}`] ?? [];
+    return dias.map((d) => ({
+      dia: d.dia,
+      emergencias: d.emergencias,
+      afectados: d.afectados,
+      regionPico: "Registro nacional SINPAD",
+      descripcion: "Emergencias registradas (SINPAD)",
+    }));
   };
 
   const selectedItem = selectedAnio === 'todos' 
@@ -264,7 +240,7 @@ export default function HistoricoTendenciasView() {
             </span>
           </div>
           <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
-            {selectedDayData ? selectedDayData.regionPico : selectedItem ? selectedItem.eventoClave : 'Pico Máximo El Niño 2017'}
+            {selectedDayData ? selectedDayData.regionPico : selectedItem ? selectedItem.eventoClave : 'Serie histórica nacional (SINPAD)'}
           </span>
         </div>
 
@@ -332,7 +308,7 @@ export default function HistoricoTendenciasView() {
         <div className="h-72 w-full flex items-end gap-2 sm:gap-3 pt-10 pb-3 px-2 border-b border-slate-200 dark:border-slate-800 relative bg-slate-50/40 dark:bg-slate-900/40 rounded-2xl transition-colors">
           {HISTORICO_ANUAL.map((item) => {
             const heightPct = Math.round((item.emergencias / maxEmergenciasAnual) * 100);
-            const isPico = item.anio === 2017 || item.anio === 2023;
+            const isPico = item.emergencias === maxEmergenciasAnual;
             const isSelected = selectedAnio === item.anio;
 
             return (
