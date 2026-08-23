@@ -11,10 +11,10 @@
   "departamentos": {
     "amazonas": {
       "name": "AMAZONAS",
-      "prob": 45,
-      "tag": "Alto",
-      "tagColor": "tertiary",
-      "needleDeg": -8,
+      "prob": 44,
+      "tag": "Medio",
+      "tagColor": "secondary",
+      "needleDeg": -10,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -25,7 +25,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "113.4 mm",
-          "pct": 44,
+          "pct": 43,
           "color": "#006686"
         },
         {
@@ -55,10 +55,10 @@
     },
     "ancash": {
       "name": "ANCASH",
-      "prob": 60,
+      "prob": 59,
       "tag": "Muy Alto",
       "tagColor": "error",
-      "needleDeg": 16,
+      "needleDeg": 14,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -69,7 +69,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "45.3 mm",
-          "pct": 48,
+          "pct": 47,
           "color": "#006686"
         },
         {
@@ -113,7 +113,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "35.4 mm",
-          "pct": 29,
+          "pct": 28,
           "color": "#006686"
         },
         {
@@ -136,7 +136,7 @@
       "precipitacionMm": 35.4,
       "focosCalor": 305,
       "sismos7d": 1,
-      "tempMax": 22.7,
+      "tempMax": 22.8,
       "pimM": 470.5,
       "devengadoM": 413.2,
       "pctEjecucion": 87.8
@@ -180,7 +180,7 @@
       "precipitacionMm": 36.3,
       "focosCalor": 51,
       "sismos7d": 7,
-      "tempMax": 22.1,
+      "tempMax": 22.2,
       "pimM": 902.4,
       "devengadoM": 619.3,
       "pctEjecucion": 68.6
@@ -245,7 +245,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "98.4 mm",
-          "pct": 57,
+          "pct": 56,
           "color": "#006686"
         },
         {
@@ -268,7 +268,7 @@
       "precipitacionMm": 98.4,
       "focosCalor": 763,
       "sismos7d": 1,
-      "tempMax": 19.9,
+      "tempMax": 20.0,
       "pimM": 686.6,
       "devengadoM": 540.9,
       "pctEjecucion": 78.8
@@ -333,7 +333,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "79.3 mm",
-          "pct": 36,
+          "pct": 35,
           "color": "#006686"
         },
         {
@@ -356,7 +356,7 @@
       "precipitacionMm": 79.3,
       "focosCalor": 245,
       "sismos7d": 1,
-      "tempMax": 16.6,
+      "tempMax": 16.7,
       "pimM": 1520.6,
       "devengadoM": 1218.3,
       "pctEjecucion": 80.1
@@ -427,7 +427,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+801",
-          "pct": 58,
+          "pct": 59,
           "color": "#565e74"
         },
         {
@@ -576,7 +576,7 @@
       "precipitacionMm": 30.4,
       "focosCalor": 220,
       "sismos7d": 1,
-      "tempMax": 23.4,
+      "tempMax": 23.5,
       "pimM": 1358.8,
       "devengadoM": 894.9,
       "pctEjecucion": 65.9
@@ -729,7 +729,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "128.2 mm",
-          "pct": 74,
+          "pct": 73,
           "color": "#006686"
         },
         {
@@ -752,7 +752,7 @@
       "precipitacionMm": 128.2,
       "focosCalor": 336,
       "sismos7d": 1,
-      "tempMax": 29.7,
+      "tempMax": 29.6,
       "pimM": 118.9,
       "devengadoM": 75.7,
       "pctEjecucion": 63.7
@@ -840,7 +840,7 @@
       "precipitacionMm": 29.5,
       "focosCalor": 182,
       "sismos7d": 1,
-      "tempMax": 9.7,
+      "tempMax": 9.8,
       "pimM": 281.2,
       "devengadoM": 211.8,
       "pctEjecucion": 75.3
@@ -955,7 +955,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+1014",
-          "pct": 78,
+          "pct": 77,
           "color": "#565e74"
         },
         {
@@ -1016,7 +1016,7 @@
       "precipitacionMm": 18.4,
       "focosCalor": 12,
       "sismos7d": 4,
-      "tempMax": 22.5,
+      "tempMax": 22.4,
       "pimM": 315.5,
       "devengadoM": 244.7,
       "pctEjecucion": 77.6
@@ -1081,7 +1081,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "189.0 mm",
-          "pct": 71,
+          "pct": 70,
           "color": "#006686"
         },
         {
