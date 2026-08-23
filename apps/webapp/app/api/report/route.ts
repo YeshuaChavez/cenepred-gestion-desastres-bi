@@ -20,24 +20,35 @@ export async function POST(request: Request) {
       ? (d.shap as ShapFactor[]).map((s) => `- ${s.name}: ${s.val} (contribución ${s.pct}%)`).join('\n')
       : 'No disponibles';
 
-    const prompt = `Eres analista del Centro Nacional de Estimación, Prevención y Reducción del Riesgo de Desastres (CENEPRED, Perú). Redacta un DIAGNÓSTICO EJECUTIVO de riesgo de desastres para el departamento indicado, en español institucional sobrio, SIN emojis, conciso y accionable (máximo ~350 palabras).
+    const prompt = `Actúa como analista de gestión del riesgo de desastres del CENEPRED (Perú). Redacta un diagnóstico ejecutivo para el departamento indicado, en español institucional sobrio, directo y accionable (máximo ~320 palabras).
 
-Usa EXCLUSIVAMENTE estos datos reales; no inventes cifras:
-- Departamento: ${d.name} (zona ${d.tag})
-- Score de riesgo climático (modelo predictivo validado; F1 0.751 / AUC-ROC 0.860; validación temporal 2012-20 / 21-23): ${d.prob}%
-- Emergencias históricas registradas (SINPAD): ${d.emergencias}
-- Población afectada: ${d.afectados}
-- Población damnificada: ${d.damnificados}
-- Telemetría 24h: precipitación ${d.precipitacionMm} mm, ${d.focosCalor} focos de calor activos, ${d.sismos7d ?? 'n/d'} sismos en 7 días
-- Factores determinantes del riesgo:
+Reglas de estilo:
+- Escribe como un informe técnico oficial, NO como una respuesta de asistente. No te presentes, no menciones que eres una IA ni cómo se generó el informe, no describas herramientas, plataformas ni tecnologías.
+- Sin emojis. Usa cifras solo de los datos provistos; no inventes datos.
+- Formato en Markdown, con esta estructura EXACTA de encabezados y viñetas:
+
+## 1. Diagnóstico territorial
+Un párrafo breve sobre el nivel de riesgo (${d.prob}%) y la vulnerabilidad del departamento.
+
+## 2. Factores determinantes
+- Una viñeta por cada factor relevante, interpretando su peso.
+
+## 3. Recomendaciones de prevención
+- Entre 3 y 4 viñetas con acciones priorizadas y concretas.
+
+## 4. Evaluación presupuestal
+Un párrafo sobre la ejecución del PP0068 y la brecha por ejecutar.
+
+Usa negritas (**...**) para resaltar las cifras clave.
+
+Datos reales del departamento:
+- Departamento: ${d.name} (zona ${d.tag}), riesgo estimado ${d.prob}%
+- Emergencias históricas registradas: ${d.emergencias}
+- Población afectada: ${d.afectados} · damnificada: ${d.damnificados}
+- Condiciones 24h: precipitación ${d.precipitacionMm} mm, ${d.focosCalor} focos de calor, ${d.sismos7d ?? 'n/d'} sismos en 7 días
+- Factores determinantes:
 ${factores}
-- Presupuesto MEF PP0068: PIM S/ ${d.pimM}M, devengado S/ ${d.devengadoM}M, ejecución ${d.pctEjecucion}%
-
-Estructura la respuesta en 4 secciones numeradas:
-1) Diagnóstico territorial y vulnerabilidad
-2) Interpretación de los factores determinantes del riesgo
-3) Recomendaciones de acción preventiva priorizadas
-4) Evaluación financiera de la prevención (usa el PP0068 y la brecha por ejecutar)`;
+- Presupuesto de prevención (PP0068): asignado S/ ${d.pimM}M, ejecutado S/ ${d.devengadoM}M, avance ${d.pctEjecucion}%`;
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
     const geminiRes = await fetch(url, {
