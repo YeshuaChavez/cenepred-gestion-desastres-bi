@@ -1,20 +1,28 @@
 {
   "activities": [
     {
-      "name": "RunDailyMedallion",
-      "type": "DatabricksNotebook",
+      "name": "TriggerDatabricksDailyJob",
+      "description": "Dispara el job de Databricks 'cenepred-daily-medallion' (run-now). El job corre como su dueño (con acceso Unity Catalog), refresca la telemetria a Gold en ADLS y sobrescribe la tabla Delta fact_monitoreo_diario que consume Power BI.",
+      "type": "WebActivity",
       "dependsOn": [],
       "policy": {
-        "timeout": "1.00:00:00",
+        "timeout": "0.00:10:00",
         "retry": 1,
         "retryIntervalInSeconds": 60
       },
-      "linkedServiceName": {
-        "referenceName": "ls_databricks",
-        "type": "LinkedServiceReference"
-      },
       "typeProperties": {
-        "notebookPath": "/Shared/cenepred_daily_pipeline"
+        "url": "https://adb-7405616359428930.10.azuredatabricks.net/api/2.1/jobs/run-now",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "job_id": 1075195993704890
+        },
+        "authentication": {
+          "type": "MSI",
+          "resource": "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d"
+        }
       }
     }
   ]
