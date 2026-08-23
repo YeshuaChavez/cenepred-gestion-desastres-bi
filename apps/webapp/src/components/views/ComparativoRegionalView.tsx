@@ -126,7 +126,7 @@ export default function ComparativoRegionalView() {
 
         {/* Selectores A / B con acento por región */}
         <div className="grid grid-cols-[1fr_auto_1fr] items-stretch gap-2 sm:gap-4">
-          <div className="rounded-2xl border-2 border-sky-200 dark:border-sky-900/70 bg-sky-50/60 dark:bg-sky-950/30 p-3 sm:p-4 flex flex-col gap-2 min-w-0">
+          <div className="rounded-2xl border-2 border-sky-200 dark:border-sky-900/70 bg-sky-50/60 dark:bg-sky-950/30 p-3 sm:p-4 flex flex-col gap-2 min-w-0 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-sky-400 dark:hover:border-sky-600 animate-fade-in-up">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400">Región A</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-white shrink-0 ${riskBadgeClass(depto1.prob)}`}>Riesgo {depto1.prob}%</span>
@@ -146,7 +146,7 @@ export default function ComparativoRegionalView() {
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-[11px] font-extrabold shadow-md shrink-0">VS</div>
           </div>
 
-          <div className="rounded-2xl border-2 border-violet-200 dark:border-violet-900/70 bg-violet-50/60 dark:bg-violet-950/30 p-3 sm:p-4 flex flex-col gap-2 min-w-0">
+          <div style={{ animationDelay: '120ms', animationFillMode: 'both' }} className="rounded-2xl border-2 border-violet-200 dark:border-violet-900/70 bg-violet-50/60 dark:bg-violet-950/30 p-3 sm:p-4 flex flex-col gap-2 min-w-0 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-violet-400 dark:hover:border-violet-600 animate-fade-in-up">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-400">Región B</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-white shrink-0 ${riskBadgeClass(depto2.prob)}`}>Riesgo {depto2.prob}%</span>
@@ -172,16 +172,16 @@ export default function ComparativoRegionalView() {
             const aLead = m.a > m.b;
             const bLead = m.b > m.a;
             return (
-              <div key={i} className="flex flex-col gap-1">
-                <span className="text-center text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">{m.label}</span>
+              <div key={i} style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }} className="group flex flex-col gap-1 rounded-lg -mx-2 px-2 py-1 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900/40 animate-fade-in-up">
+                <span className="text-center text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500 transition-colors group-hover:text-slate-600 dark:group-hover:text-slate-300">{m.label}</span>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <span className={`w-14 sm:w-24 text-right text-xs sm:text-sm font-extrabold tabular-nums shrink-0 ${aLead ? 'text-sky-600 dark:text-sky-400' : 'text-slate-400 dark:text-slate-500'}`}>{m.fmt(m.a)}</span>
                   <div className="flex-1 flex justify-end min-w-0">
-                    <div className={`h-2.5 rounded-l-full transition-all duration-500 ${aLead ? 'bg-sky-500' : 'bg-sky-500/40'}`} style={{ width: `${aPct}%` }}></div>
+                    <div className={`h-2.5 rounded-l-full transition-all duration-500 ${aLead ? 'bg-sky-500 group-hover:bg-sky-600' : 'bg-sky-500/40 group-hover:bg-sky-500/70'}`} style={{ width: `${aPct}%` }}></div>
                   </div>
                   <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 shrink-0"></div>
                   <div className="flex-1 flex justify-start min-w-0">
-                    <div className={`h-2.5 rounded-r-full transition-all duration-500 ${bLead ? 'bg-violet-500' : 'bg-violet-500/40'}`} style={{ width: `${bPct}%` }}></div>
+                    <div className={`h-2.5 rounded-r-full transition-all duration-500 ${bLead ? 'bg-violet-500 group-hover:bg-violet-600' : 'bg-violet-500/40 group-hover:bg-violet-500/70'}`} style={{ width: `${bPct}%` }}></div>
                   </div>
                   <span className={`w-14 sm:w-24 text-left text-xs sm:text-sm font-extrabold tabular-nums shrink-0 ${bLead ? 'text-violet-600 dark:text-violet-400' : 'text-slate-400 dark:text-slate-500'}`}>{m.fmt(m.b)}</span>
                 </div>

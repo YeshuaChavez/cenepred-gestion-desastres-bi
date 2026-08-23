@@ -153,10 +153,10 @@ export default function PresupuestoMEFView() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
         {/* Card 1: Presupuesto Asignado */}
-        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
+        <div style={{ animationDelay: '0ms', animationFillMode: 'both' }} className="group rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-sky-300 dark:hover:border-sky-700 animate-fade-in-up">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Presupuesto Asignado</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 flex items-center justify-center">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">Presupuesto Asignado</span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <span className="material-symbols-outlined text-base">account_balance</span>
             </div>
           </div>
@@ -167,10 +167,10 @@ export default function PresupuestoMEFView() {
         </div>
 
         {/* Card 2: Inversión Ejecutada */}
-        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
+        <div style={{ animationDelay: '90ms', animationFillMode: 'both' }} className="group rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 dark:hover:border-emerald-700 animate-fade-in-up">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Inversión Ejecutada</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Inversión Ejecutada</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <span className="material-symbols-outlined text-base">trending_up</span>
             </div>
           </div>
@@ -181,10 +181,10 @@ export default function PresupuestoMEFView() {
         </div>
 
         {/* Card 3: Fondo Pendiente */}
-        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
+        <div style={{ animationDelay: '180ms', animationFillMode: 'both' }} className="group rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-red-300 dark:hover:border-red-700 animate-fade-in-up">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Fondo Pendiente</span>
-            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">Fondo Pendiente</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <span className="material-symbols-outlined text-base">warning</span>
             </div>
           </div>
@@ -197,10 +197,10 @@ export default function PresupuestoMEFView() {
         </div>
 
         {/* Card 4: Regiones en Riesgo Crítico */}
-        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
+        <div style={{ animationDelay: '270ms', animationFillMode: 'both' }} className="group rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-purple-300 dark:hover:border-purple-700 animate-fade-in-up">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Regiones en Riesgo Crítico</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 flex items-center justify-center">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Regiones en Riesgo Crítico</span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
               <span className="material-symbols-outlined text-base">analytics</span>
             </div>
           </div>
