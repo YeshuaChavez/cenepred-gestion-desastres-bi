@@ -15,9 +15,12 @@ subprocess.run(["git", "clone", "--depth", "1",
 subprocess.run([sys.executable, "-m", "pip", "install", "-q",
                 "numpy<2", "geopandas", "pandera", "azure-storage-blob"], check=True)
 
-os.environ["NASA_FIRMS_MAP_KEY"] = dbutils.secrets.get("cenepred", "nasa-firms-key")  # noqa: F821
-os.environ["AZURE_STORAGE_KEY"] = dbutils.secrets.get("cenepred", "adls-key")  # noqa: F821
-os.environ["AZURE_STORAGE_ACCOUNT"] = dbutils.secrets.get("cenepred", "adls-account")  # noqa: F821
+# Scope "cenepred_kv": respaldado por Azure Key Vault (kv-cenepred-dev1). dbutils lee el valor
+# directo del vault (fuente única de secretos). El scope "cenepred" (Databricks-backed) queda
+# como respaldo con los mismos nombres de secreto.
+os.environ["NASA_FIRMS_MAP_KEY"] = dbutils.secrets.get("cenepred_kv", "nasa-firms-key")  # noqa: F821
+os.environ["AZURE_STORAGE_KEY"] = dbutils.secrets.get("cenepred_kv", "adls-key")  # noqa: F821
+os.environ["AZURE_STORAGE_ACCOUNT"] = dbutils.secrets.get("cenepred_kv", "adls-account")  # noqa: F821
 
 r = subprocess.run([sys.executable, "data/pipelines/master_pipeline.py", "--daily"],
                    cwd="/tmp/cenepred", capture_output=True, text=True)
