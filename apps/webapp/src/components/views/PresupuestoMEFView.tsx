@@ -10,6 +10,9 @@ export default function PresupuestoMEFView() {
   const [selectedRegionDetail, setSelectedRegionDetail] = useState<typeof TABLAS_MEF_DEPARTAMENTO[0] | null>(null);
   const [exportToast, setExportToast] = useState<boolean>(false);
 
+  // Regiones en riesgo crítico = las de nivel "Muy Alto" (lo mismo que filtra la tarjeta 4).
+  const regionesRiesgoCritico = TABLAS_MEF_DEPARTAMENTO.filter(r => r.riesgo === 'Muy Alto').length;
+
   // Filter Table Data dynamically by Search Term, Pliego, and Execution Status
   const filteredTabla = TABLAS_MEF_DEPARTAMENTO.filter(r => {
     // 1. Pliego filter
@@ -240,7 +243,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">{NATIONAL_META.totalDepartamentos}</span>
+            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">{regionesRiesgoCritico}</span>
             <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-bold">Filtrar Riesgo Muy Alto</span>
           </div>
         </div>

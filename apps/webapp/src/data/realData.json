@@ -1717,43 +1717,43 @@
   "pliegosEjecutores": [
     {
       "nombre": "GOBIERNO REGIONAL DE LIMA",
-      "monto": "S/ 10539.2M (77%)",
-      "pct": 77,
+      "monto": "S/ 10539.2M (76.8%)",
+      "pct": 76.8,
       "color": "bg-emerald-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE PIURA",
-      "monto": "S/ 3900.7M (61%)",
-      "pct": 61,
+      "monto": "S/ 3900.7M (60.6%)",
+      "pct": 60.6,
       "color": "bg-sky-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE ANCASH",
-      "monto": "S/ 1764.1M (52%)",
-      "pct": 52,
+      "monto": "S/ 1764.1M (52.3%)",
+      "pct": 52.3,
       "color": "bg-amber-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE CUSCO",
-      "monto": "S/ 1520.6M (80%)",
-      "pct": 80,
+      "monto": "S/ 1520.6M (80.1%)",
+      "pct": 80.1,
       "color": "bg-emerald-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE ICA",
-      "monto": "S/ 1504.9M (65%)",
-      "pct": 65,
+      "monto": "S/ 1504.9M (64.6%)",
+      "pct": 64.6,
       "color": "bg-sky-500",
       "isAlert": false
     },
     {
       "nombre": "GOBIERNO REGIONAL DE LA LIBERTAD",
-      "monto": "S/ 1358.8M (66%)",
-      "pct": 66,
+      "monto": "S/ 1358.8M (65.9%)",
+      "pct": 65.9,
       "color": "bg-sky-500",
       "isAlert": false
     }

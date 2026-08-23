@@ -222,8 +222,9 @@ def process_gold_data():
                  else "bg-amber-500" if pct >= 40 else "bg-red-500")
         pliegos.append({
             "nombre": f"GOBIERNO REGIONAL DE {r.departamento}",
-            "monto": f"S/ {round(r.monto_pim / 1e6, 1)}M ({int(round(pct))}%)",
-            "pct": int(round(pct)),
+            # % con 1 decimal, igual que la tabla por departamento (evita el mismatch 77 vs 76.8).
+            "monto": f"S/ {round(r.monto_pim / 1e6, 1)}M ({pct}%)",
+            "pct": pct,
             "color": color,
             "isAlert": pct < 40,
         })
