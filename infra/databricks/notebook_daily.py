@@ -46,3 +46,11 @@ spark.sql("""
   WHEN NOT MATCHED THEN INSERT *
 """)  # noqa: F821
 print(f"MERGE en fact_monitoreo_diario (Unity Catalog): {_fm.shape[0]} filas de la ventana reciente")
+
+# dim_tiempo debe cubrir el rango del fact (hasta hoy) para que Power BI muestre las fechas
+# nuevas en el eje de tiempo. Es un calendario completo, se sobrescribe entero.
+_dt = pd.read_parquet("/tmp/cenepred/data/gold/local_data/dim_tiempo.parquet")
+(spark.createDataFrame(_dt)  # noqa: F821
+      .write.mode("overwrite").option("overwriteSchema", "true")
+      .saveAsTable("dbw_cenepred_dev.default.dim_tiempo"))
+print(f"dim_tiempo actualizada en Unity Catalog: {_dt.shape[0]} filas (hasta hoy)")
