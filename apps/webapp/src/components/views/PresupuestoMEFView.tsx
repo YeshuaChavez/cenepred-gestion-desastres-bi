@@ -5,7 +5,7 @@ import { TABLAS_MEF_DEPARTAMENTO, PLIEGOS_EJECUTORES, NATIONAL_META } from '../.
 
 export default function PresupuestoMEFView() {
   const [selectedPliego, setSelectedPliego] = useState<string | null>(null);
-  const [executionFilter, setExecutionFilter] = useState<'all' | 'high_assigned' | 'high' | 'low' | 'critical'>('all');
+  const [executionFilter, setExecutionFilter] = useState<'all' | 'high' | 'low' | 'critical'>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRegionDetail, setSelectedRegionDetail] = useState<typeof TABLAS_MEF_DEPARTAMENTO[0] | null>(null);
   const [exportToast, setExportToast] = useState<boolean>(false);
@@ -24,7 +24,6 @@ export default function PresupuestoMEFView() {
       return false;
     }
     // 3. Execution / Risk status filter
-    if (executionFilter === 'high_assigned' && parsePim(r.pim) < 500) return false;
     if (executionFilter === 'high' && r.pct < 50) return false;
     if (executionFilter === 'low' && r.pct >= 50) return false;
     if (executionFilter === 'critical' && r.riesgo !== 'Muy Alto') return false;
@@ -150,71 +149,42 @@ export default function PresupuestoMEFView() {
         </div>
       </div>
 
-      {/* Interactive Metric Cards */}
+      {/* Tarjetas de indicador (solo lectura; el filtrado está en la barra de la tabla) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        
-        {/* Card 1: High Assigned Budget Filter */}
-        <div
-          onClick={() => setExecutionFilter(executionFilter === 'high_assigned' ? 'all' : 'high_assigned')}
-          className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
-            executionFilter === 'high_assigned'
-              ? 'bg-sky-50/80 dark:bg-sky-950/40 border-sky-400 ring-2 ring-sky-500/20 shadow-md -translate-y-0.5'
-              : 'bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 hover:border-sky-400 hover:shadow-md hover:-translate-y-0.5'
-          }`}
-          title="Haz clic para filtrar regiones con presupuesto asignado > S/ 500M"
-        >
+
+        {/* Card 1: Presupuesto Asignado */}
+        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">Presupuesto Asignado</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Presupuesto Asignado</span>
+            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 flex items-center justify-center">
               <span className="material-symbols-outlined text-base">account_balance</span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">S/ {NATIONAL_META.totalPimMillones}M</span>
-            <span className="text-xs font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-1">
-              <span className="material-symbols-outlined text-xs">filter_list</span> Filtrar Asignación &gt; S/ 500M
-            </span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Presupuesto Institucional Modificado (PIM)</span>
           </div>
         </div>
 
-        {/* Card 2: High Execution Filter */}
-        <div
-          onClick={() => setExecutionFilter(executionFilter === 'high' ? 'all' : 'high')}
-          className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
-            executionFilter === 'high'
-              ? 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-400 ring-2 ring-emerald-500/20 shadow-md -translate-y-0.5'
-              : 'bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 hover:border-emerald-400 hover:shadow-md hover:-translate-y-0.5'
-          }`}
-          title="Haz clic para filtrar regiones con avance > 50%"
-        >
+        {/* Card 2: Inversión Ejecutada */}
+        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Inversión Ejecutada</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Inversión Ejecutada</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center">
               <span className="material-symbols-outlined text-base">trending_up</span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
-            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 font-bold">Filtrar Avance &gt; 50%</span>
-          </div>
-          <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 mt-1 overflow-hidden">
-            <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${NATIONAL_META.pctEjecucionNacional}%` }}></div>
+            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{NATIONAL_META.pctEjecucionNacional}% de ejecución nacional</span>
           </div>
         </div>
 
-        {/* Card 3: Low / Pending Budget Filter */}
-        <div
-          onClick={() => setExecutionFilter(executionFilter === 'low' ? 'all' : 'low')}
-          className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
-            executionFilter === 'low'
-              ? 'bg-red-50/80 dark:bg-red-950/40 border-red-400 ring-2 ring-red-500/20 shadow-md -translate-y-0.5'
-              : 'bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 hover:border-red-400 hover:shadow-md hover:-translate-y-0.5'
-          }`}
-          title="Haz clic para filtrar regiones con avance pendiente (< 50%)"
-        >
+        {/* Card 3: Fondo Pendiente */}
+        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">Fondo Pendiente</span>
-            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Fondo Pendiente</span>
+            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center">
               <span className="material-symbols-outlined text-base">warning</span>
             </div>
           </div>
@@ -222,29 +192,21 @@ export default function PresupuestoMEFView() {
             <span className="font-display-lg text-3xl font-extrabold text-red-600 dark:text-red-400">
               S/ {roundNum(NATIONAL_META.totalPimMillones - NATIONAL_META.totalDevengadoMillones)}M
             </span>
-            <span className="text-xs font-semibold text-red-600 dark:text-red-400">Filtrar Avance Pendiente (&lt; 50%)</span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Saldo por ejecutar (PIM menos Devengado)</span>
           </div>
         </div>
 
-        {/* Card 4: Critical Risk Filter */}
-        <div
-          onClick={() => setExecutionFilter(executionFilter === 'critical' ? 'all' : 'critical')}
-          className={`group rounded-2xl p-6 shadow-2xs border transition-all duration-300 flex flex-col gap-3 cursor-pointer ${
-            executionFilter === 'critical'
-              ? 'bg-purple-50/80 dark:bg-purple-950/40 border-purple-400 ring-2 ring-purple-500/20 shadow-md -translate-y-0.5'
-              : 'bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 hover:border-purple-400 hover:shadow-md hover:-translate-y-0.5'
-          }`}
-          title="Haz clic para filtrar regiones en riesgo Muy Alto"
-        >
+        {/* Card 4: Regiones en Riesgo Crítico */}
+        <div className="rounded-2xl p-6 shadow-2xs border bg-white dark:bg-[#0c1833] border-slate-200/90 dark:border-slate-800/90 flex flex-col gap-3">
           <div className="flex justify-between items-start">
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Regiones en Riesgo Crítico</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Regiones en Riesgo Crítico</span>
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 flex items-center justify-center">
               <span className="material-symbols-outlined text-base">analytics</span>
             </div>
           </div>
           <div className="flex flex-col gap-1">
             <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">{regionesRiesgoCritico}</span>
-            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-bold">Filtrar Riesgo Muy Alto</span>
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Departamentos en nivel Muy Alto</span>
           </div>
         </div>
 
@@ -453,8 +415,4 @@ function barColorClass(pct: number): string {
 
 function roundNum(num: number): string {
   return (Math.round(num * 10) / 10).toFixed(1);
-}
-
-function parsePim(pimStr: string): number {
-  return parseFloat(pimStr.replace("S/", "").replace("M", "").trim()) || 0;
 }
