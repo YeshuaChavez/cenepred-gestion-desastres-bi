@@ -1,54 +1,50 @@
-name: Sincronización y Pipeline Diario CENEPRED
+name: Sincronización Diaria WebApp (Gold ADLS -> realData.json)
 
 on:
   schedule:
-    # Ejecución automática diaria a las 02:00 UTC (21:00 Hora Perú)
-    - cron: '0 2 * * *'
+    # 07:45 UTC (02:45 Perú), después del pipeline diario de Databricks (07:00 UTC) que deja el
+    # Gold fresco en ADLS. Regenera realData.json y hace commit -> Vercel redespliega el webapp.
+    - cron: '45 7 * * *'
   workflow_dispatch:
-    # Permite ejecutar el pipeline manualmente en cualquier momento desde GitHub Actions
+
+permissions:
+  contents: write
 
 jobs:
-  daily-data-pipeline:
-    name: Ejecución Pipeline Medallón Diario
+  sync-webapp-data:
+    name: Regenerar realData.json desde el Gold de ADLS
     runs-on: ubuntu-latest
+    env:
+      AZURE_STORAGE_ACCOUNT: stcenepreddev1
+      ADLS_GOLD_CONTAINER: gold
+      AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
 
     steps:
-      - name: Checkout del Repositorio
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: '3.11'
 
-      - name: Instalar Dependencias del Pipeline
-        run: |
-          pip install -r requirements.txt
+      - name: Install dependencies (ligeras, solo export)
+        run: pip install --quiet pandas numpy pyarrow azure-storage-blob
 
-      - name: Ejecutar Master Pipeline (Bronze -> Silver -> Gold -> Export -> Alerts)
-        run: |
-          python data/pipelines/master_pipeline.py
+      - name: Descargar Gold fresco desde ADLS
+        run: python scripts/download_gold_from_adls.py
 
-      - name: Verificar Integridad de Datos Exportados
-        run: |
-          python -c "
-          import json, os
-          path = 'apps/webapp/src/data/realData.json'
-          assert os.path.exists(path), 'realData.json no fue generado'
-          with open(path, 'r', encoding='utf-8') as f:
-              data = json.load(f)
-          print(f'Validación exitosa: {len(data.get(\"departamentos\", {}))} departamentos sincronizados.')
-          "
+      - name: Regenerar realData.json del webapp
+        run: python scripts/export_gold_to_webapp_json.py
 
-      - name: Commit y Push de Datos Diarios Actualizados
+      - name: Commit y push si cambió (Vercel redespliega solo)
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add apps/webapp/src/data/realData.json
           if git diff --staged --quiet; then
-            echo "Sin cambios en los datos diarios. No se requiere commit."
+            echo "Sin cambios en realData.json; no se requiere commit."
           else
-            git commit -m "chore(data): auto-sync daily telemetry and risk scores [skip ci]"
+            git commit -m "chore(data): auto-sync realData.json desde el Gold de ADLS [skip ci]"
             git push origin main
           fi

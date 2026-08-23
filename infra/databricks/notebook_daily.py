@@ -54,3 +54,16 @@ _dt = pd.read_parquet("/tmp/cenepred/data/gold/local_data/dim_tiempo.parquet")
       .write.mode("overwrite").option("overwriteSchema", "true")
       .saveAsTable("dbw_cenepred_dev.default.dim_tiempo"))
 print(f"dim_tiempo actualizada en Unity Catalog: {_dt.shape[0]} filas (hasta hoy)")
+
+# Exportar el Gold fresco (fact_monitoreo completo mergeado + dim_tiempo) a ADLS en parquet, para
+# que el GitHub Action regenere realData.json y el webapp se redespliegue con datos frescos.
+from azure.storage.blob import BlobServiceClient  # noqa: E402
+
+_key = dbutils.secrets.get("cenepred", "adls-key")  # noqa: F821
+_cont = BlobServiceClient("https://stcenepreddev1.blob.core.windows.net", credential=_key).get_container_client("gold")
+for _tbl in ["fact_monitoreo_diario", "dim_tiempo"]:
+    _p = f"/tmp/{_tbl}.parquet"
+    spark.table(f"dbw_cenepred_dev.default.{_tbl}").toPandas().to_parquet(_p, index=False)  # noqa: F821
+    with open(_p, "rb") as _fh:
+        _cont.upload_blob(f"{_tbl}.parquet", _fh, overwrite=True)
+    print(f"ADLS gold/{_tbl}.parquet actualizado (fresco para el webapp)")
