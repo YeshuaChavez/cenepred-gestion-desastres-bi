@@ -1,213 +1,236 @@
-# Sistema de Alerta Temprana de Riesgo Dinámico ante Emergencias Climáticas - Perú
+# CENEPRED · Sistema de Alerta Temprana de Riesgo Dinámico
 
-Plataforma de **Business Intelligence + Machine Learning** que estima y comunica el **riesgo dinámico** de emergencias hidrometeorológicas por departamento en el Perú, sobre una **arquitectura Lakehouse (Medallion) en Azure**, con dashboards en Power BI y una aplicación web pública.
+> Una plataforma de datos que convierte el historial de desastres del Perú y la telemetría ambiental de hoy en una respuesta a una sola pregunta: **¿qué departamentos tienen mayor probabilidad de sufrir una emergencia climática en los próximos días, y por qué?**
 
----
-
-## 1. Problema y propuesta
-
-El **SIGRID (CENEPRED)** evalúa el riesgo de forma **estructural/estática** (geología, pendientes, zonificación). Este sistema **complementa** esa visión con **riesgo dinámico**: cruza el historial oficial de emergencias (INDECI/SINPAD, 2012-2023) con **telemetría actual** (clima, sismos, focos de calor, El Niño/ONI) para estimar, por departamento y a corto plazo, la probabilidad de una emergencia hidrometeorológica severa y sus **factores determinantes** (SHAP), además de dar seguimiento a la ejecución del **Programa Presupuestal 0068 (PREVAED)** del MEF.
+El sistema toma emergencias oficiales (INDECI/SINPAD), clima, sismos, focos de calor, el estado de El Niño y la ejecución presupuestal del Estado; los procesa en un Lakehouse en Azure; entrena un modelo que estima el riesgo por región; y lo publica en dashboards de Power BI y en una aplicación web pública. Todo se refresca solo cada mañana.
 
 ---
 
-## 2. Arquitectura general (automatizada de punta a punta)
+## El problema
+
+En el Perú, la evaluación del riesgo de desastres (a cargo del CENEPRED, a través del SIGRID) es sobre todo **estructural**: geología, pendientes, zonificación urbana, materiales de construcción. Es información valiosa pero **estática**: describe qué tan vulnerable es un territorio en general, no si el riesgo está subiendo *esta semana* porque lleva cinco días lloviendo, hay focos de calor activos o el índice ENSO entró en fase de El Niño.
+
+Esta plataforma no reemplaza esa mirada estructural: la **complementa con riesgo dinámico**. Cruza el registro histórico de emergencias con la telemetría más reciente para estimar, región por región y a corto plazo, la probabilidad de una emergencia hidrometeorológica severa, señalar los factores que más pesan en esa estimación, y darle seguimiento a si el presupuesto de prevención (Programa Presupuestal 0068, PREVAED) se está ejecutando donde el riesgo lo justifica.
+
+## Qué entrega
+
+- **Un mapa de riesgo vivo** por los 25 departamentos, con el nivel operativo derivado del riesgo real (no de valores fijos).
+- **Un modelo predictivo** que responde "¿emergencia climática severa en 7 días?" con explicaciones por región (qué variable empuja el riesgo hacia arriba).
+- **Monitoreo diario** de clima, sismos y focos de calor, con la telemetría extendida hasta la fecha de hoy.
+- **Seguimiento presupuestal** de la inversión en prevención por gobierno regional.
+- **Un asistente analítico** que responde en lenguaje natural sobre regiones, riesgo y presupuesto.
+- **Alertas automáticas** por Telegram y correo cuando una región entra en riesgo Alto o Crítico, sin que nadie tenga que apretar un botón.
+- **Diagnósticos ejecutivos** generados con IA a partir de datos reales de cada departamento.
+
+---
+
+## Cómo está construido
+
+La columna vertebral es un **Lakehouse con arquitectura Medallion** (Bronze, Silver, Gold) sobre Azure Data Lake Storage Gen2. Cada capa tiene una responsabilidad clara y los datos solo avanzan cuando pasan sus controles de calidad.
 
 ```
-Fuentes externas (APIs)
+Fuentes externas
   INDECI/SINPAD · Open-Meteo · USGS · NASA FIRMS · NOAA ONI · INEI · MEF PP0068
         │
         ▼
-Azure Data Factory (trigger diario 07:00 UTC)
-        │  run-now (MSI)
+   BRONZE   datos crudos, tal cual los entrega cada API (JSON/CSV/GeoJSON/ZIP)
+        │   se conserva la fuente original, sin tocar
         ▼
-Azure Databricks (job diario, cluster single-node)
-   master_pipeline.py --daily  →  Bronze → Silver → Gold (ventana incremental a HOY)
-        ├──►  MERGE en tabla Delta Unity Catalog  (dbw_cenepred_dev.default.fact_monitoreo_diario)
-        └──►  export Gold fresco a ADLS Gen2  (stcenepreddev1 / gold / *.parquet)
-        │
-        ├──►  Power BI  (modelo semántico sobre Unity Catalog · refresh programado 08:00 UTC)
-        │
-        └──►  GitHub Action (07:45 UTC)  →  regenera realData.json  →  commit
-                     │
-                     ▼
-              Vercel  (redeploy automático del WebApp Next.js)
+   SILVER   limpieza y estandarización: nombres de departamento normalizados,
+        │   tipado, joins geoespaciales (cada sismo y foco de calor cae en su
+        │   departamento) y reglas de calidad validadas con pandera
+        ▼
+   GOLD     modelo dimensional listo para analítica y para entrenar el modelo,
+            en Parquet y en tablas Delta dentro de Unity Catalog
 ```
 
-Cada mañana, sin intervención manual: el pipeline refresca los datos, Power BI y el WebApp se actualizan solos.
+### El viaje de un dato
 
-### Capas Medallion (Lakehouse en ADLS Gen2)
-- **Bronze** - datos crudos tal cual los entregan las APIs (JSON/CSV/GeoJSON/ZIP).
-- **Silver** - limpieza, tipado, normalización de nombres departamentales, join geoespacial (focos/sismos → departamento) y reglas de calidad (**pandera**).
-- **Gold** - modelo dimensional (galaxy schema) en Parquet + tablas Delta en Unity Catalog para Power BI.
+Un foco de calor detectado por el satélite VIIRS llega a **Bronze** como una fila con latitud y longitud. En **Silver** se le hace un *join* espacial contra los límites departamentales del INEI para saber a qué región pertenece, se descartan coordenadas fuera del país y se agrega a la ventana móvil de 7 días de esa región. En **Gold** termina como una columna (`num_focos_calor_activos`) de `fact_monitoreo_diario`, la tabla que el modelo lee para estimar el riesgo y que Power BI consume para pintar el mapa. El mismo camino recorren la precipitación, los sismos y el índice ENSO.
 
----
+### Un día en el sistema
 
-## 3. Fuentes de datos (reales)
+La parte que hace que todo esto sea sostenible es que **se ejecuta solo**. No hay pasos manuales entre que amanece y que los tableros muestran datos nuevos:
 
-| Fuente | Contenido | Cadencia |
-|---|---|---|
-| **INDECI / SINPAD** (CKAN datosabiertos) | Emergencias históricas: afectados, damnificados, fallecidos, viviendas | Histórico 2012-2023 |
-| **Open-Meteo** (ERA5 archive) | Clima diario por región (temp máx/mín, precipitación) | Dinámica (a hoy) |
-| **USGS** | Sismicidad (epicentro, profundidad, magnitud); join costa `sjoin_nearest` | Dinámica |
-| **NASA FIRMS** (VIIRS) | Focos de calor satelitales; join geoespacial por departamento | Dinámica |
-| **NOAA ONI** | Índice El Niño/La Niña (ENSO) | Mensual |
-| **INEI** | Límites departamentales (shapefile) para los joins geoespaciales | Estático |
-| **MEF PP0068 (PREVAED)** | PIM y devengado por departamento (Consulta Amigable, export manual) | Anual |
+| Hora (UTC) | Qué ocurre |
+|------------|------------|
+| 07:00 | **Azure Data Factory** dispara el job de Databricks (Web activity con identidad administrada, para correr como propietario con acceso a Unity Catalog). |
+| ~07:05 | **Databricks** ejecuta el pipeline en modo incremental: recalcula la telemetría reciente hasta hoy, hace `MERGE` sobre la tabla Delta en Unity Catalog y exporta un Gold fresco a ADLS. |
+| 07:45 | Una **GitHub Action** descarga ese Gold, regenera el `realData.json` de la web y hace commit; **Vercel** redespliega la app sola. |
+| 08:00 | **Power BI Service** refresca su modelo semántico contra Unity Catalog. |
 
-> La **ventana etiquetada del modelo** es 2012-2023 (rango real de INDECI). La telemetría (`fact_monitoreo_diario`) se extiende **hasta hoy** de forma incremental para el monitoreo dinámico; emergencias y gasto se mantienen históricos.
+Si algo falla, Azure Monitor (para ADF) y la notificación del job (para Databricks) avisan por correo. El resultado: cada mañana el mapa, los dashboards y las métricas amanecen con datos al día sin intervención humana.
 
 ---
 
-## 4. Modelo dimensional (Gold)
+## El modelo predictivo
 
-- `DIM_REGION` - 25 departamentos, región natural predominante y `cluster_riesgo` (K-Means).
-- `DIM_TIEMPO` - calendario diario (2012 → hoy), con temporadas del hemisferio sur.
-- `DIM_FENOMENO` - categorías de fenómenos (con foco en Hidrometeorológico y Oceanográfico).
-- `FACT_EMERGENCIAS` - eventos SINPAD con impacto humano y físico (grano evento).
-- `FACT_MONITOREO_DIARIO` - telemetría por región×día (clima, sismos 7d, focos, ONI). **Tabla dinámica**.
-- `FACT_GASTO_PREVAED` - ejecución MEF PP0068 por región×año.
+El corazón analítico responde una pregunta concreta y con valor operativo:
 
----
+> **¿Ocurrirá una emergencia de severidad media o alta, de origen hidrometeorológico u oceanográfico, en esta región dentro de los próximos 7 días?**
 
-## 5. Machine Learning (`ml/`)
+Ese enunciado no salió a la primera; se afinó siguiendo la evidencia (y está documentado en el código):
 
-Target real: **¿ocurrirá una emergencia MEDIO/ALTO de origen Hidrometeorológico y Oceanográfico en la región dentro de los próximos 7 días?** Split **temporal** (train 2012-2020 / test 2021-2023), sin fuga de datos (features históricas calculadas solo sobre train; ventanas `reciente_Xd` con `shift(1)`).
+1. "Cualquier emergencia en 7 días" daba 72% de positivos porque INDECI registra hasta incidentes menores: casi trivial de predecir, sin valor real.
+2. "Solo severidad alta, cualquier causa" mezclaba accidentes de tránsito, incendios urbanos y epidemias con eventos climáticos; el AUC no pasaba de 0.6 porque se le pedía al modelo predecir cosas que el clima no explica.
+3. **Media o alta severidad, solo categoría hidrometeorológica y oceanográfica**: aquí la señal se vuelve coherente con lo que las fuentes de monitoreo pueden explicar causalmente, y las métricas suben con sentido.
 
-| Modelo | F1 | AUC-ROC | Recall | Notas |
-|---|---|---|---|---|
-| Regresión Logística (baseline) | 0.560 | 0.650 | - | referencia |
-| **Random Forest** | **0.773** | **0.882** | 0.785 | cumple las 3 metas |
-| **XGBoost** | **~0.751** | **0.860** | 0.845 | modelo servido |
-| LSTM (comparación) | 0.626 | 0.723 | 0.740 | documentado: no supera a XGBoost/RF |
+El entrenamiento usa un **split temporal** (entrena con 2012 a 2020, evalúa con 2021 a 2023) para simular condiciones reales de pronóstico, sin "espiar" el futuro. Las features históricas se calculan solo sobre el tramo de entrenamiento y las ventanas recientes usan `shift(1)` para no filtrar el propio día.
 
-Metas (sección 11.1 del informe): F1 ≥ 0.75, AUC ≥ 0.80, recall ≥ 0.70 - **cumplidas** por RF y XGBoost.
+| Modelo | F1 | AUC-ROC | Recall | Rol |
+|--------|-----|---------|--------|-----|
+| Regresión Logística | 0.560 | 0.650 | - | baseline de referencia |
+| **Random Forest** | **0.773** | **0.882** | 0.785 | cumple las tres metas |
+| **XGBoost** | **~0.751** | **0.860** | 0.845 | modelo servido en producción |
+| LSTM | 0.626 | 0.723 | 0.740 | evaluado; documentado como no superior |
 
-Además: **K-Means** (segmentación regional), **Isolation Forest** (anomalías de monitoreo), **SHAP nativo de XGBoost** (explicabilidad, `pred_contribs`). *(El forecasting Prophet/SARIMA fue evaluado y descartado por no superar al baseline naive.)*
+Las metas del proyecto (F1 ≥ 0.75, AUC ≥ 0.80, recall ≥ 0.70) las cumplen Random Forest y XGBoost. Sobre el conjunto de prueba (27,375 filas región-día de 2021 a 2023) la matriz de confusión del modelo servido es 9,531 verdaderos positivos, 11,530 verdaderos negativos, 4,563 falsos positivos y 1,751 falsos negativos: en gestión de desastres se prioriza el recall (no dejar pasar una emergencia real) por encima de la precisión.
 
-- **Serving** (`data/ml/`): FastAPI + contrato Azure ML `init()/run()`; predice por región desde 3 artefactos autocontenidos (modelo `.pkl` + snapshot de features + metadata), sin depender de la capa Gold ni del módulo de training en runtime. Métricas **calculadas**, no hardcodeadas.
+Además del clasificador conviven **K-Means** (segmentación de regiones por perfil de riesgo), **Isolation Forest** (detección de anomalías en el monitoreo) y **SHAP nativo de XGBoost** para la explicabilidad: cada predicción viene con el peso de las variables que la empujan. El forecasting con Prophet/SARIMA se evaluó y se descartó por no superar al baseline ingenuo.
 
----
-
-## 6. Aplicación web (`apps/webapp/`) - Next.js 14
-
-Seis vistas (Home, Monitoreo Diario, Histórico y Tendencias, Riesgo Predictivo, Comparativo Regional, Presupuesto MEF) alimentadas por `realData.json` (agregados reales del Gold). Rutas API reales:
-
-- **`/api/chat`** - Asistente analítico con **Azure OpenAI (GPT-4o)** y guardrails institucionales.
-- **`/api/report`** - Generador de diagnóstico ejecutivo con **Google Gemini** (`gemini-3.6-flash`), a partir de datos reales del departamento.
-- **`/api/alerts`** - Alertas de riesgo Alto/Crítico por **Telegram** (bot `@Cenepred_bot`) y correo (SMTP opcional).
-- **Mapa interactivo** (Leaflet) con infraestructura crítica **real** (hospitales, puentes, albergues verificados); el `estado` operativo se **deriva del riesgo real** del departamento.
-
-Stack: Next.js App Router, React 18, **Tailwind CSS** (build real con PostCSS, no CDN), Leaflet, Recharts. Diseño responsive; sin datos inventados (las series históricas provienen de `fact_emergencias`).
+El modelo se **sirve** con FastAPI siguiendo el contrato `init()/run()` de Azure ML, a partir de tres artefactos autocontenidos (el modelo `.pkl`, un snapshot de features y su metadata), de modo que el endpoint arranca sin depender de la capa Gold ni del código de entrenamiento en runtime, y sus métricas se **calculan**, no se escriben a mano.
 
 ---
 
-## 7. Automatización (schedules)
+## La aplicación web
 
-| Hora (UTC) | Componente | Acción |
-|---|---|---|
-| 07:00 | **ADF** `tr_daily_0700utc` | dispara el job de Databricks (Web activity, auth MSI) |
-| ~07:05 | **Databricks** `cenepred-daily-medallion` | pipeline incremental → MERGE Delta (UC) + export Gold a ADLS |
-| 07:45 | **GitHub Action** `daily_pipeline_sync` | baja Gold de ADLS → regenera `realData.json` → commit → Vercel redeploy |
-| 08:00 | **Power BI Service** | refresh programado del modelo semántico |
+Construida en **Next.js 14** (App Router) con **Tailwind CSS**, la app tiene seis vistas (Inicio, Monitoreo Diario, Histórico y Tendencias, Riesgo Predictivo, Comparativo Regional y Presupuesto de Prevención) alimentadas por agregados reales del Gold. Detrás de la interfaz corren rutas API propias:
 
-Alertas de fallo por email vía **Azure Monitor** (ADF) y notificación del job (Databricks).
+- **Asistente analítico** con guardrails institucionales, acotado al dominio de gestión del riesgo.
+- **Generador de diagnósticos ejecutivos** por departamento, con IA, a partir de datos reales.
+- **Despacho de alertas** de riesgo Alto y Crítico por Telegram y correo, pensado para ejecutarse de forma automática.
+- **Mapa interactivo** (Leaflet) con infraestructura crítica real (hospitales, puentes y albergues verificados), cuyo estado operativo se deriva del riesgo real de cada departamento.
+
+El diseño es responsive: navegación con menú lateral en escritorio y menú desplegable en móvil, sin desbordes horizontales, y sin datos inventados (las series históricas provienen directamente de `fact_emergencias`).
 
 ---
 
-## 8. Ejecución local
+## De dónde vienen los datos
 
-### Python (pipeline / ML)
+| Fuente | Qué aporta | Cadencia |
+|--------|------------|----------|
+| **INDECI / SINPAD** | Emergencias oficiales: afectados, damnificados, fallecidos, viviendas (84,369 eventos, 11.1M afectados) | Histórico 2012 a 2023 |
+| **Open-Meteo** (ERA5) | Clima diario por región: temperatura máxima/mínima, precipitación | Dinámica, hasta hoy |
+| **USGS** | Sismicidad: epicentro, profundidad, magnitud | Dinámica |
+| **NASA FIRMS** (VIIRS) | Focos de calor satelitales | Dinámica |
+| **NOAA ONI** | Índice El Niño / La Niña (ENSO) | Mensual |
+| **INEI** | Límites departamentales para los joins geoespaciales | Estático |
+| **MEF PP0068** (PREVAED) | Presupuesto y ejecución de prevención (PIM S/ 31,016M, 71.4% ejecutado) | Anual |
+
+Las emergencias y el gasto son históricos porque ese es el rango real de sus fuentes; solo la telemetría de monitoreo se extiende de forma incremental hasta la fecha actual, que es justo lo que da sentido al "riesgo dinámico".
+
+### El modelo dimensional (Gold)
+
+- `DIM_REGION`: 25 departamentos, región natural predominante y cluster de riesgo (K-Means).
+- `DIM_TIEMPO`: calendario diario desde 2012 hasta hoy, con temporadas del hemisferio sur.
+- `DIM_FENOMENO`: taxonomía de fenómenos, con foco en la categoría hidrometeorológica y oceanográfica.
+- `FACT_EMERGENCIAS`: eventos SINPAD con impacto humano y físico (grano de evento).
+- `FACT_MONITOREO_DIARIO`: telemetría por región y día (la tabla dinámica que crece cada mañana).
+- `FACT_GASTO_PREVAED`: ejecución presupuestal por región y año.
+
+---
+
+## Infraestructura en Azure
+
+Todo vive en el grupo de recursos `rg-cenepred-dev`:
+
+| Recurso | Nombre | Función |
+|---------|--------|---------|
+| Data Factory | `adf-cenepred-dev` | orquesta el pipeline diario |
+| ADLS Gen2 | `stcenepreddev1` | data lake Bronze / Silver / Gold |
+| Databricks | `dbw-cenepred-dev` | cómputo del pipeline, Unity Catalog y SQL Warehouse para Power BI |
+| Key Vault | `kv-cenepred-dev1` | secretos (integración en curso) |
+| Azure OpenAI | recurso dedicado | asistente conversacional |
+| Azure Monitor | `alert-adf-daily-failures` | avisa si el pipeline falla |
+
+### Seguridad y secretos
+
+Ningún secreto vive en el repositorio. En local se cargan desde `apps/webapp/.env.local` (ignorado por git); en Databricks desde el secret scope; en Vercel y GitHub como variables del proyecto. Los artefactos derivados (parquet, modelos `.pkl`, binarios `.pbix`) también están fuera del control de versiones y se regeneran desde el pipeline.
+
+---
+
+## Correrlo en local
+
+**Pipeline y modelo (Python):**
+
 ```bash
 python -m venv venv
-venv\Scripts\Activate.ps1        # Windows PowerShell
-pip install -r requirements.txt   # + requirements-dev.txt para tests
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt      # y requirements-dev.txt para las pruebas
 ```
 
 ```bash
-# Pipeline Medallion completo (bronze → silver → gold → export → alertas)
+# Pipeline Medallion completo (bronze -> silver -> gold -> export)
 python data/pipelines/master_pipeline.py
 
-# Modo diario incremental (telemetría reciente → Gold, para el job de Databricks)
+# Modo incremental diario (el que corre en Databricks)
 python data/pipelines/master_pipeline.py --daily
 
-# Regenerar el JSON del webapp desde el Gold local
+# Regenerar el JSON de la web desde el Gold local
 python scripts/export_gold_to_webapp_json.py
 ```
 
-### Tests y linting (lo que corre CI)
-```bash
-python -m pytest tests/ -q            # 68 tests
-python -m ruff check . --select F,E9
-```
+**Aplicación web (Next.js):**
 
-### WebApp
 ```bash
 cd apps/webapp
 npm install
 npm run dev        # http://localhost:3000
 ```
-Requiere `apps/webapp/.env.local` con `AZURE_OPENAI_*`, `GEMINI_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (ver `.env.example`).
+
+La web necesita un `apps/webapp/.env.local` con las claves del asistente, del generador de diagnósticos y del bot de alertas (ver `.env.example`).
+
+### Pruebas y calidad
+
+La misma suite que corre en CI:
+
+```bash
+python -m pytest tests/ -q            # 68 pruebas
+python -m ruff check . --select F,E9
+```
+
+El typecheck de la web se valida con `npx tsc --noEmit` dentro de `apps/webapp`.
 
 ---
 
-## 9. Infraestructura Azure (`rg-cenepred-dev`)
-
-| Recurso | Nombre | Uso |
-|---|---|---|
-| Data Factory | `adf-cenepred-dev` | orquestación diaria (trigger + Web activity MSI) |
-| ADLS Gen2 | `stcenepreddev1` | data lake bronze/silver/gold |
-| Databricks | `dbw-cenepred-dev` | cómputo del pipeline + Unity Catalog + SQL Warehouse (Power BI) |
-| Key Vault | `kv-cenepred-dev1` | secretos (pendiente de integración completa) |
-| Azure OpenAI | `yeshuachavezlozano-8430-resource` | chatbot GPT-4o |
-| Azure Monitor | `alert-adf-daily-failures` | alerta de fallo del pipeline |
-
-> Secretos: nunca en el repo. En local viven en `apps/webapp/.env.local` (gitignored); en Databricks en el secret scope `cenepred`; en Vercel/GitHub como variables/secrets del proyecto. Los artefactos derivados (parquet, modelos `.pkl`, `.pbix`) están gitignored.
-
----
-
-## 10. CI/CD (`.github/workflows/`)
-
-- **`ci.yml`** - lint (ruff) + `py_compile` + `pytest` + smoke import, en cada push/PR.
-- **`azure_adf_ci_cd.yml`** - tests + despliegue ADF (opt-in vía `vars.DEPLOY_ADF`).
-- **`daily_pipeline_sync.yml`** - regeneración diaria de `realData.json` desde ADLS (requiere secret `AZURE_STORAGE_KEY`).
-
----
-
-## 11. Estructura del repositorio
+## El repositorio de un vistazo
 
 ```text
-.
-├── .github/workflows/          # CI/CD (tests, sync diario webapp, deploy ADF)
-├── apps/
-│   ├── webapp/                 # Next.js 14 (chat, alertas, reportes, mapa, dashboards)
-│   ├── chatbot/                # Servidor de chat standalone (Express)
-│   └── dashboards/             # Power BI: .pbids, medidas DAX, specs, guía ADLS
-├── data/
-│   ├── ingestion/              # Fetchers Bronze por fuente
-│   ├── bronze/ silver/ gold/   # Capas Medallion (local_data gitignored)
-│   ├── quality/                # Validación (pandera)
-│   ├── pipelines/              # master_pipeline.py (orquestador)
-│   └── ml/                     # Serving del modelo (FastAPI + contrato Azure ML)
-├── ml/
-│   ├── training/               # LogReg, RandomForest/XGBoost, K-Means, IsolationForest, LSTM
-│   ├── evaluation/             # SHAP
-│   └── inference/              # generación de predicciones para el dashboard
-├── infra/
-│   ├── azure_data_factory/     # IaC ADF (linked service, pipeline, trigger)
-│   ├── azure_ml/               # despliegue del endpoint Azure ML
-│   ├── databricks/             # notebook del job diario
-│   └── environments/ modules/  # Terraform (parcial)
-├── scripts/                    # export webapp, sync/descarga ADLS, utilidades
-├── tests/                      # 68 tests (pytest)
-├── requirements.txt / -dev.txt
-└── README.md
+apps/
+  webapp/        Next.js 14: mapa, dashboards, asistente, alertas, diagnósticos
+  chatbot/       servidor de chat independiente (Express)
+  dashboards/    Power BI: .pbids, medidas DAX, especificaciones
+data/
+  ingestion/     descarga de datos crudos por fuente (Bronze)
+  bronze/ silver/ gold/   las tres capas Medallion
+  quality/       validación de calidad (pandera)
+  pipelines/     master_pipeline.py, el orquestador
+  ml/            serving del modelo (FastAPI + contrato Azure ML)
+ml/
+  training/      LogReg, Random Forest / XGBoost, K-Means, Isolation Forest, LSTM
+  evaluation/    explicabilidad (SHAP)
+  inference/     generación de predicciones para el dashboard
+infra/
+  azure_data_factory/   pipeline, trigger y linked service como código
+  databricks/    notebook del job diario
+  azure_ml/      despliegue del endpoint
+scripts/         export a la web, sincronización con ADLS, utilidades
+tests/           68 pruebas (pytest)
 ```
 
 ---
 
-## 12. Estado y limitaciones (honesto)
+## Estado actual, con honestidad
 
-- **Operativo y verificado:** pipeline diario ADF→Databricks→ADLS+Unity Catalog, Power BI (refresh programado), WebApp en producción (chat/alertas/reportes probados en vivo), 68 tests en verde.
-- **Pendiente:** integración completa de Key Vault (requiere rol de secretos); el despliegue de Azure ML necesita empaquetar el snapshot junto al modelo; módulos Terraform parciales.
-- **Alcance de datos:** emergencias y gasto MEF son históricos (2012-2023, límites reales de las fuentes); solo la telemetría de monitoreo es dinámica hasta hoy.
-```
+**Funcionando y verificado:** el pipeline diario completo (ADF -> Databricks -> ADLS + Unity Catalog), el refresh programado de Power BI, la web en producción con asistente, alertas y diagnósticos probados en vivo, y las 68 pruebas en verde.
+
+**En curso o pendiente:** cerrar la integración de Key Vault (requiere el rol de secretos), empaquetar el snapshot junto al modelo para el despliegue en Azure ML, y completar los módulos de Terraform.
+
+**Alcance de datos:** emergencias y gasto son históricos por límite de las fuentes; solo la telemetría de monitoreo es dinámica hasta hoy. Esa es una decisión consciente, no un defecto: el valor del sistema está precisamente en cruzar un historial estable con señales frescas.
+
+## Hacia dónde puede crecer
+
+- Sustituir el export manual del presupuesto MEF por una ingesta automatizada.
+- Reincorporar el portal de INDECI cuando el acceso desde la nube lo permita, para acortar el rezago del histórico.
+- Promover el endpoint de Azure ML a un despliegue gestionado con escalado.
+- Añadir pronóstico probabilístico por horizonte una vez que haya suficiente telemetría dinámica acumulada para que supere al baseline.
