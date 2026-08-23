@@ -127,7 +127,7 @@ export default function AIChatbotModal() {
       {/* Chat Window Panel */}
       <div
         className={`
-          w-[380px] sm:w-[420px] h-[560px] max-h-[85vh]
+          w-[calc(100vw-1.5rem)] sm:w-[420px] h-[560px] max-h-[85vh]
           bg-white dark:bg-[#0c1833] rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800
           flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right pointer-events-auto
           ${isOpen ? 'scale-100 opacity-100 mb-4' : 'scale-90 opacity-0 pointer-events-none hidden'}
