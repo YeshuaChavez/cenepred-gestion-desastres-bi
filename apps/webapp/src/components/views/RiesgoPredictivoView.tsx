@@ -18,10 +18,6 @@ export default function RiesgoPredictivoView() {
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
 
-  // Envío de alerta (Telegram + correo) para el departamento seleccionado
-  const [alertStatus, setAlertStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
-  const [alertMsg, setAlertMsg] = useState<string>('');
-
   const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
   const handleGenerateReport = async () => {
@@ -62,44 +58,6 @@ export default function RiesgoPredictivoView() {
       setGeneratedReport('Error de red al contactar el servicio de generación de diagnósticos.');
     } finally {
       setIsGeneratingReport(false);
-    }
-  };
-
-  // La ruta /api/alerts solo despacha para niveles "Alto" o "Crítico".
-  const nivelAlerta = deptoData.prob >= 65 ? 'Crítico' : 'Alto';
-  const puedeAlertar = deptoData.prob >= 45;
-
-  const handleSendAlert = async () => {
-    setAlertStatus('sending');
-    setAlertMsg('');
-    try {
-      const res = await fetch('/api/alerts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          departamento: deptoData.name,
-          nivelRiesgo: nivelAlerta,
-          precipitacionMax: deptoData.precipitacionMm,
-          focosCalor: deptoData.focosCalor,
-          sismos7d: deptoData.sismos7d,
-          factoresRiesgo: (deptoData.shap || []).map((s) => s.name),
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setAlertStatus('sent');
-        setAlertMsg(
-          data.telegramSent
-            ? `Alerta ${nivelAlerta} de ${deptoData.name} enviada a Telegram.`
-            : 'Alerta procesada, pero Telegram no está configurado (revisa las variables de entorno).'
-        );
-      } else {
-        setAlertStatus('error');
-        setAlertMsg(data.message || data.error || 'No se pudo enviar la alerta.');
-      }
-    } catch {
-      setAlertStatus('error');
-      setAlertMsg('Error de red al contactar el servicio de alertas.');
     }
   };
 
@@ -401,27 +359,10 @@ export default function RiesgoPredictivoView() {
               Datos sincronizados automáticamente con el Data Lakehouse.
             </div>
 
-            <button
-              onClick={handleSendAlert}
-              disabled={!puedeAlertar || alertStatus === 'sending'}
-              title={puedeAlertar ? `Enviar alerta ${nivelAlerta} de ${deptoData.name}` : 'Solo se envían alertas para riesgo Alto o Crítico'}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-br from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 transition-all shadow-xs active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
-            >
-              <span className={`material-symbols-outlined text-base ${alertStatus === 'sending' ? 'animate-spin' : ''}`}>
-                {alertStatus === 'sending' ? 'progress_activity' : 'notifications_active'}
-              </span>
-              {alertStatus === 'sending'
-                ? 'Enviando alerta...'
-                : puedeAlertar
-                  ? `Enviar alerta ${nivelAlerta} a Telegram`
-                  : 'Sin alerta (riesgo por debajo de Alto)'}
-            </button>
-
-            {alertMsg && (
-              <p className={`text-[11px] font-semibold text-center ${alertStatus === 'error' ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                {alertMsg}
-              </p>
-            )}
+            <div className="flex items-start gap-2 p-3 rounded-xl border border-emerald-100 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/40 text-[11px] text-emerald-800 dark:text-emerald-300 font-medium">
+              <span className="material-symbols-outlined text-base leading-none mt-0.5">notifications_active</span>
+              <span>Las alertas de riesgo Alto y Crítico se envían automáticamente por Telegram y correo a las autoridades, sin intervención manual.</span>
+            </div>
           </div>
         </div>
 
