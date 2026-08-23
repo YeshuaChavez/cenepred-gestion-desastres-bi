@@ -2,11 +2,6 @@
 
 Plataforma de **Business Intelligence + Machine Learning** que estima y comunica el **riesgo dinámico** de emergencias hidrometeorológicas por departamento en el Perú, sobre una **arquitectura Lakehouse (Medallion) en Azure**, con dashboards en Power BI y una aplicación web pública.
 
-Proyecto del curso de **Inteligencia de Negocios (UNMSM)** — autor: Yeshua Chávez.
-
-- **WebApp en producción:** https://cenepred-gestion-desastres-bi.vercel.app
-- **Repositorio:** https://github.com/YeshuaChavez/cenepred-gestion-desastres-bi
-
 ---
 
 ## 1. Problema y propuesta
