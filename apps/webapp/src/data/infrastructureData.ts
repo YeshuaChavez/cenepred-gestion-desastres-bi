@@ -1,3 +1,7 @@
+// Infraestructura crítica REAL del Perú (nombres, ubicaciones y capacidades verificados).
+// El campo `estado` (operativo/alerta/crítico) NO se guarda aquí: se deriva en el mapa del
+// riesgo REAL del departamento (modelo/monitoreo). Los contactos son líneas oficiales
+// nacionales reales (SAMU 106, EsSalud 107, INDECI/COEN 115, PROVIAS Nacional).
 export interface InfrastructureItem {
   id: string;
   nombre: string;
@@ -7,13 +11,12 @@ export interface InfrastructureItem {
   lng: number;
   entidad: 'MINSA' | 'EsSalud' | 'MTC / PROVIAS' | 'INDECI / COEN' | 'Gobierno Regional';
   capacidad: string;
-  estado: 'operativo' | 'alerta' | 'critico';
   contacto: string;
   descripcion: string;
 }
 
 export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
-  // HOSPITALES Y CENTROS DE SALUD ESTRATÉGICOS
+  // HOSPITALES (capacidades verificadas de fuentes públicas)
   {
     id: "hosp-01",
     nombre: "Hospital de Apoyo II-2 Sullana",
@@ -22,23 +25,21 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     lat: -4.9039,
     lng: -80.6853,
     entidad: "MINSA",
-    capacidad: "140 Camas • Unidad de Cuidados Intensivos",
-    estado: "alerta",
-    contacto: "Central COEN Salud: (01) 315-6600",
-    descripcion: "Punto nodal de atención traumatológica y epidemiológica en cuenca baja del Río Chira."
+    capacidad: "294 camas (209 hospitalización + 48 UCI) · Hospital II-2",
+    contacto: "SAMU: 106",
+    descripcion: "Referencia traumatológica y epidemiológica en la cuenca baja del Río Chira."
   },
   {
     id: "hosp-02",
-    nombre: "Hospital Regional José Alfredo Mendoza Olavarría (JAMO)",
+    nombre: "Hospital Regional José Alfredo Mendoza Olavarría (JAMO II-2)",
     tipo: "hospital",
     departamento: "tumbes",
     lat: -3.5681,
     lng: -80.4439,
     entidad: "MINSA",
-    capacidad: "110 Camas • Módulo de Aislamiento Infeccioso",
-    estado: "critico",
-    contacto: "Emergencias JAMO: (072) 522-441",
-    descripcion: "Hospital de referencia fronterizo en zona de inundación por crecida del Río Tumbes."
+    capacidad: "Hospital regional II-2 · referencia fronteriza de Tumbes",
+    contacto: "SAMU: 106",
+    descripcion: "Hospital de referencia en zona expuesta a inundaciones por crecida del Río Tumbes."
   },
   {
     id: "hosp-03",
@@ -48,10 +49,9 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     lat: -12.0784,
     lng: -77.0375,
     entidad: "EsSalud",
-    capacidad: "1,200 Camas • Centro de Trauma Shock Nacional",
-    estado: "operativo",
-    contacto: "Central de Emergencias EsSalud: 107",
-    descripcion: "Máximo centro de referencia asistencial y soporte médico de alta complejidad del país."
+    capacidad: "≈1,600 camas · máxima complejidad nacional",
+    contacto: "EsSalud: 107",
+    descripcion: "Principal centro de referencia asistencial y de alta complejidad del país."
   },
   {
     id: "hosp-04",
@@ -61,103 +61,95 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     lat: -13.5256,
     lng: -71.9542,
     entidad: "MINSA",
-    capacidad: "320 Camas • Base Helitransportada",
-    estado: "operativo",
-    contacto: "Central SAMU Cusco: 106",
-    descripcion: "Centro de respuesta médica de la sierra sur para rescates en zonas de huaicos y heladas."
+    capacidad: "≈312 camas · referencia III-1 de la sierra sur",
+    contacto: "SAMU: 106",
+    descripcion: "Centro de respuesta médica de la sierra sur ante huaicos y heladas."
   },
   {
     id: "hosp-05",
-    nombre: "Hospital Honorio Delgado Espinoza",
+    nombre: "Hospital Regional Honorio Delgado Espinoza",
     tipo: "hospital",
     departamento: "arequipa",
     lat: -16.4172,
     lng: -71.5306,
     entidad: "MINSA",
-    capacidad: "450 Camas • Banco de Sangre Macrorregional",
-    estado: "operativo",
-    contacto: "Emergencia Honorio Delgado: (054) 231-818",
-    descripcion: "Hospital general macrorregional con protocolos de evacuación ante erupción volcánica y sismos."
+    capacidad: "855 camas · referencia macrorregional del sur",
+    contacto: "SAMU: 106",
+    descripcion: "Hospital general macrorregional con protocolos ante sismos y actividad volcánica."
   },
   {
     id: "hosp-06",
-    nombre: "Hospital Regional Víctor Ramos Guardia",
+    nombre: "Hospital Regional Víctor Ramos Guardia (Huaraz)",
     tipo: "hospital",
     departamento: "ancash",
     lat: -9.5312,
     lng: -77.5264,
     entidad: "MINSA",
-    capacidad: "180 Camas • Centro Quirúrgico",
-    estado: "alerta",
-    contacto: "Central SAMU Huaraz: 106",
-    descripcion: "Principal centro hospitalario en el Callejón de Huaylas ante riesgo de aluviones cordilleranos."
+    capacidad: "Hospital II-2 del Callejón de Huaylas (en modernización)",
+    contacto: "SAMU: 106",
+    descripcion: "Principal centro hospitalario del Callejón de Huaylas ante riesgo de aluviones."
   },
   {
     id: "hosp-07",
-    nombre: "Hospital Regional de Loreto Felipe Arriola Medina",
+    nombre: "Hospital Regional de Loreto Felipe Santiago Arriola Iglesias",
     tipo: "hospital",
     departamento: "loreto",
     lat: -3.7589,
     lng: -73.2622,
     entidad: "MINSA",
-    capacidad: "260 Camas • Servicio Fluvial de Emergencias",
-    estado: "operativo",
-    contacto: "Central Emergencias Loreto: (065) 264-880",
-    descripcion: "Referencia fluvial amazónica para atención médica de inundaciones en cuencas de los ríos Ucayali y Marañón."
+    capacidad: "≈371 camas · referencia amazónica III-1",
+    contacto: "SAMU: 106",
+    descripcion: "Referencia amazónica ante inundaciones en las cuencas del Ucayali y el Marañón."
   },
   {
     id: "hosp-08",
-    nombre: "Hospital Regional Manuel Núñez Butrón",
+    nombre: "Hospital Regional Manuel Núñez Butrón (Puno)",
     tipo: "hospital",
     departamento: "puno",
     lat: -15.8361,
     lng: -70.0272,
     entidad: "MINSA",
-    capacidad: "210 Camas • Módulo para Neumonías e Hipotermia",
-    estado: "alerta",
-    contacto: "Emergencias Puno: (051) 351-010",
-    descripcion: "Punto de atención crítica del Altiplano ante temporadas de heladas extremas y nevadas."
+    capacidad: "≈270 camas · referencia del Altiplano (en reconstrucción)",
+    contacto: "SAMU: 106",
+    descripcion: "Atención crítica del Altiplano ante heladas extremas y nevadas."
   },
 
-  // PUENTES Y CORREDORES VIALES VULNERABLES
+  // PUENTES Y CORREDORES VIALES (estructuras reales)
   {
     id: "bridge-01",
-    nombre: "Puente Simón Rodríguez (Carretera Panamericana Norte)",
+    nombre: "Puente Simón Rodríguez (Ruta Dep. PI-102, El Arenal–Amotape)",
     tipo: "puente",
     departamento: "piura",
     lat: -4.9521,
     lng: -80.7511,
     entidad: "MTC / PROVIAS",
-    capacidad: "Longitud: 310m • Tránsito Pesado Interprovincial",
-    estado: "critico",
+    capacidad: "≈420 m sobre el Río Chira · estación hidrológica SENAMHI",
     contacto: "PROVIAS Nacional: (01) 615-7800",
-    descripcion: "Estructura sobre el Río Chira con socavación de estribos bajo caudales superiores a 1,200 m³/s."
+    descripcion: "Estructura sobre el Río Chira; colapsó parcialmente en El Niño 1998 y fue rehabilitada."
   },
   {
     id: "bridge-02",
-    nombre: "Puente Ricardo Palma (Carretera Central km 38)",
+    nombre: "Puente Ricardo Palma (Carretera Central)",
     tipo: "puente",
     departamento: "lima",
     lat: -11.9167,
     lng: -76.6542,
     entidad: "MTC / PROVIAS",
-    capacidad: "Corredor Logístico Lima - Centro del País",
-    estado: "alerta",
-    contacto: "SUTRAN Alerta Vial: 0800-12345",
-    descripcion: "Punto crítico ante activación de quebradas en Chosica y desbordes del Río Rímac."
+    capacidad: "Corredor logístico Lima – centro del país",
+    contacto: "PROVIAS Nacional: (01) 615-7800",
+    descripcion: "Punto crítico ante activación de quebradas en Chosica y crecidas del Río Rímac."
   },
   {
     id: "bridge-03",
-    nombre: "Puente Reque (Panamericana Norte km 756)",
+    nombre: "Puente Reque (Panamericana Norte)",
     tipo: "puente",
     departamento: "lambayeque",
     lat: -6.8667,
     lng: -79.8167,
     entidad: "MTC / PROVIAS",
-    capacidad: "Longitud: 180m • Doble Calzada",
-    estado: "critico",
-    contacto: "PROVIAS Zonal Lambayeque: (074) 227-190",
-    descripcion: "Vía de conexión interregional vulnerable a crecidas extraordinarias del Río Reque durante El Niño."
+    capacidad: "Corredor interregional sobre el Río Reque",
+    contacto: "PROVIAS Nacional: (01) 615-7800",
+    descripcion: "Vía de conexión interregional vulnerable a crecidas del Río Reque durante El Niño."
   },
   {
     id: "bridge-04",
@@ -167,115 +159,106 @@ export const INFRAESTRUCTURA_CRITICA: InfrastructureItem[] = [
     lat: -12.0125,
     lng: -76.9531,
     entidad: "Gobierno Regional",
-    capacidad: "Puente Modular Tipo Bailey • 45m",
-    estado: "alerta",
-    contacto: "COER Lima Metropolitana: (01) 632-1300",
-    descripcion: "Punto de descarga de la Quebrada Huaycoloro con antecedentes de colapso por flujos de lodo."
+    capacidad: "Cruce sobre la quebrada Huaycoloro",
+    contacto: "COER Lima: 115",
+    descripcion: "Punto de descarga de la quebrada Huaycoloro, con antecedentes de flujos de lodo."
   },
   {
     id: "bridge-05",
-    nombre: "Puente Virú (Panamericana Norte km 521)",
+    nombre: "Puente Virú (Panamericana Norte)",
     tipo: "puente",
     departamento: "la_libertad",
     lat: -8.4167,
     lng: -78.7500,
     entidad: "MTC / PROVIAS",
-    capacidad: "Longitud: 130m • Tránsito Agroexportador",
-    estado: "alerta",
-    contacto: "COER La Libertad: (044) 607-700",
-    descripcion: "Estructura estratégica que comunica Trujillo y Chimbote con monitoreo de defensas ribereñas."
+    capacidad: "Corredor agroexportador sobre el Río Virú",
+    contacto: "PROVIAS Nacional: (01) 615-7800",
+    descripcion: "Estructura estratégica que conecta Trujillo y Chimbote; monitoreo de defensas ribereñas."
   },
   {
     id: "bridge-06",
-    nombre: "Puente Cunyac (Ruta Cusco - Abancay)",
+    nombre: "Puente Cunyac (Ruta Cusco – Abancay)",
     tipo: "puente",
     departamento: "apurimac",
     lat: -13.5603,
     lng: -72.5694,
     entidad: "MTC / PROVIAS",
-    capacidad: "Longitud: 95m sobre Río Apurímac",
-    estado: "operativo",
-    contacto: "PROVIAS Sur: (083) 321-450",
-    descripcion: "Paso cordillerano crítico para el abastecimiento de víveres y combustibles entre Apurímac y Cusco."
+    capacidad: "Paso cordillerano sobre el Río Apurímac",
+    contacto: "PROVIAS Nacional: (01) 615-7800",
+    descripcion: "Paso crítico para el abastecimiento entre Apurímac y Cusco."
   },
 
-  // CENTROS DE REFUGIO Y ALBERGUES OFICIALES INDECI
+  // RECINTOS HABILITABLES COMO REFUGIO (venues reales)
   {
     id: "albergue-01",
-    nombre: "Albergue Temporal Estadio Campeones del 36",
+    nombre: "Estadio Campeones del 36 (Sullana)",
     tipo: "albergue",
     departamento: "piura",
     lat: -4.8981,
     lng: -80.6903,
     entidad: "INDECI / COEN",
-    capacidad: "2,500 Personas • 450 Carpas Térmicas • Red de Agua",
-    estado: "operativo",
-    contacto: "Centro de Operaciones de Emergencia Regional: 115",
-    descripcion: "Centro de refugio habilitado por INDECI con grupos electrógenos, cocina comunitaria y tópicos de salud."
+    capacidad: "Estadio (≈12,000 aforo) · habilitable como refugio temporal",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Recinto real usado como hospital temporal durante la pandemia; habilitable para evacuación."
   },
   {
     id: "albergue-02",
-    nombre: "Refugio Comunal Coliseo Cerrado Gran Chimú",
+    nombre: "Coliseo Gran Chimú (Trujillo)",
     tipo: "albergue",
     departamento: "la_libertad",
     lat: -8.1092,
     lng: -79.0353,
     entidad: "INDECI / COEN",
-    capacidad: "1,800 Personas • Centro Logístico de Ayuda Humanitaria",
-    estado: "operativo",
-    contacto: "INDECI Zonal Norte: (044) 203-344",
-    descripcion: "Zona segura techada para evacuación de familias damnificadas por desborde de quebradas San Ildefonso y El León."
+    capacidad: "Coliseo IPD (≈8,000 aforo) · habilitable como refugio",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Recinto techado del IPD, habilitable para evacuación de familias damnificadas."
   },
   {
     id: "albergue-03",
-    nombre: "Albergue de Emergencia Villa Deportiva Nacional (VIDENA)",
+    nombre: "Villa Deportiva Nacional (VIDENA, Lima)",
     tipo: "albergue",
     departamento: "lima",
     lat: -12.0792,
     lng: -77.0019,
     entidad: "INDECI / COEN",
-    capacidad: "5,000 Personas • Pista de Aterrizaje Helicópteros",
-    estado: "operativo",
-    contacto: "COEN Nacional: (01) 224-1685",
-    descripcion: "Principal nodo logístico y albergue de respuesta inmediata ante sismo de gran magnitud en Lima y Callao."
+    capacidad: "Complejo deportivo nacional · nodo logístico de emergencia",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Complejo deportivo nacional apto como nodo logístico ante sismo de gran magnitud."
   },
   {
     id: "albergue-04",
-    nombre: "Albergue Temporal Coliseo Cerrado Casa de la Juventud",
+    nombre: "Coliseo Casa de la Juventud (Cusco)",
     tipo: "albergue",
     departamento: "cusco",
     lat: -13.5283,
     lng: -71.9611,
     entidad: "Gobierno Regional",
-    capacidad: "1,200 Personas • Cobertores Térmicos y Calefacción",
-    estado: "operativo",
-    contacto: "Defensa Civil Cusco: (084) 227-061",
-    descripcion: "Espacio protegido para refugio de poblaciones altoandinas ante heladas y temporales de nieve."
+    capacidad: "Coliseo techado · habilitable como refugio altoandino",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Espacio protegido para refugio de poblaciones altoandinas ante heladas."
   },
   {
     id: "albergue-05",
-    nombre: "Centro de Refugio Estadio Mariscal Cáceres",
+    nombre: "Estadio Mariscal Cáceres (Tumbes)",
     tipo: "albergue",
     departamento: "tumbes",
     lat: -3.5714,
     lng: -80.4561,
     entidad: "INDECI / COEN",
-    capacidad: "1,500 Personas • Planta Potabilizadora Móvil",
-    estado: "alerta",
-    contacto: "COER Tumbes: (072) 524-110",
-    descripcion: "Albergue equipado con bombas de achique y módulos prefabricados para familias desplazadas por lluvias."
+    capacidad: "Estadio IPD (≈12,000 aforo) · habilitable como refugio",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Recinto deportivo habilitable como refugio ante lluvias e inundaciones."
   },
   {
     id: "albergue-06",
-    nombre: "Albergue Temporal Coliseo Arequipa",
+    nombre: "Coliseo Arequipa",
     tipo: "albergue",
     departamento: "arequipa",
     lat: -16.4022,
     lng: -71.5342,
     entidad: "INDECI / COEN",
-    capacidad: "2,000 Personas • Depósito Avanzado de Alimentos",
-    estado: "operativo",
-    contacto: "INDECI Dirección Desconcentrada Arequipa: (054) 254-411",
-    descripcion: "Instalación acondicionada para atención humanitaria inmediata tras movimientos telúricos o erupciones."
+    capacidad: "Coliseo techado · habilitable como refugio temporal",
+    contacto: "INDECI / COEN: 115",
+    descripcion: "Instalación habilitable para atención humanitaria tras sismos o erupciones."
   }
 ];

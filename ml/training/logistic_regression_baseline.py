@@ -87,6 +87,11 @@ def construir_dataset() -> pd.DataFrame:
         )
     )
     df["label"] = df["label"].fillna(0).astype(int)
+
+    # El modelo se entrena/evalúa SOLO en la ventana etiquetada 2012-2023 (las emergencias de
+    # INDECI terminan en 2023). Aunque FACT_MONITOREO_DIARIO ahora se extiende a fechas recientes
+    # para el dashboard, esos días no tienen etiqueta y no deben entrar al train/test del modelo.
+    df = df[df["fecha"] <= pd.Timestamp("2023-12-31")].reset_index(drop=True)
     return df
 
 

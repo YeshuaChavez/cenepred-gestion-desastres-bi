@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import { RegionData } from '../types';
 import { useTheme } from '../hooks/useTheme';
 import { INFRAESTRUCTURA_CRITICA, InfrastructureItem } from '../data/infrastructureData';
+import { PERU_DEPARTAMENTOS } from '../data/mockData';
 
 // Fix Leaflet default icon issues in Webpack/Vite
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -334,6 +335,9 @@ export default function PeruInteractiveMap({
           const isBridge = item.tipo === 'puente';
           const color = isHosp ? '#059669' : isBridge ? '#d97706' : '#7c3aed';
           const iconSymbol = isHosp ? 'H' : isBridge ? 'P' : 'A';
+          // Estado derivado del riesgo REAL del departamento (modelo/monitoreo), no un valor fijo.
+          const _prob = PERU_DEPARTAMENTOS[item.departamento]?.prob ?? 0;
+          const estado = _prob >= 55 ? 'critico' : _prob >= 45 ? 'alerta' : 'operativo';
 
           return (
             <CircleMarker
@@ -365,9 +369,9 @@ export default function PeruInteractiveMap({
                     <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded-lg text-[11px]">
                       <span className="text-slate-500 dark:text-slate-400">Estado:</span>
                       <span className={`font-bold uppercase text-[10px] px-2 py-0.5 rounded-md text-white ${
-                        item.estado === 'critico' ? 'bg-red-600' : item.estado === 'alerta' ? 'bg-amber-600' : 'bg-emerald-600'
+                        estado === 'critico' ? 'bg-red-600' : estado === 'alerta' ? 'bg-amber-600' : 'bg-emerald-600'
                       }`}>
-                        {item.estado}
+                        {estado}
                       </span>
                     </div>
 

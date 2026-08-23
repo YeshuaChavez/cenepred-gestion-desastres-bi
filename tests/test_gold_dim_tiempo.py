@@ -9,10 +9,13 @@ from dim_tiempo import construir, validar_calidad
 
 def test_construir_cubre_toda_la_ventana_2012_2023_incluyendo_bisiestos():
     df = construir()
-    # 2012, 2016 y 2020 son bisiestos: 12 años * 365 + 3 días extra = 4383.
-    assert len(df) == 4383
+    # El calendario ahora se extiende dinámicamente hasta hoy (para el monitoreo diario a 2024+),
+    # pero la ventana histórica 2012-2023 debe estar completa, con bisiestos 2012/2016/2020: 4383 días.
     assert df["fecha"].min() == pd.Timestamp("2012-01-01")
-    assert df["fecha"].max() == pd.Timestamp("2023-12-31")
+    assert df["fecha"].max() >= pd.Timestamp("2023-12-31")
+    ventana_2012_2023 = df[(df["fecha"] >= "2012-01-01") & (df["fecha"] <= "2023-12-31")]
+    assert len(ventana_2012_2023) == 4383
+    assert df["fecha_id"].is_unique
 
 
 def test_fecha_id_tiene_formato_yyyymmdd():
