@@ -89,3 +89,8 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# ------------------------------------------
+# Notas de trabajo locales (no versionadas)
+# ------------------------------------------
+docs/
