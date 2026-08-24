@@ -1,7 +1,5 @@
 # CENEPRED · Sistema de Alerta Temprana de Riesgo Dinámico
 
-> Una plataforma de datos que convierte el historial de desastres del Perú y la telemetría ambiental de hoy en una respuesta a una sola pregunta: **¿qué departamentos tienen mayor probabilidad de sufrir una emergencia climática en los próximos días, y por qué?**
-
 El sistema toma emergencias oficiales (INDECI/SINPAD), clima, sismos, focos de calor, el estado de El Niño y la ejecución presupuestal del Estado; los procesa en un Lakehouse en Azure; entrena un modelo que estima el riesgo por región; y lo publica en dashboards de Power BI y en una aplicación web pública. Todo se refresca solo cada mañana.
 
 ---
@@ -65,11 +63,7 @@ Si algo falla, Azure Monitor (para ADF) y la notificación del job (para Databri
 
 ## Modelo predictivo
 
-El corazón analítico responde una pregunta concreta y con valor operativo:
-
-> **¿Ocurrirá una emergencia de severidad media o alta, de origen hidrometeorológico u oceanográfico, en esta región dentro de los próximos 7 días?**
-
-Ese enunciado no salió a la primera; se afinó siguiendo la evidencia (y está documentado en el código):
+El modelo responde una pregunta concreta y con valor operativo: **¿ocurrirá una emergencia de severidad media o alta, de origen hidrometeorológico u oceanográfico, en esta región dentro de los próximos 7 días?** Ese enunciado no salió a la primera; se afinó siguiendo la evidencia (y está documentado en el código):
 
 1. "Cualquier emergencia en 7 días" daba 72% de positivos porque INDECI registra hasta incidentes menores: casi trivial de predecir, sin valor real.
 2. "Solo severidad alta, cualquier causa" mezclaba accidentes de tránsito, incendios urbanos y epidemias con eventos climáticos; el AUC no pasaba de 0.6 porque se le pedía al modelo predecir cosas que el clima no explica.
