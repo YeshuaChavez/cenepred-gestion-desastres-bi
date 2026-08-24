@@ -1,8 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { PERU_DEPARTAMENTOS } from '../../data/mockData';
+import regionFeaturesData from '../../data/regionFeatures.json';
+import { loadModel, predictProba, FeatureVector } from '../../lib/xgbModel';
+
+const REGION_FEATURES = regionFeaturesData as Record<string, FeatureVector>;
+
+// Features del modelo que el usuario puede ajustar en el simulador (las demás -temp_min,
+// tasa histórica, ONI, ventanas recientes- se toman del contexto real de la región).
+const SIM_FIELDS = [
+  { key: 'precipitacion_mm', label: 'Precipitación 24h', unit: 'mm', min: 0, max: 200, step: 1 },
+  { key: 'precipitacion_acumulada_15d', label: 'Precipitación 15 días', unit: 'mm', min: 0, max: 600, step: 5 },
+  { key: 'temp_max', label: 'Temperatura máxima', unit: '°C', min: 0, max: 45, step: 0.5 },
+  { key: 'num_sismos_7d', label: 'Sismos (7 días)', unit: '', min: 0, max: 15, step: 1 },
+  { key: 'magnitud_max_7d', label: 'Magnitud máx (7d)', unit: '', min: 0, max: 8, step: 0.1 },
+  { key: 'num_focos_calor_activos', label: 'Focos de calor', unit: '', min: 0, max: 1000, step: 5 },
+];
 
 // Mapa localizador (Leaflet) cargado solo en cliente (usa window).
 const RegionLocatorMap = dynamic(() => import('../RegionLocatorMap'), {
@@ -48,29 +63,6 @@ const riskLevel = (p: number) =>
   p >= 55 ? { label: 'MUY ALTO', color: '#ea580c' } :
   p >= 45 ? { label: 'ALTO', color: '#d97706' } :
   { label: 'MEDIO', color: '#0284c7' };
-
-// Estimador interpretable de riesgo a 7 días a partir de características ingresadas.
-// Combina los factores del modelo (precipitación, sismos, focos de calor, temporada y brecha
-// de ejecución) en un score logístico transparente. NO es la inferencia oficial del modelo
-// XGBoost (que corre en el pipeline); es una aproximación explicable para explorar escenarios.
-function estimarRiesgo(f: { precip: number; sismos: number; focos: number; mes: number; ejec: number }) {
-  const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-  const nPrecip = clamp(f.precip / 120);
-  const nSismos = clamp(f.sismos / 8);
-  const nFocos = clamp(f.focos / 500);
-  const temporada = [11, 0, 1, 2].includes(f.mes) ? 1 : (f.mes >= 3 && f.mes <= 4 ? 0.5 : 0.15);
-  const gapEjec = clamp((100 - f.ejec) / 100);
-  const z = -1.25 + 2.4 * nPrecip + 1.25 * nSismos + 0.9 * nFocos + 1.55 * temporada + 0.75 * gapEjec;
-  const p = 1 / (1 + Math.exp(-z));
-  const factores = [
-    { name: 'Precipitación', w: 2.4 * nPrecip },
-    { name: 'Temporada de lluvias', w: 1.55 * temporada },
-    { name: 'Actividad sísmica', w: 1.25 * nSismos },
-    { name: 'Focos de calor', w: 0.9 * nFocos },
-    { name: 'Brecha de ejecución', w: 0.75 * gapEjec },
-  ].sort((a, b) => b.w - a.w);
-  return { prob: Math.round(p * 100), dominante: factores[0].name };
-}
 
 // Render ligero de Markdown (encabezados, viñetas, negrita, párrafos) para el diagnóstico.
 function DiagnosticoRender({ text }: { text: string }) {
@@ -153,19 +145,46 @@ export default function RiesgoPredictivoView() {
   const reportDeptoData = PERU_DEPARTAMENTOS[reportDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
   // Simulador de riesgo por características
-  const [simPrecip, setSimPrecip] = useState<number>(Math.round(deptoData.precipitacionMm ?? 40));
-  const [simSismos, setSimSismos] = useState<number>(deptoData.sismos7d ?? 1);
-  const [simFocos, setSimFocos] = useState<number>(deptoData.focosCalor ?? 20);
-  const [simMes, setSimMes] = useState<number>(new Date().getMonth());
-  const [simEjec, setSimEjec] = useState<number>(Math.round(deptoData.pctEjecucion ?? 60));
-  const [simResult, setSimResult] = useState<{ prob: number; dominante: string } | null>(null);
+  // Simulador: usa el modelo XGBoost real. El vector base es el contexto real de la región
+  // (14 features); el usuario ajusta un subconjunto y el resto se toma del contexto.
+  const modelFeats: FeatureVector = REGION_FEATURES[norm(deptoData.name)] || {};
+  const seedVals = () => {
+    const v: Record<string, number> = {};
+    SIM_FIELDS.forEach((f) => { v[f.key] = Number(modelFeats[f.key] ?? 0); });
+    return v;
+  };
+  const [simVals, setSimVals] = useState<Record<string, number>>(seedVals);
+  const [simMes, setSimMes] = useState<number>(Number(modelFeats.mes ?? new Date().getMonth() + 1));
+  const [simResult, setSimResult] = useState<{ prob: number } | null>(null);
+  const [simLoading, setSimLoading] = useState<boolean>(false);
+  const [simError, setSimError] = useState<boolean>(false);
+
+  // Reseed cuando cambia la región seleccionada.
+  useEffect(() => {
+    setSimVals(seedVals());
+    setSimMes(Number(modelFeats.mes ?? new Date().getMonth() + 1));
+    setSimResult(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeptoKey]);
 
   const cargarValoresReales = () => {
-    setSimPrecip(Math.round(deptoData.precipitacionMm ?? 40));
-    setSimSismos(deptoData.sismos7d ?? 1);
-    setSimFocos(deptoData.focosCalor ?? 20);
-    setSimEjec(Math.round(deptoData.pctEjecucion ?? 60));
+    setSimVals(seedVals());
+    setSimMes(Number(modelFeats.mes ?? new Date().getMonth() + 1));
     setSimResult(null);
+  };
+
+  const predecirConModelo = async () => {
+    setSimLoading(true);
+    setSimError(false);
+    try {
+      const model = await loadModel();
+      const fv: FeatureVector = { ...modelFeats, ...simVals, mes: simMes };
+      setSimResult({ prob: Math.round(predictProba(model, fv) * 100) });
+    } catch {
+      setSimError(true);
+    } finally {
+      setSimLoading(false);
+    }
   };
 
   const geo = REGION_GEO[norm(deptoData.name)];
@@ -400,7 +419,7 @@ export default function RiesgoPredictivoView() {
               </div>
               Simulador de Riesgo por Características
             </h3>
-            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Ajusta las condiciones y estima el riesgo a 7 días. Estimador interpretable a partir de los factores del modelo.</p>
+            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Ajusta las condiciones y el <b className="text-slate-700 dark:text-slate-300">modelo XGBoost entrenado</b> predice el riesgo a 7 días para la región (el resto del contexto se toma de sus datos reales).</p>
           </div>
           <button onClick={cargarValoresReales} className="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer shrink-0">
             <span className="material-symbols-outlined text-sm">restart_alt</span> Cargar valores reales de {deptoData.name}
@@ -410,49 +429,51 @@ export default function RiesgoPredictivoView() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Controls */}
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-            {[
-              { label: 'Precipitación 24h', unit: 'mm', min: 0, max: 200, step: 1, val: simPrecip, set: setSimPrecip },
-              { label: 'Sismos (7 días)', unit: '', min: 0, max: 15, step: 1, val: simSismos, set: setSimSismos },
-              { label: 'Focos de calor activos', unit: '', min: 0, max: 1000, step: 5, val: simFocos, set: setSimFocos },
-              { label: 'Ejecución presupuestal', unit: '%', min: 0, max: 100, step: 1, val: simEjec, set: setSimEjec },
-            ].map((c) => (
-              <div key={c.label}>
+            {SIM_FIELDS.map((c) => (
+              <div key={c.key}>
                 <div className="flex justify-between items-baseline mb-1.5">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300">{c.label}</label>
-                  <span className="text-sm font-extrabold text-sky-700 dark:text-sky-300 tabular-nums">{c.val}{c.unit && ` ${c.unit}`}</span>
+                  <span className="text-sm font-extrabold text-sky-700 dark:text-sky-300 tabular-nums">{simVals[c.key] ?? 0}{c.unit && ` ${c.unit}`}</span>
                 </div>
-                <input type="range" min={c.min} max={c.max} step={c.step} value={c.val} onChange={(e) => { c.set(Number(e.target.value)); setSimResult(null); }} className="w-full accent-sky-600 dark:accent-sky-400 cursor-pointer" />
+                <input type="range" min={c.min} max={c.max} step={c.step} value={simVals[c.key] ?? 0} onChange={(e) => { setSimVals((s) => ({ ...s, [c.key]: Number(e.target.value) })); setSimResult(null); }} className="w-full accent-sky-600 dark:accent-sky-400 cursor-pointer" />
               </div>
             ))}
             <div className="sm:col-span-2">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Mes del año</label>
               <select value={simMes} onChange={(e) => { setSimMes(Number(e.target.value)); setSimResult(null); }} className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold px-3 py-2 outline-none text-slate-800 dark:text-slate-200 cursor-pointer">
-                {MESES_SIM.map((mes, i) => <option key={i} value={i} className="bg-white dark:bg-[#0c1833]">{mes}</option>)}
+                {MESES_SIM.map((mes, i) => <option key={i} value={i + 1} className="bg-white dark:bg-[#0c1833]">{mes}</option>)}
               </select>
             </div>
             <div className="sm:col-span-2">
-              <button onClick={() => setSimResult(estimarRiesgo({ precip: simPrecip, sismos: simSismos, focos: simFocos, mes: simMes, ejec: simEjec }))} className="w-full px-5 py-3 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-base">bolt</span> Predecir riesgo
+              <button onClick={predecirConModelo} disabled={simLoading} className="w-full px-5 py-3 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all cursor-pointer active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2">
+                {simLoading
+                  ? (<><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> Ejecutando modelo…</>)
+                  : (<><span className="material-symbols-outlined text-base">bolt</span> Predecir riesgo</>)}
               </button>
             </div>
           </div>
 
           {/* Result */}
           <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-6 text-center">
-            {simResult ? (
+            {simError ? (
+              <div className="flex flex-col items-center gap-2 text-red-500">
+                <span className="material-symbols-outlined text-3xl">error</span>
+                <p className="text-xs font-medium">No se pudo cargar el modelo. Reintenta.</p>
+              </div>
+            ) : simResult ? (
               <div className="animate-fade-in flex flex-col items-center gap-2 w-full">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Riesgo estimado a 7 días</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Riesgo predicho a 7 días</span>
                 <span className="text-5xl font-extrabold" style={{ color: riskLevel(simResult.prob).color }}>{simResult.prob}%</span>
                 <span className="px-3 py-1 rounded-full text-[11px] font-bold text-white uppercase" style={{ backgroundColor: riskLevel(simResult.prob).color }}>{riskLevel(simResult.prob).label}</span>
                 <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 mt-2 overflow-hidden">
                   <div className="h-full rounded-full transition-all duration-700" style={{ width: `${simResult.prob}%`, backgroundColor: riskLevel(simResult.prob).color }}></div>
                 </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Factor dominante: <b className="text-slate-700 dark:text-slate-200">{simResult.dominante}</b></p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Salida del modelo <b className="text-slate-700 dark:text-slate-200">XGBoost</b> (AUC-ROC 0.86) para {deptoData.name}.</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-slate-400 dark:text-slate-500">
-                <span className="material-symbols-outlined text-4xl">insights</span>
-                <p className="text-xs font-medium">Ajusta las condiciones y pulsa <b>Predecir riesgo</b> para ver el resultado.</p>
+                <span className="material-symbols-outlined text-4xl">neurology</span>
+                <p className="text-xs font-medium">Ajusta las condiciones y pulsa <b>Predecir riesgo</b> para ejecutar el modelo.</p>
               </div>
             )}
           </div>
