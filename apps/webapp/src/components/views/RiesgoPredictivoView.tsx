@@ -14,9 +14,11 @@ const SIM_FIELDS = [
   { key: 'precipitacion_mm', label: 'Precipitación 24h', unit: 'mm', min: 0, max: 200, step: 1 },
   { key: 'precipitacion_acumulada_15d', label: 'Precipitación 15 días', unit: 'mm', min: 0, max: 600, step: 5 },
   { key: 'temp_max', label: 'Temperatura máxima', unit: '°C', min: 0, max: 45, step: 0.5 },
+  { key: 'temp_min', label: 'Temperatura mínima', unit: '°C', min: -10, max: 30, step: 0.5 },
   { key: 'num_sismos_7d', label: 'Sismos (7 días)', unit: '', min: 0, max: 15, step: 1 },
   { key: 'magnitud_max_7d', label: 'Magnitud máx (7d)', unit: '', min: 0, max: 8, step: 0.1 },
   { key: 'num_focos_calor_activos', label: 'Focos de calor', unit: '', min: 0, max: 1000, step: 5 },
+  { key: 'oni', label: 'Índice El Niño (ONI)', unit: '', min: -2.5, max: 3, step: 0.1 },
 ];
 
 // Mapa localizador (Leaflet) cargado solo en cliente (usa window).
