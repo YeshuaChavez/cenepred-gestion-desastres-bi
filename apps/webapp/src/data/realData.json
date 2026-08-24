@@ -25,7 +25,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "113.4 mm",
-          "pct": 43,
+          "pct": 39,
           "color": "#006686"
         },
         {
@@ -48,17 +48,17 @@
       "precipitacionMm": 113.4,
       "focosCalor": 159,
       "sismos7d": 1,
-      "tempMax": 20.3,
+      "tempMax": 20.7,
       "pimM": 290.3,
       "devengadoM": 242.8,
       "pctEjecucion": 83.6
     },
     "ancash": {
       "name": "ANCASH",
-      "prob": 59,
+      "prob": 60,
       "tag": "Muy Alto",
       "tagColor": "error",
-      "needleDeg": 14,
+      "needleDeg": 16,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -69,7 +69,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "45.3 mm",
-          "pct": 47,
+          "pct": 48,
           "color": "#006686"
         },
         {
@@ -92,7 +92,7 @@
       "precipitacionMm": 45.3,
       "focosCalor": 165,
       "sismos7d": 1,
-      "tempMax": 19.5,
+      "tempMax": 19.9,
       "pimM": 1764.1,
       "devengadoM": 923.3,
       "pctEjecucion": 52.3
@@ -113,7 +113,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "35.4 mm",
-          "pct": 28,
+          "pct": 29,
           "color": "#006686"
         },
         {
@@ -136,17 +136,17 @@
       "precipitacionMm": 35.4,
       "focosCalor": 305,
       "sismos7d": 1,
-      "tempMax": 22.8,
+      "tempMax": 22.9,
       "pimM": 470.5,
       "devengadoM": 413.2,
       "pctEjecucion": 87.8
     },
     "arequipa": {
       "name": "AREQUIPA",
-      "prob": 44,
+      "prob": 43,
       "tag": "Medio",
       "tagColor": "secondary",
-      "needleDeg": -10,
+      "needleDeg": -11,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -157,12 +157,12 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "36.3 mm",
-          "pct": 14,
+          "pct": 13,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+51",
+          "val": "+55",
           "pct": 10,
           "color": "#565e74"
         },
@@ -178,7 +178,7 @@
       "damnificados": 36726,
       "fallecidos": 43,
       "precipitacionMm": 36.3,
-      "focosCalor": 51,
+      "focosCalor": 55,
       "sismos7d": 7,
       "tempMax": 22.2,
       "pimM": 902.4,
@@ -200,8 +200,8 @@
         },
         {
           "name": "Precipitación Acumulada (mm/24h)",
-          "val": "23.7 mm",
-          "pct": 22,
+          "val": "26.5 mm",
+          "pct": 21,
           "color": "#006686"
         },
         {
@@ -221,20 +221,20 @@
       "afectados": 366741,
       "damnificados": 20363,
       "fallecidos": 75,
-      "precipitacionMm": 23.7,
+      "precipitacionMm": 26.5,
       "focosCalor": 121,
       "sismos7d": 1,
-      "tempMax": 20.5,
+      "tempMax": 20.8,
       "pimM": 778.2,
       "devengadoM": 558.0,
       "pctEjecucion": 71.7
     },
     "cajamarca": {
       "name": "CAJAMARCA",
-      "prob": 55,
-      "tag": "Muy Alto",
-      "tagColor": "error",
-      "needleDeg": 8,
+      "prob": 54,
+      "tag": "Alto",
+      "tagColor": "tertiary",
+      "needleDeg": 6,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -245,7 +245,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "98.4 mm",
-          "pct": 56,
+          "pct": 51,
           "color": "#006686"
         },
         {
@@ -268,7 +268,7 @@
       "precipitacionMm": 98.4,
       "focosCalor": 763,
       "sismos7d": 1,
-      "tempMax": 20.0,
+      "tempMax": 20.2,
       "pimM": 686.6,
       "devengadoM": 540.9,
       "pctEjecucion": 78.8
@@ -312,17 +312,17 @@
       "precipitacionMm": 15.0,
       "focosCalor": 5,
       "sismos7d": 1,
-      "tempMax": 22.3,
+      "tempMax": 22.4,
       "pimM": 458.5,
       "devengadoM": 373.5,
       "pctEjecucion": 81.5
     },
     "cusco": {
       "name": "CUSCO",
-      "prob": 58,
+      "prob": 57,
       "tag": "Muy Alto",
       "tagColor": "error",
-      "needleDeg": 13,
+      "needleDeg": 11,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -339,7 +339,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+245",
-          "pct": 24,
+          "pct": 22,
           "color": "#565e74"
         },
         {
@@ -356,7 +356,7 @@
       "precipitacionMm": 79.3,
       "focosCalor": 245,
       "sismos7d": 1,
-      "tempMax": 16.7,
+      "tempMax": 16.9,
       "pimM": 1520.6,
       "devengadoM": 1218.3,
       "pctEjecucion": 80.1
@@ -377,7 +377,7 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "62.2 mm",
-          "pct": 42,
+          "pct": 41,
           "color": "#006686"
         },
         {
@@ -400,17 +400,17 @@
       "precipitacionMm": 62.2,
       "focosCalor": 115,
       "sismos7d": 1,
-      "tempMax": 13.9,
+      "tempMax": 14.1,
       "pimM": 648.4,
       "devengadoM": 399.2,
       "pctEjecucion": 61.6
     },
     "huanuco": {
       "name": "HUANUCO",
-      "prob": 54,
+      "prob": 53,
       "tag": "Alto",
       "tagColor": "tertiary",
-      "needleDeg": 6,
+      "needleDeg": 5,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -427,7 +427,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+801",
-          "pct": 59,
+          "pct": 56,
           "color": "#565e74"
         },
         {
@@ -444,7 +444,7 @@
       "precipitacionMm": 40.3,
       "focosCalor": 801,
       "sismos7d": 1,
-      "tempMax": 23.4,
+      "tempMax": 23.7,
       "pimM": 485.6,
       "devengadoM": 352.9,
       "pctEjecucion": 72.7
@@ -464,13 +464,13 @@
         },
         {
           "name": "Precipitación Acumulada (mm/24h)",
-          "val": "17.0 mm",
+          "val": "39.4 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+13",
+          "val": "+44",
           "pct": 10,
           "color": "#565e74"
         },
@@ -485,20 +485,20 @@
       "afectados": 259779,
       "damnificados": 14089,
       "fallecidos": 23,
-      "precipitacionMm": 17.0,
-      "focosCalor": 13,
+      "precipitacionMm": 39.4,
+      "focosCalor": 44,
       "sismos7d": 2,
-      "tempMax": 28.4,
+      "tempMax": 28.6,
       "pimM": 1504.9,
       "devengadoM": 972.4,
       "pctEjecucion": 64.6
     },
     "junin": {
       "name": "JUNIN",
-      "prob": 51,
+      "prob": 52,
       "tag": "Alto",
       "tagColor": "tertiary",
-      "needleDeg": 2,
+      "needleDeg": 3,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -509,13 +509,13 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "46.4 mm",
-          "pct": 43,
+          "pct": 46,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+419",
-          "pct": 40,
+          "pct": 37,
           "color": "#565e74"
         },
         {
@@ -532,7 +532,7 @@
       "precipitacionMm": 46.4,
       "focosCalor": 419,
       "sismos7d": 1,
-      "tempMax": 17.1,
+      "tempMax": 17.3,
       "pimM": 647.1,
       "devengadoM": 504.2,
       "pctEjecucion": 77.9
@@ -558,7 +558,7 @@
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+220",
+          "val": "+227",
           "pct": 12,
           "color": "#565e74"
         },
@@ -574,9 +574,9 @@
       "damnificados": 82878,
       "fallecidos": 47,
       "precipitacionMm": 30.4,
-      "focosCalor": 220,
+      "focosCalor": 227,
       "sismos7d": 1,
-      "tempMax": 23.5,
+      "tempMax": 23.4,
       "pimM": 1358.8,
       "devengadoM": 894.9,
       "pctEjecucion": 65.9
@@ -620,7 +620,7 @@
       "precipitacionMm": 106.2,
       "focosCalor": 275,
       "sismos7d": 1,
-      "tempMax": 25.6,
+      "tempMax": 25.8,
       "pimM": 1158.5,
       "devengadoM": 706.3,
       "pctEjecucion": 61.0
@@ -646,7 +646,7 @@
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+42",
+          "val": "+46",
           "pct": 10,
           "color": "#565e74"
         },
@@ -662,7 +662,7 @@
       "damnificados": 40229,
       "fallecidos": 230,
       "precipitacionMm": 15.0,
-      "focosCalor": 42,
+      "focosCalor": 46,
       "sismos7d": 1,
       "tempMax": 22.2,
       "pimM": 10539.2,
@@ -690,7 +690,7 @@
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+423",
+          "val": "+603",
           "pct": 48,
           "color": "#565e74"
         },
@@ -706,9 +706,9 @@
       "damnificados": 256119,
       "fallecidos": 56,
       "precipitacionMm": 198.0,
-      "focosCalor": 423,
-      "sismos7d": 3,
-      "tempMax": 29.7,
+      "focosCalor": 603,
+      "sismos7d": 2,
+      "tempMax": 29.8,
       "pimM": 268.3,
       "devengadoM": 216.9,
       "pctEjecucion": 80.8
@@ -729,13 +729,13 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "128.2 mm",
-          "pct": 73,
+          "pct": 71,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+336",
-          "pct": 36,
+          "val": "+717",
+          "pct": 37,
           "color": "#565e74"
         },
         {
@@ -750,9 +750,9 @@
       "damnificados": 5737,
       "fallecidos": 28,
       "precipitacionMm": 128.2,
-      "focosCalor": 336,
+      "focosCalor": 717,
       "sismos7d": 1,
-      "tempMax": 29.6,
+      "tempMax": 29.7,
       "pimM": 118.9,
       "devengadoM": 75.7,
       "pctEjecucion": 63.7
@@ -778,7 +778,7 @@
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+48",
+          "val": "+52",
           "pct": 10,
           "color": "#565e74"
         },
@@ -794,9 +794,9 @@
       "damnificados": 7384,
       "fallecidos": 13,
       "precipitacionMm": 51.5,
-      "focosCalor": 48,
+      "focosCalor": 52,
       "sismos7d": 1,
-      "tempMax": 24.3,
+      "tempMax": 24.5,
       "pimM": 277.5,
       "devengadoM": 218.9,
       "pctEjecucion": 78.9
@@ -823,7 +823,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+182",
-          "pct": 18,
+          "pct": 17,
           "color": "#565e74"
         },
         {
@@ -840,7 +840,7 @@
       "precipitacionMm": 29.5,
       "focosCalor": 182,
       "sismos7d": 1,
-      "tempMax": 9.8,
+      "tempMax": 9.9,
       "pimM": 281.2,
       "devengadoM": 211.8,
       "pctEjecucion": 75.3
@@ -884,7 +884,7 @@
       "precipitacionMm": 130.6,
       "focosCalor": 195,
       "sismos7d": 1,
-      "tempMax": 31.2,
+      "tempMax": 31.4,
       "pimM": 3900.7,
       "devengadoM": 2362.5,
       "pctEjecucion": 60.6
@@ -911,7 +911,7 @@
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+133",
-          "pct": 11,
+          "pct": 10,
           "color": "#565e74"
         },
         {
@@ -928,17 +928,17 @@
       "precipitacionMm": 35.0,
       "focosCalor": 133,
       "sismos7d": 2,
-      "tempMax": 14.9,
+      "tempMax": 15.0,
       "pimM": 639.1,
       "devengadoM": 556.1,
       "pctEjecucion": 87.0
     },
     "san_martin": {
       "name": "SAN MARTIN",
-      "prob": 57,
+      "prob": 56,
       "tag": "Muy Alto",
       "tagColor": "error",
-      "needleDeg": 11,
+      "needleDeg": 10,
       "shap": [
         {
           "name": "Incidencia Emergencias (SINPAD)",
@@ -949,13 +949,13 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "70.5 mm",
-          "pct": 51,
+          "pct": 49,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
           "val": "+1014",
-          "pct": 77,
+          "pct": 74,
           "color": "#565e74"
         },
         {
@@ -972,7 +972,7 @@
       "precipitacionMm": 70.5,
       "focosCalor": 1014,
       "sismos7d": 1,
-      "tempMax": 26.5,
+      "tempMax": 26.7,
       "pimM": 633.9,
       "devengadoM": 512.1,
       "pctEjecucion": 80.8
@@ -1016,7 +1016,7 @@
       "precipitacionMm": 18.4,
       "focosCalor": 12,
       "sismos7d": 4,
-      "tempMax": 22.4,
+      "tempMax": 22.5,
       "pimM": 315.5,
       "devengadoM": 244.7,
       "pctEjecucion": 77.6
@@ -1060,7 +1060,7 @@
       "precipitacionMm": 115.0,
       "focosCalor": 36,
       "sismos7d": 1,
-      "tempMax": 28.6,
+      "tempMax": 28.5,
       "pimM": 1196.7,
       "devengadoM": 803.4,
       "pctEjecucion": 67.1
@@ -1081,12 +1081,12 @@
         {
           "name": "Precipitación Acumulada (mm/24h)",
           "val": "189.0 mm",
-          "pct": 70,
+          "pct": 69,
           "color": "#006686"
         },
         {
           "name": "Focos Calor / Actividad Satelital",
-          "val": "+683",
+          "val": "+936",
           "pct": 80,
           "color": "#565e74"
         },
@@ -1102,9 +1102,9 @@
       "damnificados": 15374,
       "fallecidos": 52,
       "precipitacionMm": 189.0,
-      "focosCalor": 683,
+      "focosCalor": 936,
       "sismos7d": 2,
-      "tempMax": 29.9,
+      "tempMax": 30.1,
       "pimM": 170.5,
       "devengadoM": 135.3,
       "pctEjecucion": 79.4
