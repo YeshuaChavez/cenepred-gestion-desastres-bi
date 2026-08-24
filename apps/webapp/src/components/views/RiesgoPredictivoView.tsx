@@ -158,6 +158,26 @@ export default function RiesgoPredictivoView() {
   const [simResult, setSimResult] = useState<{ prob: number } | null>(null);
   const [simLoading, setSimLoading] = useState<boolean>(false);
   const [simError, setSimError] = useState<boolean>(false);
+  const [displayProb, setDisplayProb] = useState<number>(0); // % animado (count-up)
+
+  // Anima el % del resultado de 0 al valor predicho (easeOutCubic).
+  useEffect(() => {
+    if (!simResult) { setDisplayProb(0); return; }
+    const target = simResult.prob;
+    const dur = 900;
+    let raf = 0;
+    let t0 = 0;
+    const step = (t: number) => {
+      if (!t0) t0 = t;
+      const k = Math.min(1, (t - t0) / dur);
+      setDisplayProb(Math.round(target * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    // Garantiza el valor final aunque rAF esté pausado (pestaña en segundo plano).
+    const fallback = setTimeout(() => setDisplayProb(target), dur + 150);
+    return () => { cancelAnimationFrame(raf); clearTimeout(fallback); };
+  }, [simResult]);
 
   // Reseed cuando cambia la región seleccionada.
   useEffect(() => {
@@ -419,7 +439,7 @@ export default function RiesgoPredictivoView() {
               </div>
               Simulador de Riesgo por Características
             </h3>
-            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Ajusta las condiciones y el <b className="text-slate-700 dark:text-slate-300">modelo XGBoost entrenado</b> predice el riesgo a 7 días para la región (el resto del contexto se toma de sus datos reales).</p>
+            <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Ajusta las condiciones y el <b className="text-slate-700 dark:text-slate-300">modelo predictivo entrenado</b> calcula el riesgo a 7 días para la región (el resto del contexto se toma de sus datos reales).</p>
           </div>
           <button onClick={cargarValoresReales} className="text-xs font-bold text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 cursor-pointer shrink-0">
             <span className="material-symbols-outlined text-sm">restart_alt</span> Cargar valores reales de {deptoData.name}
@@ -461,19 +481,36 @@ export default function RiesgoPredictivoView() {
                 <p className="text-xs font-medium">No se pudo cargar el modelo. Reintenta.</p>
               </div>
             ) : simResult ? (
-              <div className="animate-fade-in flex flex-col items-center gap-2 w-full">
+              <div key={simResult.prob} className="animate-fade-in-up flex flex-col items-center gap-3 w-full">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Riesgo predicho a 7 días</span>
-                <span className="text-5xl font-extrabold" style={{ color: riskLevel(simResult.prob).color }}>{simResult.prob}%</span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold text-white uppercase" style={{ backgroundColor: riskLevel(simResult.prob).color }}>{riskLevel(simResult.prob).label}</span>
-                <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 mt-2 overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-700" style={{ width: `${simResult.prob}%`, backgroundColor: riskLevel(simResult.prob).color }}></div>
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Salida del modelo <b className="text-slate-700 dark:text-slate-200">XGBoost</b> (AUC-ROC 0.86) para {deptoData.name}.</p>
+                {(() => {
+                  const rl2 = riskLevel(simResult.prob);
+                  const R = 42, C = 2 * Math.PI * R;
+                  return (
+                    <div className="relative w-40 h-40">
+                      <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                        <circle cx="50" cy="50" r={R} fill="none" strokeWidth="9" className="stroke-slate-200 dark:stroke-slate-800" />
+                        <circle
+                          cx="50" cy="50" r={R} fill="none" strokeWidth="9" strokeLinecap="round"
+                          stroke={rl2.color}
+                          strokeDasharray={C}
+                          strokeDashoffset={C * (1 - displayProb / 100)}
+                          style={{ transition: 'stroke-dashoffset 90ms linear', filter: `drop-shadow(0 0 4px ${rl2.color}66)` }}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-4xl font-extrabold tabular-nums" style={{ color: rl2.color }}>{displayProb}%</span>
+                        <span className="px-2.5 py-0.5 mt-1 rounded-full text-[10px] font-bold text-white uppercase" style={{ backgroundColor: rl2.color }}>{rl2.label}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center">Predicción del <b className="text-slate-700 dark:text-slate-200">modelo entrenado</b> (AUC-ROC 0.86) para {deptoData.name}.</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-slate-400 dark:text-slate-500">
                 <span className="material-symbols-outlined text-4xl">neurology</span>
-                <p className="text-xs font-medium">Ajusta las condiciones y pulsa <b>Predecir riesgo</b> para ejecutar el modelo.</p>
+                <p className="text-xs font-medium">Ajusta las condiciones y pulsa <b>Predecir riesgo</b> para calcular el riesgo.</p>
               </div>
             )}
           </div>
