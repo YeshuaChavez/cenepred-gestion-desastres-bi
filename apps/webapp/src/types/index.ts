@@ -20,6 +20,10 @@ export interface RegionData {
   focosCalor?: number;
   sismos7d?: number;
   tempMax?: number;
+  precip24h?: number;
+  precip7d?: number;
+  precip30d?: number;
+  focos30d?: number;
   pimM?: number;
   devengadoM?: number;
   pctEjecucion?: number;

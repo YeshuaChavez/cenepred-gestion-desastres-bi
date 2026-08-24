@@ -30,7 +30,6 @@ export default function MonitoreoView() {
   const [macroRegion, setMacroRegion] = useState<MacroRegion>('todas');
   const [mapMode, setMapMode] = useState<MapLayerMode>('riesgo');
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('24h');
-  const [forecast48h, setForecast48h] = useState<boolean>(false);
   const [showHospitals, setShowHospitals] = useState<boolean>(false);
   const [showBridges, setShowBridges] = useState<boolean>(false);
   const [showShelters, setShowShelters] = useState<boolean>(false);
@@ -38,28 +37,19 @@ export default function MonitoreoView() {
   
   const rawDeptoData = PERU_DEPARTAMENTOS[selectedDeptoKey] || PERU_DEPARTAMENTOS[departmentKeys[0]];
 
-  // Factores temporales multiplicadores
-  const timeFactorPrecip = timeWindow === '30d' ? 14.8 : timeWindow === '7d' ? 4.2 : 1.0;
-  const timeFactorFocos = timeWindow === '30d' ? 19.2 : timeWindow === '7d' ? 5.5 : 1.0;
-  const timeFactorSismos = timeWindow === '30d' ? 3.8 : timeWindow === '7d' ? 1.0 : 0.25;
+  // Nivel de riesgo del modelo entrenado para la región seleccionada.
+  const currentProb = rawDeptoData.prob;
 
-  // Cálculo de valores según ventana temporal y pronóstico 48h
-  let currentProb = rawDeptoData.prob;
-  let forecastDelta = 0;
-  if (forecast48h) {
-    if (['piura', 'tumbes', 'lambayeque', 'loreto', 'san_martin', 'amazonas'].includes(selectedDeptoKey)) {
-      forecastDelta = 12;
-    } else if (['arequipa', 'cusco', 'puno', 'ancash'].includes(selectedDeptoKey)) {
-      forecastDelta = 6;
-    } else {
-      forecastDelta = -3;
-    }
-    currentProb = Math.min(99, Math.max(10, currentProb + forecastDelta));
-  }
-
-  const currentPrecip = Math.round((rawDeptoData.precipitacionMm || 0) * timeFactorPrecip);
-  const currentFocos = Math.round((rawDeptoData.focosCalor || 0) * timeFactorFocos);
-  const currentSismos = Math.round((rawDeptoData.sismos7d || 0) * timeFactorSismos);
+  // Lluvia acumulada real por ventana (24h / 7 días / 30 días).
+  const currentPrecip = timeWindow === '30d'
+    ? (rawDeptoData.precip30d ?? 0)
+    : timeWindow === '7d'
+      ? (rawDeptoData.precip7d ?? 0)
+      : (rawDeptoData.precip24h ?? 0);
+  // Focos de calor detectados en los ultimos 30 dias (satelite, procesamiento mensual).
+  const currentFocos = rawDeptoData.focos30d ?? 0;
+  // Sismos sentidos en los ultimos 7 dias.
+  const currentSismos = rawDeptoData.sismos7d ?? 0;
 
   // Filter department keys by macro-region
   const filteredKeys = departmentKeys.filter(key => {
@@ -80,26 +70,23 @@ export default function MonitoreoView() {
   };
 
   // High risk departments calculation
-  const sortedDeptos = Object.entries(PERU_DEPARTAMENTOS).map(([k, d]) => {
-    let p = d.prob;
-    if (forecast48h) {
-      const delta = ['piura', 'tumbes', 'lambayeque', 'loreto', 'san_martin', 'amazonas'].includes(k) ? 12 : ['arequipa', 'cusco', 'puno', 'ancash'].includes(k) ? 6 : -3;
-      p = Math.min(99, Math.max(10, p + delta));
-    }
-    return { ...d, key: k, computedProb: p };
-  }).sort((a, b) => b.computedProb - a.computedProb);
+  const sortedDeptos = Object.entries(PERU_DEPARTAMENTOS)
+    .map(([k, d]) => ({ ...d, key: k, computedProb: d.prob }))
+    .sort((a, b) => b.computedProb - a.computedProb);
 
   const highRiskDeptos = sortedDeptos.filter(d => d.computedProb >= 50);
 
   const handleExportCSV = () => {
-    const headers = ["Departamento", "Riesgo SAT (%)", "Categoría", "Ventana Temporal", "Lluvia (mm)", "Focos Calor", "PIM (S/ M)", "Ejecución MEF (%)"];
+    const precipFor = (d: typeof sortedDeptos[number]) =>
+      timeWindow === '30d' ? (d.precip30d ?? 0) : timeWindow === '7d' ? (d.precip7d ?? 0) : (d.precip24h ?? 0);
+    const headers = ["Departamento", "Riesgo SAT (%)", "Categoría", "Ventana Temporal", "Lluvia (mm)", "Focos Calor 30d", "PIM (S/ M)", "Ejecución MEF (%)"];
     const rows = sortedDeptos.map(d => [
       `"${d.name}"`,
       d.computedProb,
       `"${d.computedProb >= 65 ? 'Muy Alto' : d.computedProb >= 50 ? 'Alto' : 'Moderado'}"`,
       `"${timeWindow}"`,
-      Math.round((d.precipitacionMm || 0) * timeFactorPrecip),
-      Math.round((d.focosCalor || 0) * timeFactorFocos),
+      precipFor(d),
+      d.focos30d ?? 0,
       d.pimM,
       d.pctEjecucion
     ]);
@@ -108,7 +95,7 @@ export default function MonitoreoView() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `Reporte_Monitoreo_CENEPRED_${timeWindow}_${forecast48h ? 'Pronostico48h_' : ''}${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `Reporte_Monitoreo_CENEPRED_${timeWindow}_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -133,15 +120,9 @@ export default function MonitoreoView() {
         <div>
           <h2 className="font-display-lg text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             Monitoreo Nacional de Riesgos
-            {forecast48h && (
-              <span className="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-xs animate-pulse">
-                <span className="material-symbols-outlined text-xs">auto_awesome</span>
-                Pronóstico 48h Activo
-              </span>
-            )}
           </h2>
           <p className="font-body-md text-sm text-slate-600 dark:text-slate-400 max-w-3xl mt-1">
-            Explora el mapa interactivo del Perú en tiempo real para consultar las lluvias, el nivel de riesgo y la inversión preventiva en cada región del país.
+            Explora el mapa interactivo del Perú para consultar las lluvias, el nivel de riesgo y la inversión preventiva en cada región del país.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -154,9 +135,9 @@ export default function MonitoreoView() {
         </div>
       </div>
 
-      {/* Control Bar: Ventana Temporal + Pronóstico 48h + Capas del Mapa */}
+      {/* Control Bar: Ventana Temporal + Capas del Mapa */}
       <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4 bg-white dark:bg-[#0c1833] p-4 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs text-xs font-semibold transition-colors duration-300">
-        
+
         {/* Left: Ventana Temporal Selector */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
           <span className="text-slate-500 dark:text-slate-400 font-bold px-1 flex items-center gap-1 shrink-0">
@@ -182,25 +163,6 @@ export default function MonitoreoView() {
               Últimos 30 Días
             </button>
           </div>
-        </div>
-
-        {/* Center: Pronóstico Predictivo 48h Toggle */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setForecast48h(!forecast48h)}
-            className={`px-4 py-2 rounded-2xl font-bold text-xs transition-all cursor-pointer flex items-center gap-2 border ${
-              forecast48h
-                ? 'bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/40'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-purple-400 hover:text-purple-600'
-            }`}
-            title="Activar o desactivar proyección inferencial a 48 horas"
-          >
-            <span className="material-symbols-outlined text-base">{forecast48h ? 'online_prediction' : 'query_stats'}</span>
-            <span>Pronóstico Predictivo 48h</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${forecast48h ? 'bg-white text-purple-900' : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'}`}>
-              {forecast48h ? 'ON' : 'IA'}
-            </span>
-          </button>
         </div>
 
         {/* Right: Map Layers */}
@@ -337,7 +299,7 @@ export default function MonitoreoView() {
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-red-500 rounded-full"></span>
               <h3 className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                {forecast48h ? 'Proyección Riesgo 48h' : 'Regiones en Alto Riesgo'}
+                Regiones en Alto Riesgo
               </h3>
             </div>
             <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-300 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
@@ -400,7 +362,7 @@ export default function MonitoreoView() {
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-6 bg-amber-500 rounded-full"></span>
               <h3 className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                Focos Calor ({timeWindow}) • {rawDeptoData.name}
+                Focos Calor (30d) • {rawDeptoData.name}
               </h3>
             </div>
             <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
@@ -412,8 +374,8 @@ export default function MonitoreoView() {
             <span className="font-body-md text-sm text-slate-600 dark:text-slate-400 mb-1 font-medium">Focos Detectados</span>
           </div>
           <div className="mt-4 flex items-center gap-2 relative z-10">
-            <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
-            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400">Telemetría NASA FIRMS • Sismos ({timeWindow}) {currentSismos}</span>
+            <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+            <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400">Focos satelitales NASA FIRMS • Sismos (7d) {currentSismos}</span>
           </div>
         </div>
 
@@ -468,19 +430,6 @@ export default function MonitoreoView() {
               </div>
             </div>
 
-            {/* If 48h forecast active, show delta forecast alert */}
-            {forecast48h && (
-              <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-950/60 rounded-2xl border border-purple-200 dark:border-purple-800/60 flex items-center justify-between text-xs animate-fade-in">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-purple-600 dark:text-purple-400 text-base">auto_awesome</span>
-                  <span className="font-bold text-purple-900 dark:text-purple-200">Pronóstico Satelital 48h</span>
-                </div>
-                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${forecastDelta > 0 ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
-                  {forecastDelta > 0 ? `▲ +${forecastDelta}% Alza` : '▼ Descenso'}
-                </span>
-              </div>
-            )}
-
             {/* Department Gauge */}
             <div className="flex flex-col items-center justify-center py-2 border-b border-slate-200 dark:border-slate-800">
               <div className="relative w-48 h-24 overflow-hidden mb-2">
@@ -491,7 +440,7 @@ export default function MonitoreoView() {
               <div className="text-center">
                 <span className="font-display-lg text-3xl font-extrabold text-red-600 dark:text-red-400 block leading-none mb-1">{currentProb}%</span>
                 <span className="font-label-sm text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
-                  {forecast48h ? `Riesgo Proyectado a 48h` : `Nivel de Riesgo (${timeWindow})`}
+                  Nivel de Riesgo
                 </span>
               </div>
             </div>
@@ -545,11 +494,11 @@ export default function MonitoreoView() {
           <div className="flex justify-between items-center mb-3 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex-wrap gap-2">
             <div>
               <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${forecast48h ? 'bg-purple-500 animate-ping' : 'bg-emerald-500 animate-pulse'}`}></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                 Visor Cartográfico GIS Nacional
               </h3>
               <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                {forecast48h ? 'Modo Pronóstico 48h con simulación satelital activa' : 'Haz clic en los marcadores del mapa para seleccionar una región'}
+                Haz clic en los marcadores del mapa para seleccionar una región
               </span>
             </div>
             
@@ -571,7 +520,6 @@ export default function MonitoreoView() {
               mapMode={mapMode}
               macroRegion={macroRegion}
               timeWindow={timeWindow}
-              forecast48h={forecast48h}
               showHospitals={showHospitals}
               showBridges={showBridges}
               showShelters={showShelters}

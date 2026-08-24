@@ -27,7 +27,6 @@ interface PeruInteractiveMapProps {
   mapMode?: MapLayerMode;
   macroRegion?: string;
   timeWindow?: TimeWindow;
-  forecast48h?: boolean;
   showHospitals?: boolean;
   showBridges?: boolean;
   showShelters?: boolean;
@@ -94,7 +93,6 @@ export default function PeruInteractiveMap({
   mapMode = 'riesgo',
   macroRegion = 'todas',
   timeWindow = '24h',
-  forecast48h = false,
   showHospitals = false,
   showBridges = false,
   showShelters = false
@@ -120,52 +118,37 @@ export default function PeruInteractiveMap({
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
-  const getMarkerProps = (data: RegionData, key: string) => {
-    // Multiplicadores según ventana temporal (24h, 7d, 30d)
-    const timeFactorPrecip = timeWindow === '30d' ? 14.8 : timeWindow === '7d' ? 4.2 : 1.0;
-    const timeFactorFocos = timeWindow === '30d' ? 19.2 : timeWindow === '7d' ? 5.5 : 1.0;
-
-    const precip = Math.round((data.precipitacionMm || 0) * timeFactorPrecip);
-    const focos = Math.round((data.focosCalor || 0) * timeFactorFocos);
+  const getMarkerProps = (data: RegionData, _key: string) => {
+    // Lluvia acumulada real por ventana (24h / 7 dias / 30 dias) y focos de los ultimos 30 dias.
+    const precip = timeWindow === '30d'
+      ? (data.precip30d ?? 0)
+      : timeWindow === '7d'
+        ? (data.precip7d ?? 0)
+        : (data.precip24h ?? 0);
+    const focos = data.focos30d ?? 0;
     const pct = data.pctEjecucion || 0;
-
-    // Si el modo pronóstico a 48h está activo, calcular riesgo proyectado
-    let prob = data.prob;
-    let forecastDelta = 0;
-    if (forecast48h) {
-      // Norte y Selva tienen proyección en alza por frentes meteorológicos
-      if (['piura', 'tumbes', 'lambayeque', 'loreto', 'san_martin', 'amazonas'].includes(key)) {
-        forecastDelta = 12;
-      } else if (['arequipa', 'cusco', 'puno', 'ancash'].includes(key)) {
-        forecastDelta = 6;
-      } else {
-        forecastDelta = -3;
-      }
-      prob = Math.min(99, Math.max(10, prob + forecastDelta));
-    }
+    const prob = data.prob;
 
     if (mapMode === 'precip') {
-      const radius = Math.max(10, Math.min(28, Math.round(precip / (timeWindow === '30d' ? 60 : timeWindow === '7d' ? 18 : 5))));
+      const radius = Math.max(10, Math.min(28, Math.round(precip / (timeWindow === '30d' ? 12 : timeWindow === '7d' ? 5 : 2)) + 8));
       return {
         color: '#0284c7',
         radius,
         label: `${precip} mm (${timeWindow})`,
         prob,
         precip,
-        focos,
-        forecastDelta
+        focos
       };
     }
     if (mapMode === 'focos') {
-      const radius = Math.max(10, Math.min(28, Math.round(focos / (timeWindow === '30d' ? 45 : timeWindow === '7d' ? 15 : 4))));
+      const radius = Math.max(10, Math.min(28, Math.round(focos / 4) + 8));
       return {
         color: '#ea580c',
         radius,
-        label: `${focos} focos (${timeWindow})`,
+        label: `${focos} focos (30d)`,
         prob,
         precip,
-        focos,
-        forecastDelta
+        focos
       };
     }
     if (mapMode === 'mef') {
@@ -177,17 +160,16 @@ export default function PeruInteractiveMap({
         label: `${pct}% devengado`,
         prob,
         precip,
-        focos,
-        forecastDelta
+        focos
       };
     }
 
-    // Default mode: riesgo SAT (o pronóstico 48h)
+    // Default mode: riesgo SAT
     const color = prob >= 65 ? '#dc2626' : prob >= 55 ? '#ea580c' : prob >= 45 ? '#d97706' : prob >= 35 ? '#0284c7' : '#10b981';
     const radius = Math.max(12, Math.min(26, Math.round(prob / 3.2)));
-    const label = forecast48h ? `Proyección ${prob}% (+48h)` : `${prob}% riesgo (${timeWindow})`;
+    const label = `${prob}% riesgo`;
 
-    return { color, radius, label, prob, precip, focos, forecastDelta };
+    return { color, radius, label, prob, precip, focos };
   };
 
   // Filtrar infraestructura según toggles activos
@@ -208,9 +190,9 @@ export default function PeruInteractiveMap({
         <div className={`px-3 py-1.5 rounded-xl backdrop-blur-md shadow-md border text-xs font-bold flex items-center gap-2 ${
           isClientDark ? 'bg-slate-900/85 text-white border-slate-700' : 'bg-white/90 text-slate-800 border-slate-200'
         }`}>
-          <span className={`w-2 h-2 rounded-full ${forecast48h ? 'bg-purple-500 animate-ping' : 'bg-emerald-500'}`}></span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
           <span>
-            {forecast48h ? 'Pronóstico Predictivo IA (48 Horas)' : `Monitoreo SAT (${timeWindow === '24h' ? 'Últimas 24h' : timeWindow === '7d' ? 'Últimos 7 Días' : 'Últimos 30 Días'})`}
+            {`Monitoreo SAT (${timeWindow === '24h' ? 'Últimas 24h' : timeWindow === '7d' ? 'Últimos 7 Días' : 'Últimos 30 Días'})`}
           </span>
         </div>
 
@@ -251,11 +233,11 @@ export default function PeruInteractiveMap({
         {Object.entries(departamentos).map(([key, data]) => {
           const coords = DEPT_COORDS[key] || centerPeru;
           const isSelected = key === selectedDeptoKey;
-          const { color, radius, prob, precip, focos, forecastDelta } = getMarkerProps(data, key);
+          const { color, radius, prob, precip, focos } = getMarkerProps(data, key);
 
           return (
             <CircleMarker
-              key={`${key}-${isClientDark ? 'dark' : 'light'}-${timeWindow}-${forecast48h ? 'f48' : 'norm'}`}
+              key={`${key}-${isClientDark ? 'dark' : 'light'}-${timeWindow}`}
               center={coords}
               radius={isSelected ? radius + 5 : radius}
               pathOptions={{
@@ -279,23 +261,9 @@ export default function PeruInteractiveMap({
                       className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white uppercase shadow-xs"
                       style={{ backgroundColor: color }}
                     >
-                      {forecast48h ? (prob >= 65 ? 'Muy Alto' : prob >= 50 ? 'Alto' : 'Moderado') : data.tag}
+                      {data.tag}
                     </span>
                   </div>
-
-                  {forecast48h && (
-                    <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800/60 text-xs">
-                      <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider block">
-                        Proyección Inferencia 48h
-                      </span>
-                      <div className="flex justify-between items-baseline mt-0.5">
-                        <span className="font-extrabold text-purple-950 dark:text-purple-100 text-sm">Score {prob}%</span>
-                        <span className={`text-[10px] font-bold ${forecastDelta > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
-                          {forecastDelta > 0 ? `▲ +${forecastDelta}% Alza` : forecastDelta < 0 ? `▼ ${forecastDelta}% Descenso` : '▶ Estable'}
-                        </span>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
@@ -311,7 +279,7 @@ export default function PeruInteractiveMap({
                       <span className="font-semibold text-sky-600 dark:text-sky-400">{precip} mm</span>
                     </div>
                     <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60">
-                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Focos Calor:</span>
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Focos Calor (30d):</span>
                       <span className="font-semibold text-amber-600 dark:text-amber-400">{focos}</span>
                     </div>
                   </div>

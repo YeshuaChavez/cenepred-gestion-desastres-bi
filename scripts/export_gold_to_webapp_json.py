@@ -41,6 +41,36 @@ def process_gold_data():
 
     deptos = sorted(dim_region['departamento'].unique())
 
+    # Ventanas REALES de monitoreo reciente por departamento (para la vista de Monitoreo Diario):
+    # precipitación acumulada de la última ventana de 24h/7d/30d, y focos de calor de la última
+    # ventana de 30 días CON datos satelitales (FIRMS tiene rezago de procesamiento).
+    fm_fecha = fact_monitoreo.merge(dim_tiempo[['fecha_id', 'fecha']], on='fecha_id', how='left')
+    fm_fecha['fecha'] = pd.to_datetime(fm_fecha['fecha'])
+    max_fecha = fm_fecha['fecha'].max()
+    recent_windows = {}
+    for dep_name, g in fm_fecha.groupby('departamento'):
+        g = g.sort_values('fecha')
+        gp = g.dropna(subset=['precipitacion_mm'])
+        # Ventanas de precipitación terminando en el último día CON dato (ERA5 tiene ~5 días de
+        # rezago), para que 24h/7d/30d reflejen datos reales y no ceros de días aún sin publicar.
+        pend = gp['fecha'].max() if len(gp) else max_fecha
+        w7 = g[(g['fecha'] > pend - pd.Timedelta(days=7)) & (g['fecha'] <= pend)]
+        w30 = g[(g['fecha'] > pend - pd.Timedelta(days=30)) & (g['fecha'] <= pend)]
+        precip_ult = round(float(gp['precipitacion_mm'].iloc[-1]), 1) if len(gp) else 0.0
+        gf = g[g['num_focos_calor_activos'].fillna(0) > 0]
+        if len(gf):
+            fend = gf['fecha'].max()
+            wf30 = g[(g['fecha'] > fend - pd.Timedelta(days=30)) & (g['fecha'] <= fend)]
+            focos_30d = int(wf30['num_focos_calor_activos'].fillna(0).sum())
+        else:
+            focos_30d = 0
+        recent_windows[dep_name] = {
+            'precip24h': precip_ult,
+            'precip7d': round(float(w7['precipitacion_mm'].fillna(0).sum()), 1),
+            'precip30d': round(float(w30['precipitacion_mm'].fillna(0).sum()), 1),
+            'focos30d': focos_30d,
+        }
+
     # Pre-aggregate MEF data per department
     mef_dept_agg = fact_gasto.groupby('departamento').agg({
         'monto_pim': 'sum',
@@ -110,9 +140,9 @@ def process_gold_data():
         n_damn = int(row['cantidad_damnificados'])
         n_fall = int(row['cantidad_fallecidos'])
 
-        # Daily 24h peak telemetry values
-        precip_24h = round(float(row['precip_max']), 1)
-        focos_24h = int(row['focos_max'])
+        # Peak daily telemetry over the historical record (feature inputs of the risk model)
+        precip_peak = round(float(row['precip_max']), 1)
+        focos_peak = int(row['focos_max'])
         sismos_7d = int(max(1, round(row['sismos_mean'] * 7)))
         t_max = round(float(row['temp_max']), 1)
 
@@ -141,8 +171,8 @@ def process_gold_data():
         # Real SHAP feature breakdown per department
         shap = [
             {"name": "Incidencia Emergencias (SINPAD)", "val": f"+{n_emg}", "pct": min(95, max(15, int(row['emg_norm'] * 90))), "color": "#ba1a1a"},
-            {"name": "Precipitación Acumulada (mm/24h)", "val": f"{precip_24h} mm", "pct": min(90, max(10, int(row['precip_norm'] * 85))), "color": "#006686"},
-            {"name": "Focos Calor / Actividad Satelital", "val": f"+{focos_24h}", "pct": min(85, max(10, int(row['focos_norm'] * 80))), "color": "#565e74"},
+            {"name": "Precipitación máxima diaria (mm)", "val": f"{precip_peak} mm", "pct": min(90, max(10, int(row['precip_norm'] * 85))), "color": "#006686"},
+            {"name": "Focos calor (pico diario)", "val": f"+{focos_peak}", "pct": min(85, max(10, int(row['focos_norm'] * 80))), "color": "#565e74"},
             {"name": "Brecha Presupuestal MEF", "val": f"{round(pct_gasto, 1)}%", "pct": min(80, max(10, int(row['gap_norm'] * 75))), "color": "#94a3b8"}
         ]
 
@@ -158,10 +188,15 @@ def process_gold_data():
             "afectados": n_afect,
             "damnificados": n_damn,
             "fallecidos": n_fall,
-            "precipitacionMm": precip_24h,
-            "focosCalor": focos_24h,
+            "precipitacionMm": precip_peak,
+            "focosCalor": focos_peak,
             "sismos7d": sismos_7d,
             "tempMax": t_max,
+            # Ventanas reales recientes (vista Monitoreo Diario)
+            "precip24h": recent_windows.get(d, {}).get("precip24h", 0.0),
+            "precip7d": recent_windows.get(d, {}).get("precip7d", 0.0),
+            "precip30d": recent_windows.get(d, {}).get("precip30d", 0.0),
+            "focos30d": recent_windows.get(d, {}).get("focos30d", 0),
             "pimM": round(pim_m, 1),
             "devengadoM": round(dev_m, 1),
             "pctEjecucion": round(pct_gasto, 1)

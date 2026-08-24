@@ -23,13 +23,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "113.4 mm",
           "pct": 39,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+159",
           "pct": 10,
           "color": "#565e74"
@@ -49,6 +49,10 @@
       "focosCalor": 159,
       "sismos7d": 1,
       "tempMax": 20.7,
+      "precip24h": 1.7,
+      "precip7d": 10.6,
+      "precip30d": 30.8,
+      "focos30d": 49,
       "pimM": 290.3,
       "devengadoM": 242.8,
       "pctEjecucion": 83.6
@@ -67,13 +71,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "45.3 mm",
           "pct": 48,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+165",
           "pct": 10,
           "color": "#565e74"
@@ -93,6 +97,10 @@
       "focosCalor": 165,
       "sismos7d": 1,
       "tempMax": 19.9,
+      "precip24h": 0.0,
+      "precip7d": 0.3,
+      "precip30d": 9.1,
+      "focos30d": 38,
       "pimM": 1764.1,
       "devengadoM": 923.3,
       "pctEjecucion": 52.3
@@ -111,13 +119,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "35.4 mm",
           "pct": 29,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+305",
           "pct": 10,
           "color": "#565e74"
@@ -137,6 +145,10 @@
       "focosCalor": 305,
       "sismos7d": 1,
       "tempMax": 22.9,
+      "precip24h": 5.1,
+      "precip7d": 22.4,
+      "precip30d": 36.9,
+      "focos30d": 2,
       "pimM": 470.5,
       "devengadoM": 413.2,
       "pctEjecucion": 87.8
@@ -155,13 +167,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "36.3 mm",
           "pct": 13,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+55",
           "pct": 10,
           "color": "#565e74"
@@ -181,6 +193,10 @@
       "focosCalor": 55,
       "sismos7d": 7,
       "tempMax": 22.2,
+      "precip24h": 0.0,
+      "precip7d": 15.0,
+      "precip30d": 16.9,
+      "focos30d": 49,
       "pimM": 902.4,
       "devengadoM": 619.3,
       "pctEjecucion": 68.6
@@ -199,13 +215,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "26.5 mm",
           "pct": 21,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+121",
           "pct": 10,
           "color": "#565e74"
@@ -225,6 +241,10 @@
       "focosCalor": 121,
       "sismos7d": 1,
       "tempMax": 20.8,
+      "precip24h": 3.8,
+      "precip7d": 10.7,
+      "precip30d": 16.0,
+      "focos30d": 2,
       "pimM": 778.2,
       "devengadoM": 558.0,
       "pctEjecucion": 71.7
@@ -243,13 +263,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "98.4 mm",
           "pct": 51,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+763",
           "pct": 15,
           "color": "#565e74"
@@ -269,6 +289,10 @@
       "focosCalor": 763,
       "sismos7d": 1,
       "tempMax": 20.2,
+      "precip24h": 4.9,
+      "precip7d": 9.6,
+      "precip30d": 18.7,
+      "focos30d": 74,
       "pimM": 686.6,
       "devengadoM": 540.9,
       "pctEjecucion": 78.8
@@ -287,13 +311,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "15.0 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+5",
           "pct": 10,
           "color": "#565e74"
@@ -313,6 +337,10 @@
       "focosCalor": 5,
       "sismos7d": 1,
       "tempMax": 22.4,
+      "precip24h": 0.0,
+      "precip7d": 0.3,
+      "precip30d": 2.9,
+      "focos30d": 1,
       "pimM": 458.5,
       "devengadoM": 373.5,
       "pctEjecucion": 81.5
@@ -331,13 +359,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "79.3 mm",
           "pct": 35,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+245",
           "pct": 22,
           "color": "#565e74"
@@ -357,6 +385,10 @@
       "focosCalor": 245,
       "sismos7d": 1,
       "tempMax": 16.9,
+      "precip24h": 0.8,
+      "precip7d": 9.0,
+      "precip30d": 21.1,
+      "focos30d": 14,
       "pimM": 1520.6,
       "devengadoM": 1218.3,
       "pctEjecucion": 80.1
@@ -375,13 +407,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "62.2 mm",
           "pct": 41,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+115",
           "pct": 10,
           "color": "#565e74"
@@ -401,6 +433,10 @@
       "focosCalor": 115,
       "sismos7d": 1,
       "tempMax": 14.1,
+      "precip24h": 4.9,
+      "precip7d": 12.5,
+      "precip30d": 25.1,
+      "focos30d": 1,
       "pimM": 648.4,
       "devengadoM": 399.2,
       "pctEjecucion": 61.6
@@ -419,13 +455,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "40.3 mm",
           "pct": 24,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+801",
           "pct": 56,
           "color": "#565e74"
@@ -445,6 +481,10 @@
       "focosCalor": 801,
       "sismos7d": 1,
       "tempMax": 23.7,
+      "precip24h": 8.3,
+      "precip7d": 27.0,
+      "precip30d": 57.7,
+      "focos30d": 32,
       "pimM": 485.6,
       "devengadoM": 352.9,
       "pctEjecucion": 72.7
@@ -463,13 +503,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "39.4 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+44",
           "pct": 10,
           "color": "#565e74"
@@ -489,6 +529,10 @@
       "focosCalor": 44,
       "sismos7d": 2,
       "tempMax": 28.6,
+      "precip24h": 0.0,
+      "precip7d": 2.7,
+      "precip30d": 5.6,
+      "focos30d": 120,
       "pimM": 1504.9,
       "devengadoM": 972.4,
       "pctEjecucion": 64.6
@@ -507,13 +551,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "46.4 mm",
           "pct": 46,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+419",
           "pct": 37,
           "color": "#565e74"
@@ -533,6 +577,10 @@
       "focosCalor": 419,
       "sismos7d": 1,
       "tempMax": 17.3,
+      "precip24h": 0.5,
+      "precip7d": 3.0,
+      "precip30d": 9.6,
+      "focos30d": 50,
       "pimM": 647.1,
       "devengadoM": 504.2,
       "pctEjecucion": 77.9
@@ -551,13 +599,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "30.4 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+227",
           "pct": 12,
           "color": "#565e74"
@@ -577,6 +625,10 @@
       "focosCalor": 227,
       "sismos7d": 1,
       "tempMax": 23.4,
+      "precip24h": 0.0,
+      "precip7d": 0.1,
+      "precip30d": 1.2,
+      "focos30d": 77,
       "pimM": 1358.8,
       "devengadoM": 894.9,
       "pctEjecucion": 65.9
@@ -595,13 +647,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "106.2 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+275",
           "pct": 10,
           "color": "#565e74"
@@ -621,6 +673,10 @@
       "focosCalor": 275,
       "sismos7d": 1,
       "tempMax": 25.8,
+      "precip24h": 0.0,
+      "precip7d": 0.0,
+      "precip30d": 0.3,
+      "focos30d": 34,
       "pimM": 1158.5,
       "devengadoM": 706.3,
       "pctEjecucion": 61.0
@@ -639,13 +695,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "15.0 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+46",
           "pct": 10,
           "color": "#565e74"
@@ -665,6 +721,10 @@
       "focosCalor": 46,
       "sismos7d": 1,
       "tempMax": 22.2,
+      "precip24h": 0.0,
+      "precip7d": 0.3,
+      "precip30d": 2.9,
+      "focos30d": 57,
       "pimM": 10539.2,
       "devengadoM": 8094.0,
       "pctEjecucion": 76.8
@@ -683,13 +743,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "198.0 mm",
           "pct": 85,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+603",
           "pct": 48,
           "color": "#565e74"
@@ -709,6 +769,10 @@
       "focosCalor": 603,
       "sismos7d": 2,
       "tempMax": 29.8,
+      "precip24h": 11.7,
+      "precip7d": 47.6,
+      "precip30d": 162.4,
+      "focos30d": 31,
       "pimM": 268.3,
       "devengadoM": 216.9,
       "pctEjecucion": 80.8
@@ -727,13 +791,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "128.2 mm",
           "pct": 71,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+717",
           "pct": 37,
           "color": "#565e74"
@@ -753,6 +817,10 @@
       "focosCalor": 717,
       "sismos7d": 1,
       "tempMax": 29.7,
+      "precip24h": 0.0,
+      "precip7d": 25.1,
+      "precip30d": 70.9,
+      "focos30d": 8,
       "pimM": 118.9,
       "devengadoM": 75.7,
       "pctEjecucion": 63.7
@@ -771,13 +839,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "51.5 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+52",
           "pct": 10,
           "color": "#565e74"
@@ -797,6 +865,10 @@
       "focosCalor": 52,
       "sismos7d": 1,
       "tempMax": 24.5,
+      "precip24h": 0.0,
+      "precip7d": 12.5,
+      "precip30d": 12.7,
+      "focos30d": 93,
       "pimM": 277.5,
       "devengadoM": 218.9,
       "pctEjecucion": 78.9
@@ -815,13 +887,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "29.5 mm",
           "pct": 39,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+182",
           "pct": 17,
           "color": "#565e74"
@@ -841,6 +913,10 @@
       "focosCalor": 182,
       "sismos7d": 1,
       "tempMax": 9.9,
+      "precip24h": 0.5,
+      "precip7d": 3.4,
+      "precip30d": 13.7,
+      "focos30d": 11,
       "pimM": 281.2,
       "devengadoM": 211.8,
       "pctEjecucion": 75.3
@@ -859,13 +935,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "130.6 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+195",
           "pct": 13,
           "color": "#565e74"
@@ -885,6 +961,10 @@
       "focosCalor": 195,
       "sismos7d": 1,
       "tempMax": 31.4,
+      "precip24h": 0.0,
+      "precip7d": 0.0,
+      "precip30d": 0.0,
+      "focos30d": 57,
       "pimM": 3900.7,
       "devengadoM": 2362.5,
       "pctEjecucion": 60.6
@@ -903,13 +983,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "35.0 mm",
           "pct": 33,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+133",
           "pct": 10,
           "color": "#565e74"
@@ -929,6 +1009,10 @@
       "focosCalor": 133,
       "sismos7d": 2,
       "tempMax": 15.0,
+      "precip24h": 3.5,
+      "precip7d": 6.7,
+      "precip30d": 11.9,
+      "focos30d": 7,
       "pimM": 639.1,
       "devengadoM": 556.1,
       "pctEjecucion": 87.0
@@ -947,13 +1031,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "70.5 mm",
           "pct": 49,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+1014",
           "pct": 74,
           "color": "#565e74"
@@ -973,6 +1057,10 @@
       "focosCalor": 1014,
       "sismos7d": 1,
       "tempMax": 26.7,
+      "precip24h": 0.9,
+      "precip7d": 26.9,
+      "precip30d": 101.0,
+      "focos30d": 59,
       "pimM": 633.9,
       "devengadoM": 512.1,
       "pctEjecucion": 80.8
@@ -991,13 +1079,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "18.4 mm",
           "pct": 10,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+12",
           "pct": 10,
           "color": "#565e74"
@@ -1017,6 +1105,10 @@
       "focosCalor": 12,
       "sismos7d": 4,
       "tempMax": 22.5,
+      "precip24h": 0.0,
+      "precip7d": 9.2,
+      "precip30d": 9.8,
+      "focos30d": 7,
       "pimM": 315.5,
       "devengadoM": 244.7,
       "pctEjecucion": 77.6
@@ -1035,13 +1127,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "115.0 mm",
           "pct": 19,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+36",
           "pct": 10,
           "color": "#565e74"
@@ -1061,6 +1153,10 @@
       "focosCalor": 36,
       "sismos7d": 1,
       "tempMax": 28.5,
+      "precip24h": 0.0,
+      "precip7d": 3.9,
+      "precip30d": 4.3,
+      "focos30d": 3,
       "pimM": 1196.7,
       "devengadoM": 803.4,
       "pctEjecucion": 67.1
@@ -1079,13 +1175,13 @@
           "color": "#ba1a1a"
         },
         {
-          "name": "Precipitación Acumulada (mm/24h)",
+          "name": "Precipitación máxima diaria (mm)",
           "val": "189.0 mm",
           "pct": 69,
           "color": "#006686"
         },
         {
-          "name": "Focos Calor / Actividad Satelital",
+          "name": "Focos calor (pico diario)",
           "val": "+936",
           "pct": 80,
           "color": "#565e74"
@@ -1105,6 +1201,10 @@
       "focosCalor": 936,
       "sismos7d": 2,
       "tempMax": 30.1,
+      "precip24h": 0.0,
+      "precip7d": 23.4,
+      "precip30d": 86.1,
+      "focos30d": 27,
       "pimM": 170.5,
       "devengadoM": 135.3,
       "pctEjecucion": 79.4
