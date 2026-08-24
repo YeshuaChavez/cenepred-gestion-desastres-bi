@@ -20,7 +20,7 @@ export default function AIChatbotModal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: 'bot',
-      text: '¡Hola! Soy el Asistente de Inteligencia CENEPRED. ¿Qué información regional o presupuestal deseas consultar hoy?'
+      text: '¡Hola! Soy el asistente de CENEPRED. ¿Qué información regional o presupuestal deseas consultar?'
     }
   ]);
 
@@ -137,13 +137,13 @@ export default function AIChatbotModal() {
         <div className="bg-gradient-to-r from-sky-800 via-sky-900 to-[#0a2540] dark:from-sky-950 dark:via-[#091f3d] dark:to-[#060d1f] p-4 text-white flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-sky-500/30 flex items-center justify-center border border-sky-400/40">
-              <span className="material-symbols-outlined text-lg text-sky-200">smart_toy</span>
+              <span className="material-symbols-outlined text-lg text-sky-200">support_agent</span>
             </div>
             <div>
-              <h3 className="font-bold text-sm leading-tight">Asistente de Inteligencia CENEPRED</h3>
+              <h3 className="font-bold text-sm leading-tight">Asistente CENEPRED</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-[10px] text-sky-200 font-medium">Asistente inteligente • En línea</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
+                <span className="text-[10px] text-sky-200 font-medium">En línea</span>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function AIChatbotModal() {
             >
               {msg.sender === 'bot' && (
                 <div className="w-6 h-6 rounded-full bg-sky-700 dark:bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
-                  <span className="material-symbols-outlined text-xs">smart_toy</span>
+                  <span className="material-symbols-outlined text-xs">support_agent</span>
                 </div>
               )}
               <div
@@ -190,7 +190,7 @@ export default function AIChatbotModal() {
           {isTyping && (
             <div className="flex items-center gap-2 self-start">
               <div className="w-6 h-6 rounded-full bg-sky-700 dark:bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                <span className="material-symbols-outlined text-xs">smart_toy</span>
+                <span className="material-symbols-outlined text-xs">support_agent</span>
               </div>
               <div className="bg-white dark:bg-[#0c1833] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800 rounded-2xl rounded-tl-xs p-2.5 flex items-center gap-1.5 text-[11px] font-semibold shadow-2xs">
                 <span className="w-1.5 h-1.5 bg-sky-600 dark:bg-sky-400 rounded-full animate-bounce"></span>
@@ -210,9 +210,9 @@ export default function AIChatbotModal() {
             <button
               key={idx}
               onClick={() => handleSend(item.prompt)}
-              className="whitespace-nowrap px-2.5 py-1 text-[10px] font-bold bg-white dark:bg-[#0c1833] text-sky-900 dark:text-sky-300 hover:text-white hover:bg-sky-600 dark:hover:bg-sky-600 border border-sky-200/90 dark:border-sky-800/80 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 flex items-center gap-1"
+              className="group whitespace-nowrap px-2.5 py-1 text-[10px] font-bold bg-white dark:bg-[#0c1833] text-sky-900 dark:text-sky-300 hover:text-white hover:bg-sky-600 dark:hover:bg-sky-600 border border-sky-200/90 dark:border-sky-800/80 rounded-full transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 flex items-center gap-1"
             >
-              <span className="material-symbols-outlined text-sky-600 dark:text-sky-400 text-xs">{item.icon}</span>
+              <span className="material-symbols-outlined text-sky-600 dark:text-sky-400 group-hover:text-white text-xs">{item.icon}</span>
               <span>{item.label}</span>
             </button>
           ))}
@@ -274,7 +274,7 @@ export default function AIChatbotModal() {
         `}
         title="Abrir Asistente CENEPRED"
       >
-        <span className="material-symbols-outlined text-2xl">smart_toy</span>
+        <span className="material-symbols-outlined text-2xl">support_agent</span>
       </button>
 
     </div>

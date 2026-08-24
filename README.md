@@ -214,16 +214,8 @@ tests/           68 pruebas (pytest)
 
 ---
 
-## Estado actual
-
-**Funcionando y verificado:** el pipeline diario completo (ADF -> Databricks -> ADLS + Unity Catalog), el refresh programado de Power BI, la web en producción con asistente, alertas y diagnósticos probados en vivo, y las 68 pruebas en verde.
-
-**Listo en código, pendiente de ejecutar contra Azure:** el modelo ya se empaqueta autocontenido (pkl + snapshot + metadata) y se registra como carpeta para el endpoint de Azure ML; la lectura centralizada de secretos vía Key Vault está implementada (`common/secrets.py`, con fallback a variables de entorno) y la infraestructura está descrita en módulos de Terraform reutilizables (`infra/modules` + `infra/environments`). Lo que queda es del lado de la nube: asignar los roles de Key Vault y cargar los secretos, y correr `terraform init/plan/apply` (o importar los recursos existentes). Ver `infra/README.md`.
-
-**Alcance de datos:** emergencias y gasto son históricos por límite de las fuentes; solo la telemetría de monitoreo es dinámica hasta hoy. Esa es una decisión consciente, no un defecto: el valor del sistema está precisamente en cruzar un historial estable con señales frescas.
-
 ## Trabajo futuro
 
 - Reincorporar el portal de INDECI cuando el acceso desde la nube lo permita, para acortar el rezago del histórico.
-- Promover el endpoint de Azure ML a un despliegue gestionado con escalado.
-- Añadir pronóstico probabilístico por horizonte una vez que haya suficiente telemetría dinámica acumulada para que supere al baseline.
+- Promover el endpoint del modelo a un despliegue gestionado con escalado.
+- Ampliar la cobertura de infraestructura crítica y de alertas por canal.
