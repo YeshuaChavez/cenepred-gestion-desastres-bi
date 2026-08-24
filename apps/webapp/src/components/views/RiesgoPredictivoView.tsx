@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { PERU_DEPARTAMENTOS } from '../../data/mockData';
+
+// Mapa localizador (Leaflet) cargado solo en cliente (usa window).
+const RegionLocatorMap = dynamic(() => import('../RegionLocatorMap'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">Cargando mapa…</div>,
+});
 
 // Coordenadas y región natural por departamento (capa Gold, dim_region). Se usan para el
 // mapa localizador de la región. Claves sin tildes en mayúsculas.
@@ -33,23 +40,7 @@ const REGION_GEO: Record<string, { lat: number; lng: number; reg: string }> = {
   'UCAYALI': { lat: -8.379, lng: -74.554, reg: 'Selva' },
 };
 
-// Límites geográficos aproximados del Perú (para que la silueta y los pines encajen).
-const LAT_MAX = 0.0, LAT_MIN = -18.4, LNG_MIN = -81.4, LNG_MAX = -68.6;
-const MAP_W = 150, MAP_H = 210, MAP_PAD = 10;
 const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().trim();
-const projX = (lng: number) => MAP_PAD + ((lng - LNG_MIN) / (LNG_MAX - LNG_MIN)) * (MAP_W - 2 * MAP_PAD);
-const projY = (lat: number) => MAP_PAD + ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * (MAP_H - 2 * MAP_PAD);
-
-// Contorno simplificado del Perú como pares [lng, lat] (borde aproximado, sentido horario).
-const PERU_OUTLINE: [number, number][] = [
-  [-75.2, -0.1], [-73.0, -0.7], [-70.1, -2.6], [-69.95, -4.2], [-70.8, -4.1],
-  [-72.9, -5.1], [-72.9, -7.6], [-73.8, -8.4], [-72.4, -9.4], [-70.6, -9.5],
-  [-69.6, -10.9], [-68.7, -12.5], [-69.4, -13.7], [-68.9, -15.6], [-69.4, -17.5],
-  [-70.4, -18.35], [-71.4, -17.7], [-73.4, -16.4], [-75.2, -15.2], [-76.3, -14.0],
-  [-77.2, -12.3], [-78.5, -9.0], [-79.4, -7.9], [-80.2, -6.3], [-81.2, -5.0],
-  [-81.3, -4.3], [-80.5, -3.4], [-78.5, -3.4], [-77.5, -2.0], [-76.5, -0.4],
-];
-const PERU_PATH = PERU_OUTLINE.map((p, i) => `${i ? 'L' : 'M'}${projX(p[0]).toFixed(1)},${projY(p[1]).toFixed(1)}`).join(' ') + ' Z';
 
 // Nivel de riesgo y color a partir de la probabilidad.
 const riskLevel = (p: number) =>
@@ -292,94 +283,72 @@ export default function RiesgoPredictivoView() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Factores de Riesgo Clave */}
-        <div className="lg:col-span-2 flex flex-col">
-          <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col min-h-[420px] transition-colors justify-between">
+        <div className="lg:col-span-2 bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave</h3>
-                  <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de cada variable al nivel de riesgo estimado</p>
-                </div>
-                <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                  <button onClick={() => setScope('national')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${scope === 'national' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Nacional</button>
-                  <button onClick={() => setScope('regional')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${scope === 'regional' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Por Región</button>
-                </div>
-              </div>
+              <h3 className="font-headline-lg text-lg font-bold text-slate-900 dark:text-white">Factores de Riesgo Clave</h3>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400">Contribución relativa de cada variable al nivel de riesgo estimado</p>
+            </div>
+            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+              <button onClick={() => setScope('national')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${scope === 'national' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Nacional</button>
+              <button onClick={() => setScope('regional')} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${scope === 'regional' ? 'bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Por Región</button>
+            </div>
+          </div>
 
-              {scope === 'regional' && (
-                <div className="mb-6 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 flex items-center justify-between animate-fade-in">
-                  <span className="text-xs font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
-                  </span>
-                  <select value={selectedDeptoKey} onChange={(e) => { setSelectedDeptoKey(e.target.value); setSimResult(null); }} className="bg-white dark:bg-[#0c1833] border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs">
-                    {departmentKeys.map((key) => (
-                      <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">{PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              <div className="space-y-5">
-                {shapItemsToRender.map((item, idx) => (
-                  <div key={idx} className="group">
-                    <div className="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
-                      <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 font-medium">{item.name}</span>
-                      <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
-                    </div>
-                    <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${item.pct}%`, backgroundColor: item.color }}></div>
-                    </div>
-                  </div>
+          {scope === 'regional' && (
+            <div className="mb-6 p-3 bg-sky-50 dark:bg-sky-950/40 rounded-xl border border-sky-100 dark:border-sky-900/60 flex items-center justify-between animate-fade-in">
+              <span className="text-xs font-bold text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-sm">location_on</span> Región Evaluada:
+              </span>
+              <select value={selectedDeptoKey} onChange={(e) => { setSelectedDeptoKey(e.target.value); setSimResult(null); }} className="bg-white dark:bg-[#0c1833] border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-1.5 outline-none text-slate-800 dark:text-slate-200 cursor-pointer shadow-2xs">
+                {departmentKeys.map((key) => (
+                  <option key={key} value={key} className="bg-white dark:bg-[#0c1833] text-slate-900 dark:text-white">{PERU_DEPARTAMENTOS[key].name} ({PERU_DEPARTAMENTOS[key].prob}% riesgo)</option>
                 ))}
-              </div>
+              </select>
+            </div>
+          )}
 
-              {(() => {
-                const top = [...shapItemsToRender].sort((a, b) => b.pct - a.pct)[0];
-                return (
-                  <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-sky-50 to-slate-50 dark:from-sky-950/30 dark:to-slate-900/40 border border-sky-100 dark:border-sky-900/50 flex items-start gap-3">
-                    <span className="material-symbols-outlined text-sky-600 dark:text-sky-400 text-lg mt-0.5 shrink-0">lightbulb</span>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                      <b className="text-slate-900 dark:text-white">{top.name}</b> es el factor de mayor peso ({top.pct}%) en {scope === 'national' ? 'el promedio nacional de los 25 departamentos' : `el riesgo estimado de ${deptoData.name}`}. Reducir su exposición es la palanca más efectiva para bajar el nivel de riesgo.
-                    </p>
-                  </div>
-                );
-              })()}
-            </div>
-            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex justify-between">
-              <span>{scope === 'national' ? 'Promedio de los 25 departamentos' : `Región: ${deptoData.name}`}</span>
-              <span>Factores explicativos del modelo</span>
-            </div>
+          <div className="flex-1 flex flex-col justify-center gap-6 min-h-0 py-2">
+            {shapItemsToRender.map((item, idx) => (
+              <div key={idx} className="group">
+                <div className="flex justify-between text-xs font-semibold mb-1.5 text-slate-700 dark:text-slate-300">
+                  <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 font-medium">{item.name}</span>
+                  <span className="font-bold" style={{ color: item.color }}>{item.val} ({item.pct}%)</span>
+                </div>
+                <div className="w-full bg-slate-100 dark:bg-slate-800 h-3.5 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-700" style={{ width: `${item.pct}%`, backgroundColor: item.color }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {(() => {
+            const top = [...shapItemsToRender].sort((a, b) => b.pct - a.pct)[0];
+            return (
+              <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-sky-50 to-slate-50 dark:from-sky-950/30 dark:to-slate-900/40 border border-sky-100 dark:border-sky-900/50 flex items-start gap-3">
+                <span className="material-symbols-outlined text-sky-600 dark:text-sky-400 text-lg mt-0.5 shrink-0">lightbulb</span>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <b className="text-slate-900 dark:text-white">{top.name}</b> es el factor de mayor peso ({top.pct}%) en {scope === 'national' ? 'el promedio nacional de los 25 departamentos' : `el riesgo estimado de ${deptoData.name}`}. Reducir su exposición es la palanca más efectiva para bajar el nivel de riesgo.
+                </p>
+              </div>
+            );
+          })()}
+
+          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>{scope === 'national' ? 'Promedio de los 25 departamentos' : `Región: ${deptoData.name}`}</span>
+            <span>Factores explicativos del modelo</span>
           </div>
         </div>
 
         {/* Region detail with locator map */}
         <div className="bg-white dark:bg-[#0c1833] rounded-2xl p-6 shadow-2xs border border-slate-200/80 dark:border-slate-800/80 flex flex-col gap-5 transition-colors">
-          {/* Locator map */}
-          <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-gradient-to-b from-sky-50 to-slate-50 dark:from-sky-950/40 dark:to-slate-900/60">
-            <div className="absolute top-2 left-3 z-10">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">Ubicación</span>
-              <span className="text-sm font-extrabold text-slate-900 dark:text-white">{deptoData.name}</span>
-              {geo && <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">{geo.reg}</span>}
+          {/* Locator map (Leaflet, real Peru tiles) */}
+          <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 h-[210px] bg-slate-100 dark:bg-slate-900">
+            <div className="absolute top-2 left-3 z-[1000] pointer-events-none flex flex-col items-start gap-1">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-white/85 dark:bg-slate-900/85 px-1.5 py-0.5 rounded">Ubicación</span>
+              {geo && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/85 dark:bg-slate-900/85 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">{geo.reg}</span>}
             </div>
-            <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} className="w-full h-[210px]" role="img" aria-label={`Mapa localizador de ${deptoData.name}`}>
-              {/* Peru silhouette */}
-              <path d={PERU_PATH} className="fill-sky-100/80 dark:fill-sky-950/50 stroke-sky-300 dark:stroke-sky-800" strokeWidth={0.8} strokeLinejoin="round" />
-              {/* all departments as faint dots */}
-              {Object.entries(REGION_GEO).map(([name, g]) => {
-                if (norm(deptoData.name) === name) return null;
-                return <circle key={name} cx={projX(g.lng)} cy={projY(g.lat)} r={1.6} className="fill-slate-400/70 dark:fill-slate-500/60" />;
-              })}
-              {/* selected department pin */}
-              {geo && (
-                <g>
-                  <circle cx={projX(geo.lng)} cy={projY(geo.lat)} r={11} fill={rl.color} opacity={0.18}>
-                    <animate attributeName="r" values="8;15;8" dur="2.4s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.25;0;0.25" dur="2.4s" repeatCount="indefinite" />
-                  </circle>
-                  <circle cx={projX(geo.lng)} cy={projY(geo.lat)} r={5} fill={rl.color} stroke="#fff" strokeWidth={1.5} />
-                </g>
-              )}
-            </svg>
+            {geo && <RegionLocatorMap lat={geo.lat} lng={geo.lng} name={deptoData.name} color={rl.color} />}
           </div>
 
           <div>
