@@ -57,6 +57,15 @@ export default function MonitoreoView() {
     return MACRO_REGIONS[macroRegion]?.includes(key);
   });
 
+  // Selecciona una region y, si queda fuera del filtro de macrorregion activo, lo abre a "todas"
+  // para que el selector desplegable no quede desincronizado con el panel de diagnostico.
+  const selectDepto = (key: string) => {
+    setSelectedDeptoKey(key);
+    if (macroRegion !== 'todas' && !MACRO_REGIONS[macroRegion]?.includes(key)) {
+      setMacroRegion('todas');
+    }
+  };
+
   const handleMacroRegionChange = (newMacro: MacroRegion) => {
     setMacroRegion(newMacro);
     const newFilteredKeys = departmentKeys.filter(key => {
@@ -318,7 +327,7 @@ export default function MonitoreoView() {
               return (
                 <button
                   key={d.name}
-                  onClick={() => setSelectedDeptoKey(d.key)}
+                  onClick={() => selectDepto(d.key)}
                   className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase cursor-pointer transition-all ${
                     isSelected
                       ? 'bg-red-600 text-white shadow-xs scale-105'
@@ -516,7 +525,7 @@ export default function MonitoreoView() {
             <PeruInteractiveMap
               departamentos={PERU_DEPARTAMENTOS}
               selectedDeptoKey={selectedDeptoKey}
-              onSelectDepto={(key) => setSelectedDeptoKey(key)}
+              onSelectDepto={(key) => selectDepto(key)}
               mapMode={mapMode}
               macroRegion={macroRegion}
               timeWindow={timeWindow}
