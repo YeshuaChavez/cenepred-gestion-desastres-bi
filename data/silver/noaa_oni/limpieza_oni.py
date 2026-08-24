@@ -22,7 +22,10 @@ BRONZE_FILE = (
 )
 OUTPUT_DIR = Path(__file__).parent / "local_data"
 
-ANIO_INICIO, ANIO_FIN = 2012, 2023
+# Ventana: desde 2012 hasta el año en curso (el ONI se actualiza mensualmente; los meses
+# futuros del año en curso llegan como centinela 99.9 y se filtran).
+ANIO_INICIO = 2012
+ANIO_FIN = datetime.now(timezone.utc).year
 VALOR_CENTINELA = 99.9
 
 
@@ -41,13 +44,21 @@ def cargar_historico() -> pd.DataFrame:
 
 
 def limpiar(df: pd.DataFrame) -> pd.DataFrame:
-    df = df[df["oni"] != VALOR_CENTINELA]
+    # El archivo usa +/-99.9 como centinela para meses sin dato (futuros del año en curso);
+    # el ONI real está en ~[-3, +3], así que se descarta cualquier valor de magnitud absurda.
+    df = df[df["oni"].abs() < 90]
     df = df[(df["anio"] >= ANIO_INICIO) & (df["anio"] <= ANIO_FIN)]
     return df.sort_values(["anio", "mes"]).reset_index(drop=True)
 
 
 def validar_calidad(df: pd.DataFrame) -> dict:
-    meses_esperados = (ANIO_FIN - ANIO_INICIO + 1) * 12
+    # El año en curso es parcial, así que se valida CONTINUIDAD (2012-01 hasta el último mes
+    # disponible, sin huecos) en vez de exigir 12 meses del año actual.
+    if len(df):
+        ult = df.sort_values(["anio", "mes"]).iloc[-1]
+        meses_esperados = (int(ult["anio"]) - ANIO_INICIO) * 12 + int(ult["mes"])
+    else:
+        meses_esperados = 0
     resultado = {
         "total_filas": len(df),
         "meses_esperados": meses_esperados,
