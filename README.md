@@ -211,11 +211,3 @@ infra/
 scripts/         export a la web, sincronización con ADLS, utilidades
 tests/           68 pruebas (pytest)
 ```
-
----
-
-## Trabajo futuro
-
-- Reincorporar el portal de INDECI cuando el acceso desde la nube lo permita, para acortar el rezago del histórico.
-- Promover el endpoint del modelo a un despliegue gestionado con escalado.
-- Ampliar la cobertura de infraestructura crítica y de alertas por canal.
