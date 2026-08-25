@@ -163,7 +163,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               <div className="font-headline-lg text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-2 tracking-tight">
                 {NATIONAL_META.pctEjecucionNacional}%
               </div>
-              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">S/ {NATIONAL_META.totalDevengadoMillones}M invertidos en prevención</p>
+              <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">S/ {NATIONAL_META.totalDevengadoMillones.toLocaleString('es-PE', { maximumFractionDigits: 1 })}M invertidos en prevención</p>
             </div>
           </ScrollReveal>
 
@@ -171,12 +171,20 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 3. High Risk Regions Spotlight */}
-      <section className="w-full px-6 md:px-16 py-20 bg-slate-50/60 dark:bg-[#081024]/60 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto">
-          
+      <section className="relative w-full px-6 md:px-16 py-20 bg-slate-50/60 dark:bg-[#081024]/60 transition-colors duration-300 overflow-hidden">
+        {/* Decoracion de fondo */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.55] dark:opacity-40" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(148,163,184,0.28) 1px, transparent 0)', backgroundSize: '26px 26px' }}></div>
+        <div className="pointer-events-none absolute -top-24 -right-24 w-[420px] h-[420px] bg-red-400/10 dark:bg-red-500/10 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
-              <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-2 block">
+              <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
                 Vigilancia Climatológica
               </span>
               <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -193,30 +201,37 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {highRiskDeptos.map((d, index) => (
+            {highRiskDeptos.map((d, index) => {
+              const accent = d.prob >= 65 ? '#dc2626' : d.prob >= 55 ? '#ea580c' : '#d97706';
+              return (
               <ScrollReveal key={d.name} delayMs={index * 100}>
                 <div
                   onClick={() => setActivePath('monitoreo-diario')}
-                  className="bg-white dark:bg-[#0c1833] p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-sky-300 dark:hover:border-sky-500/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
+                  className="relative bg-white dark:bg-[#0c1833] p-6 pl-7 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-sky-300 dark:hover:border-sky-500/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full overflow-hidden"
                 >
-                  <div>
+                  {/* Barra de acento por nivel de riesgo */}
+                  <span className="absolute left-0 top-0 h-full w-1.5 rounded-l-3xl" style={{ backgroundColor: accent }}></span>
+                  {/* Ranking translucido */}
+                  <span className="absolute top-3 right-4 font-headline-lg text-5xl font-extrabold text-slate-100 dark:text-white/5 leading-none select-none">{index + 1}</span>
+
+                  <div className="relative">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-base font-bold text-slate-900 dark:text-white group-hover:text-sky-700 dark:group-hover:text-sky-400 transition-colors">
                         {d.name}
                       </span>
-                      <span className="px-3 py-1 bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 text-[11px] font-bold rounded-full border border-red-200 dark:border-red-800/50">
+                      <span className="px-3 py-1 text-[11px] font-bold rounded-full border" style={{ color: accent, backgroundColor: `${accent}1a`, borderColor: `${accent}40` }}>
                         {d.prob}% Riesgo
                       </span>
                     </div>
 
                     <div className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 mb-6 font-medium">
                       <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                        <span className="text-slate-400 dark:text-slate-500">Precipitación 24h:</span>
-                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.precipitacionMm} mm</span>
+                        <span className="text-slate-400 dark:text-slate-500">Lluvia (30d):</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.precip30d ?? 0} mm</span>
                       </div>
                       <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                        <span className="text-slate-400 dark:text-slate-500">Focos de Calor:</span>
-                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.focosCalor} activos</span>
+                        <span className="text-slate-400 dark:text-slate-500">Focos de Calor (30d):</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{d.focos30d ?? 0}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400 dark:text-slate-500">Inversión Ejecutada:</span>
@@ -225,24 +240,31 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-700 dark:text-sky-400 group-hover:underline">
+                  <div className="relative pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-700 dark:text-sky-400 group-hover:underline">
                     <span>Ver Detalles Regionales</span>
                     <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">chevron_right</span>
                   </div>
                 </div>
               </ScrollReveal>
-            ))}
+              );
+            })}
           </div>
 
         </div>
       </section>
 
       {/* 4. Core Features Showcase */}
-      <section className="w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-y border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto">
-          
+      <section className="relative w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-y border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300 overflow-hidden">
+        {/* Decoracion de fondo */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.5] dark:opacity-[0.35]" style={{ backgroundImage: 'linear-gradient(rgba(148,163,184,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.14) 1px, transparent 1px)', backgroundSize: '48px 48px', maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 78%)', WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 78%)' }}></div>
+        <div className="pointer-events-none absolute top-10 -left-32 w-[380px] h-[380px] bg-sky-400/10 dark:bg-sky-500/10 rounded-full blur-3xl"></div>
+        <div className="pointer-events-none absolute bottom-0 -right-32 w-[380px] h-[380px] bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-3 block">
+            <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-3 inline-flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm">apps</span>
               Plataforma Institucional
             </span>
             <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -251,77 +273,72 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <ScrollReveal delayMs={100}>
-              <div
-                onClick={() => setActivePath('monitoreo-diario')}
-                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-sky-400 dark:hover:border-sky-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
-                    <span className="material-symbols-outlined text-3xl">satellite_alt</span>
+
+            {[
+              { path: 'monitoreo-diario', icon: 'satellite_alt', color: 'sky', title: 'Monitoreo Diario y Mapa', desc: 'Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.' },
+              { path: 'riesgo-predictivo', icon: 'psychology', color: 'indigo', title: 'Simulador de Escenarios', desc: 'Ajusta variables de lluvia y clima para simular el riesgo futuro de cada departamento y generar diagnósticos ejecutivos.' },
+              { path: 'presupuesto-mef', icon: 'analytics', color: 'emerald', title: 'Presupuesto de Prevención', desc: 'Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.' }
+            ].map((f, i) => {
+              const gradient = f.color === 'sky' ? 'from-sky-500 to-cyan-400' : f.color === 'indigo' ? 'from-indigo-500 to-violet-400' : 'from-emerald-500 to-teal-400';
+              const iconBox = f.color === 'sky' ? 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 group-hover:bg-sky-600' : f.color === 'indigo' ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 group-hover:bg-indigo-600' : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 group-hover:bg-emerald-600';
+              const titleHover = f.color === 'sky' ? 'group-hover:text-sky-600 dark:group-hover:text-sky-400' : f.color === 'indigo' ? 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400' : 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400';
+              const borderHover = f.color === 'sky' ? 'hover:border-sky-400 dark:hover:border-sky-400' : f.color === 'indigo' ? 'hover:border-indigo-400 dark:hover:border-indigo-400' : 'hover:border-emerald-400 dark:hover:border-emerald-400';
+              return (
+                <ScrollReveal key={f.path} delayMs={(i + 1) * 100}>
+                  <div
+                    onClick={() => setActivePath(f.path as ActivePath)}
+                    className={`relative bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl ${borderHover} hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full overflow-hidden`}
+                  >
+                    {/* Linea de acento superior en hover */}
+                    <span className={`absolute top-0 left-0 h-1 w-0 group-hover:w-full bg-gradient-to-r ${gradient} transition-all duration-500 rounded-t-3xl`}></span>
+                    {/* Numero de indice translucido */}
+                    <span className="absolute -bottom-4 right-3 font-headline-lg text-8xl font-extrabold text-slate-100 dark:text-white/[0.04] leading-none select-none">0{i + 1}</span>
+
+                    <div className="relative flex items-center justify-between mb-8">
+                      <div className={`w-14 h-14 ${iconBox} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:text-white transition-all duration-300 shadow-sm`}>
+                        <span className="material-symbols-outlined text-3xl">{f.icon}</span>
+                      </div>
+                      <span className={`material-symbols-outlined text-slate-400 dark:text-slate-500 ${titleHover} group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl`}>arrow_outward</span>
+                    </div>
+
+                    <div className="relative">
+                      <h3 className={`font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 ${titleHover} transition-colors`}>
+                        {f.title}
+                      </h3>
+                      <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                        {f.desc}
+                      </p>
+                    </div>
                   </div>
-                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
-                    Monitoreo Diario y Mapa
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                    Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delayMs={200}>
-              <div
-                onClick={() => setActivePath('riesgo-predictivo')}
-                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-indigo-400 dark:hover:border-indigo-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                    <span className="material-symbols-outlined text-3xl">psychology</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                    Simulador de Escenarios
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                    Ajusta variables de lluvia y clima para simular el riesgo futuro de cada departamento y generar diagnósticos ejecutivos.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delayMs={300}>
-              <div
-                onClick={() => setActivePath('presupuesto-mef')}
-                className="bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl hover:border-emerald-400 dark:hover:border-emerald-400 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
-                    <span className="material-symbols-outlined text-3xl">analytics</span>
-                  </div>
-                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-2xl">arrow_outward</span>
-                </div>
-
-                <div>
-                  <h3 className="font-headline-lg text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                    Presupuesto de Prevención
-                  </h3>
-                  <p className="font-body-md text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                    Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
+                </ScrollReveal>
+              );
+            })}
 
           </div>
+        </div>
+      </section>
+
+      {/* 4b. Fuentes de datos oficiales */}
+      <section className="w-full px-6 md:px-16 py-14 bg-slate-50/60 dark:bg-[#081024]/60 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto text-center">
+          <ScrollReveal>
+            <span className="font-label-sm text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6 inline-flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400">verified</span>
+              Integramos datos de fuentes oficiales
+            </span>
+          </ScrollReveal>
+          <ScrollReveal delayMs={120}>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+              {['INDECI / SINPAD', 'Open-Meteo (ERA5)', 'NASA FIRMS', 'USGS', 'NOAA', 'INEI', 'MEF'].map((src) => (
+                <span
+                  key={src}
+                  className="px-4 py-2 rounded-full bg-white dark:bg-[#0c1833] border border-slate-200/90 dark:border-slate-800/90 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-2xs hover:border-sky-300 dark:hover:border-sky-500/50 hover:text-sky-700 dark:hover:text-sky-400 transition-colors"
+                >
+                  {src}
+                </span>
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -330,22 +347,44 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
         <ScrollReveal>
           <div className="max-w-6xl mx-auto bg-gradient-to-r from-[#0c365a] via-sky-900 to-[#0c365a] dark:from-[#081f3d] dark:via-sky-950 dark:to-[#081f3d] text-white rounded-[36px] p-10 md:p-16 relative overflow-hidden shadow-2xl border border-sky-800/40">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-3xl -mr-40 -mt-40 pointer-events-none"></div>
-            
+            <div className="absolute bottom-0 left-0 w-[440px] h-[440px] bg-cyan-400/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
+            {/* Patron de puntos */}
+            <div className="pointer-events-none absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
-              <div className="max-w-xl space-y-4">
+              <div className="max-w-xl space-y-5">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-[11px] font-bold uppercase tracking-widest text-sky-100 backdrop-blur-sm">
+                  <span className="material-symbols-outlined text-sm">public</span>
+                  Portal público nacional
+                </span>
                 <h2 className="font-display-lg text-3xl md:text-[40px] leading-tight font-bold">
                   Acceda a la Información Nacional en Tiempo Real
                 </h2>
                 <p className="font-body-md text-sky-200 text-base md:text-lg font-medium">
                   Portal libre para la consulta pública de ciudadanos, estudiantes, autoridades e investigadores de todo el Perú.
                 </p>
+
+                {/* Chips de datos */}
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {[
+                    { icon: 'map', label: '25 regiones cubiertas' },
+                    { icon: 'update', label: 'Actualización diaria' },
+                    { icon: 'lock_open', label: 'Acceso libre y gratuito' }
+                  ].map((chip) => (
+                    <span key={chip.label} className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-100/90 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">
+                      <span className="material-symbols-outlined text-sm text-cyan-300">{chip.icon}</span>
+                      {chip.label}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               <div className="flex-shrink-0">
                 <button
                   onClick={() => setActivePath('monitoreo-diario')}
-                  className="px-8 py-4 bg-white text-sky-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer active:scale-95"
+                  className="px-8 py-4 bg-white text-sky-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap cursor-pointer active:scale-95 flex items-center gap-2"
                 >
+                  <span className="material-symbols-outlined text-base">map</span>
                   EXPLORAR MONITOREO NACIONAL
                 </button>
               </div>
@@ -355,11 +394,18 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       </section>
 
       {/* 6. FAQ Section */}
-      <section className="w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-t border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300">
-        <div className="max-w-5xl mx-auto">
-          
+      <section className="relative w-full px-6 md:px-16 py-24 bg-white dark:bg-[#060d1f] border-t border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300 overflow-hidden">
+        {/* Decoracion de fondo */}
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[520px] h-[320px] bg-sky-400/10 dark:bg-sky-500/[0.07] rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 max-w-5xl mx-auto">
+
           <ScrollReveal>
             <div className="text-center max-w-3xl mx-auto mb-14">
+              <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-3 inline-flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">help</span>
+                Centro de ayuda
+              </span>
               <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
                 Preguntas Frecuentes
               </h2>
@@ -398,6 +444,16 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               );
             })}
           </div>
+
+          <ScrollReveal delayMs={120}>
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+              <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">¿No encuentras lo que buscas?</span>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-sky-700 dark:text-sky-400">
+                <span className="material-symbols-outlined text-base">support_agent</span>
+                Pregúntale al Asistente CENEPRED (abajo a la derecha)
+              </span>
+            </div>
+          </ScrollReveal>
 
         </div>
       </section>
