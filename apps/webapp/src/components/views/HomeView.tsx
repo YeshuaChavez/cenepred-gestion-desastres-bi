@@ -269,7 +269,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
 
             {[
               { path: 'monitoreo-diario', icon: 'satellite_alt', color: 'sky', title: 'Monitoreo Diario y Mapa', desc: 'Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.' },
@@ -287,7 +287,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
               };
               const { gradient, iconBox, titleHover, borderHover } = COLOR[f.color] || COLOR.sky;
               return (
-                <ScrollReveal key={f.path} delayMs={(i + 1) * 100}>
+                <ScrollReveal key={f.path} delayMs={(i + 1) * 100} className={`md:col-span-2 ${i === 3 ? 'md:col-start-2' : ''}`}>
                   <div
                     onClick={() => setActivePath(f.path as ActivePath)}
                     className={`relative bg-slate-50/70 dark:bg-[#0c1833]/70 p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-2xs hover:shadow-xl ${borderHover} hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full overflow-hidden`}
