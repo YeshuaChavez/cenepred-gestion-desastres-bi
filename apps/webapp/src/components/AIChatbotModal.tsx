@@ -31,6 +31,13 @@ export default function AIChatbotModal() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, isListening]);
 
+  // Permite abrir el asistente desde cualquier parte de la app (p. ej. el enlace del Home).
+  useEffect(() => {
+    const open = () => setIsOpen(true);
+    window.addEventListener('open-cenepred-assistant', open);
+    return () => window.removeEventListener('open-cenepred-assistant', open);
+  }, []);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;

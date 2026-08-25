@@ -115,7 +115,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   <span className="material-symbols-outlined text-2xl">emergency</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-sky-600 dark:text-sky-400 mb-2 tracking-tight">
                 {NATIONAL_META.totalEmergencias.toLocaleString()}
               </div>
               <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">Eventos atendidos y registrados formalmente</p>
@@ -130,7 +130,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   <span className="material-symbols-outlined text-2xl">groups</span>
                 </span>
               </div>
-              <div className="font-headline-lg text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
+              <div className="font-headline-lg text-4xl font-extrabold text-amber-600 dark:text-amber-400 mb-2 tracking-tight">
                 {NATIONAL_META.totalAfectados.toLocaleString()}
               </div>
               <p className="font-body-md text-xs text-slate-500 dark:text-slate-400 font-medium">Personas bajo seguimiento y asistencia</p>
@@ -181,10 +181,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <span className="font-label-sm text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                </span>
+                <span className="material-symbols-outlined text-sm text-red-500">radar</span>
                 Vigilancia Climatológica
               </span>
               <h2 className="font-headline-lg text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -277,12 +274,18 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
             {[
               { path: 'monitoreo-diario', icon: 'satellite_alt', color: 'sky', title: 'Monitoreo Diario y Mapa', desc: 'Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.' },
               { path: 'riesgo-predictivo', icon: 'psychology', color: 'indigo', title: 'Simulador de Escenarios', desc: 'Ajusta variables de lluvia y clima para simular el riesgo futuro de cada departamento y generar diagnósticos ejecutivos.' },
-              { path: 'presupuesto-mef', icon: 'analytics', color: 'emerald', title: 'Presupuesto de Prevención', desc: 'Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.' }
+              { path: 'presupuesto-mef', icon: 'analytics', color: 'emerald', title: 'Presupuesto de Prevención', desc: 'Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.' },
+              { path: 'historico-tendencias', icon: 'timeline', color: 'amber', title: 'Histórico y Tendencias', desc: 'Evolución multianual de las emergencias y su estacionalidad para anticipar los meses de mayor riesgo en cada región.' },
+              { path: 'comparativo-regional', icon: 'leaderboard', color: 'rose', title: 'Comparativo Regional', desc: 'Compara riesgo, telemetría y ejecución presupuestal entre los 25 departamentos con una matriz estacional interactiva.' }
             ].map((f, i) => {
-              const gradient = f.color === 'sky' ? 'from-sky-500 to-cyan-400' : f.color === 'indigo' ? 'from-indigo-500 to-violet-400' : 'from-emerald-500 to-teal-400';
-              const iconBox = f.color === 'sky' ? 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 group-hover:bg-sky-600' : f.color === 'indigo' ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 group-hover:bg-indigo-600' : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 group-hover:bg-emerald-600';
-              const titleHover = f.color === 'sky' ? 'group-hover:text-sky-600 dark:group-hover:text-sky-400' : f.color === 'indigo' ? 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400' : 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400';
-              const borderHover = f.color === 'sky' ? 'hover:border-sky-400 dark:hover:border-sky-400' : f.color === 'indigo' ? 'hover:border-indigo-400 dark:hover:border-indigo-400' : 'hover:border-emerald-400 dark:hover:border-emerald-400';
+              const COLOR: Record<string, { gradient: string; iconBox: string; titleHover: string; borderHover: string }> = {
+                sky: { gradient: 'from-sky-500 to-cyan-400', iconBox: 'bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 group-hover:bg-sky-600', titleHover: 'group-hover:text-sky-600 dark:group-hover:text-sky-400', borderHover: 'hover:border-sky-400 dark:hover:border-sky-400' },
+                indigo: { gradient: 'from-indigo-500 to-violet-400', iconBox: 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 group-hover:bg-indigo-600', titleHover: 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400', borderHover: 'hover:border-indigo-400 dark:hover:border-indigo-400' },
+                emerald: { gradient: 'from-emerald-500 to-teal-400', iconBox: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 group-hover:bg-emerald-600', titleHover: 'group-hover:text-emerald-600 dark:group-hover:text-emerald-400', borderHover: 'hover:border-emerald-400 dark:hover:border-emerald-400' },
+                amber: { gradient: 'from-amber-500 to-orange-400', iconBox: 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 group-hover:bg-amber-600', titleHover: 'group-hover:text-amber-600 dark:group-hover:text-amber-400', borderHover: 'hover:border-amber-400 dark:hover:border-amber-400' },
+                rose: { gradient: 'from-rose-500 to-pink-400', iconBox: 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 group-hover:bg-rose-600', titleHover: 'group-hover:text-rose-600 dark:group-hover:text-rose-400', borderHover: 'hover:border-rose-400 dark:hover:border-rose-400' }
+              };
+              const { gradient, iconBox, titleHover, borderHover } = COLOR[f.color] || COLOR.sky;
               return (
                 <ScrollReveal key={f.path} delayMs={(i + 1) * 100}>
                   <div
@@ -448,10 +451,14 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <ScrollReveal delayMs={120}>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
               <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">¿No encuentras lo que buscas?</span>
-              <span className="inline-flex items-center gap-2 text-sm font-bold text-sky-700 dark:text-sky-400">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event('open-cenepred-assistant'))}
+                className="inline-flex items-center gap-2 text-sm font-bold text-sky-700 dark:text-sky-400 hover:text-sky-800 dark:hover:text-sky-300 hover:underline transition-colors cursor-pointer"
+              >
                 <span className="material-symbols-outlined text-base">support_agent</span>
-                Pregúntale al Asistente CENEPRED (abajo a la derecha)
-              </span>
+                Pregúntale al Asistente CENEPRED
+              </button>
             </div>
           </ScrollReveal>
 
