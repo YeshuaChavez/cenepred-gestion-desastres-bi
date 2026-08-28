@@ -126,7 +126,13 @@ const COLOR_MAP: Record<string, string> = {
   amber: 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 group-hover:bg-amber-600',
 };
 const HOVER_BORDER: Record<string, string> = {
-  sky: 'hover:border-sky-400', emerald: 'hover:border-emerald-400', purple: 'hover:border-purple-400', amber: 'hover:border-amber-400',
+  sky: 'hover:border-sky-400 dark:hover:border-sky-400', emerald: 'hover:border-emerald-400 dark:hover:border-emerald-400', purple: 'hover:border-purple-400 dark:hover:border-purple-400', amber: 'hover:border-amber-400 dark:hover:border-amber-400',
+};
+const TEXT_COLOR: Record<string, string> = {
+  sky: 'text-sky-600 dark:text-sky-400',
+  emerald: 'text-emerald-600 dark:text-emerald-400',
+  purple: 'text-purple-600 dark:text-purple-400',
+  amber: 'text-amber-600 dark:text-amber-400',
 };
 
 const MESES_SIM = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -313,7 +319,7 @@ export default function RiesgoPredictivoView() {
               </div>
             </div>
             <div>
-              <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">{m.value}</span>
+              <span className={`font-display-lg text-3xl font-extrabold ${TEXT_COLOR[m.color]}`}>{m.value}</span>
               <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1">{m.meta}</p>
             </div>
           </div>

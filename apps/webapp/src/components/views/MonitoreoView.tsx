@@ -356,7 +356,7 @@ export default function MonitoreoView() {
             </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
-            <span className="font-display-lg text-4xl font-extrabold text-slate-900 dark:text-white">{currentPrecip}</span>
+            <span className="font-display-lg text-4xl font-extrabold text-sky-600 dark:text-sky-400">{currentPrecip}</span>
             <span className="font-body-md text-sm text-slate-600 dark:text-slate-400 mb-1 font-medium">mm ({timeWindow})</span>
           </div>
           <div className="mt-4 flex items-center gap-2 relative z-10">
@@ -379,7 +379,7 @@ export default function MonitoreoView() {
             </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
-            <span className="font-display-lg text-4xl font-extrabold text-slate-900 dark:text-white">{currentFocos}</span>
+            <span className="font-display-lg text-4xl font-extrabold text-amber-600 dark:text-amber-400">{currentFocos}</span>
             <span className="font-body-md text-sm text-slate-600 dark:text-slate-400 mb-1 font-medium">Focos Detectados</span>
           </div>
           <div className="mt-4 flex items-center gap-2 relative z-10">
@@ -402,7 +402,7 @@ export default function MonitoreoView() {
             </div>
           </div>
           <div className="flex items-end gap-3 relative z-10">
-            <span className="font-display-lg text-4xl font-extrabold text-slate-900 dark:text-white">{rawDeptoData.pctEjecucion}<span className="text-2xl text-slate-400">%</span></span>
+            <span className="font-display-lg text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">{rawDeptoData.pctEjecucion}<span className="text-2xl text-emerald-400/70">%</span></span>
             <span className="font-body-md text-xs text-slate-500 dark:text-slate-400 mb-1">S/ {rawDeptoData.devengadoM}M de S/ {rawDeptoData.pimM}M</span>
           </div>
           <div className="mt-4 w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">

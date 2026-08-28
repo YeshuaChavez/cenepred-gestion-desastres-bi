@@ -207,7 +207,7 @@ export default function HistoricoTendenciasView() {
             </div>
           </div>
           <div className="my-3">
-            <span className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <span className="text-3xl md:text-4xl font-extrabold text-sky-600 dark:text-sky-400 tracking-tight">
               {selectedDayData
                 ? selectedDayData.emergencias.toLocaleString()
                 : selectedMesIdx !== null

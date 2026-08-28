@@ -161,7 +161,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">S/ {NATIONAL_META.totalPimMillones}M</span>
+            <span className="font-display-lg text-3xl font-extrabold text-sky-600 dark:text-sky-400">S/ {NATIONAL_META.totalPimMillones}M</span>
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Presupuesto Institucional Modificado (PIM)</span>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
+            <span className="font-display-lg text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
             <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{NATIONAL_META.pctEjecucionNacional}% de ejecución nacional</span>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-slate-900 dark:text-white">{regionesRiesgoCritico}</span>
+            <span className="font-display-lg text-3xl font-extrabold text-purple-600 dark:text-purple-400">{regionesRiesgoCritico}</span>
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Departamentos en nivel Muy Alto</span>
           </div>
         </div>
