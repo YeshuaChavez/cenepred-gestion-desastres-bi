@@ -1,10 +1,14 @@
 name: Sincronización Diaria WebApp (Gold ADLS -> realData.json)
 
 on:
-  schedule:
-    # 07:45 UTC (02:45 Perú), después del pipeline diario de Databricks (07:00 UTC) que deja el
-    # Gold fresco en ADLS. Regenera realData.json y hace commit -> Vercel redespliega el webapp.
-    - cron: '45 7 * * *'
+  # Programación diaria DESACTIVADA temporalmente: la suscripción de Azure está pausada, por lo
+  # que ADLS no es accesible y la sincronización fallaría cada día (generando correos de error).
+  # Reactivar descomentando el cron cuando Azure vuelva a estar disponible. Se mantiene la
+  # ejecución manual (workflow_dispatch).
+  # schedule:
+  #   # 07:45 UTC (02:45 Perú), después del pipeline diario de Databricks (07:00 UTC) que deja el
+  #   # Gold fresco en ADLS. Regenera realData.json y hace commit -> Vercel redespliega el webapp.
+  #   - cron: '45 7 * * *'
   workflow_dispatch:
 
 permissions:

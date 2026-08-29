@@ -244,11 +244,11 @@ export default function RiesgoPredictivoView() {
           devengadoM: reportDeptoData.devengadoM, pctEjecucion: reportDeptoData.pctEjecucion,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data.report) setGeneratedReport(data.report);
-      else setReportError(`No se pudo generar el diagnóstico: ${data.error || res.statusText}`);
+      else setReportError('El servicio de diagnóstico con IA no está disponible en este momento. El resto de la plataforma sigue operativa; vuelve a intentarlo más tarde.');
     } catch {
-      setReportError('Error de red al contactar el servicio de generación de diagnósticos.');
+      setReportError('El servicio de diagnóstico con IA no está disponible en este momento. El resto de la plataforma sigue operativa; vuelve a intentarlo más tarde.');
     } finally {
       setIsGeneratingReport(false);
     }
@@ -550,8 +550,8 @@ export default function RiesgoPredictivoView() {
         </div>
 
         {reportError && (
-          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-xs font-semibold text-red-700 dark:text-red-300 flex items-center gap-2">
-            <span className="material-symbols-outlined text-base">error</span>{reportError}
+          <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-2">
+            <span className="material-symbols-outlined text-base">cloud_off</span>{reportError}
           </div>
         )}
 

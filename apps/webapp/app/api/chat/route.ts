@@ -27,29 +27,35 @@ REGLAS DE ESTILO INSTITUCIONAL:
 - Basa tus respuestas en los 25 departamentos del Perú, 84,369 emergencias SINPAD registradas, S/ 31,016M PIM PP0068 (71.4% ejecutado) y las métricas del modelo predictivo de riesgo (F1-score: 0.751, AUC-ROC: 0.860).
 `;
 
-    // Conectar directamente con Azure OpenAI Service (GPT-4o)
+    // Conectar directamente con el servicio de inteligencia. Si no está configurado o no
+    // responde (p. ej. servicio temporalmente no disponible), se degrada al resumen estático
+    // de abajo en lugar de fallar, para que el asistente siempre responda algo útil.
     if (AZURE_OPENAI_KEY && AZURE_OPENAI_ENDPOINT) {
-      const azureUrl = `${AZURE_OPENAI_ENDPOINT.replace(/\/$/, '')}/openai/deployments/${AZURE_OPENAI_DEPLOYMENT}/chat/completions?api-version=2024-02-15-preview`;
-      const azureRes = await fetch(azureUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': AZURE_OPENAI_KEY
-        },
-        body: JSON.stringify({
-          messages: [
-            { role: 'system', content: CENEPRED_SYSTEM_PROMPT },
-            { role: 'user', content: prompt }
-          ],
-          temperature: 0.2,
-          max_tokens: 250
-        })
-      });
+      try {
+        const azureUrl = `${AZURE_OPENAI_ENDPOINT.replace(/\/$/, '')}/openai/deployments/${AZURE_OPENAI_DEPLOYMENT}/chat/completions?api-version=2024-02-15-preview`;
+        const azureRes = await fetch(azureUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': AZURE_OPENAI_KEY
+          },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: CENEPRED_SYSTEM_PROMPT },
+              { role: 'user', content: prompt }
+            ],
+            temperature: 0.2,
+            max_tokens: 250
+          })
+        });
 
-      if (azureRes.ok) {
-        const data = await azureRes.json();
-        const reply = data.choices?.[0]?.message?.content || 'Respuesta del Asistente de Inteligencia CENEPRED.';
-        return NextResponse.json({ reply, provider: 'CENEPRED' });
+        if (azureRes.ok) {
+          const data = await azureRes.json();
+          const reply = data.choices?.[0]?.message?.content || 'Respuesta del Asistente de Inteligencia CENEPRED.';
+          return NextResponse.json({ reply, provider: 'CENEPRED' });
+        }
+      } catch {
+        // El servicio de inteligencia no está disponible: se usa el resumen estático de abajo.
       }
     }
 
