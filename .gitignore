@@ -94,3 +94,6 @@ Thumbs.db
 # Notas de trabajo locales (no versionadas)
 # ------------------------------------------
 docs/
+
+# Config local de herramientas Claude Code (no versionar)
+.claude/
