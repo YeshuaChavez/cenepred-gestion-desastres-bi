@@ -120,7 +120,7 @@ export default function ComparativoRegionalView() {
               </div>
               Comparador Lado a Lado de Departamentos
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Selecciona dos regiones para comparar sus datos en tiempo real</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Selecciona dos regiones para comparar sus indicadores lado a lado</p>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'CENEPRED | Gestión del Riesgo de Desastres',
-  description: 'Plataforma Nacional de Prevención y Gestión del Riesgo de Desastres en el Perú. Monitoreo satelital en tiempo real e indicadores del CENEPRED.',
+  description: 'Plataforma Nacional de Prevención y Gestión del Riesgo de Desastres en el Perú. Monitoreo satelital y meteorológico e indicadores del CENEPRED.',
   icons: {
     icon: '/images/logo_cenepred.svg',
   },

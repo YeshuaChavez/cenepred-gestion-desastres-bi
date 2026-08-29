@@ -26,8 +26,8 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
       a: 'Ingresa a "Monitoreo Nacional" o "Riesgo Predictivo". Verás un mapa interactivo con semáforos de riesgo (bajo, medio, alto o crítico) calculado a partir de lluvias, clima y datos oficiales.'
     },
     {
-      q: '¿Con qué frecuencia se actualiza la información del portal?',
-      a: 'La telemetría del clima y focos de calor satelitales se actualiza automáticamente varias veces al día, mientras que los datos presupuestales se sincronizan con las fuentes del Estado.'
+      q: '¿De dónde provienen los datos del portal?',
+      a: 'La plataforma integra telemetría satelital y meteorológica junto con los registros oficiales de emergencias (SINPAD) y la ejecución presupuestal del Estado, procesados mediante un pipeline de datos automatizado.'
     },
     {
       q: '¿Qué información puedo consultar sobre el presupuesto del Estado?',
@@ -80,7 +80,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           </h1>
 
           <p className="font-body-md text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl font-normal leading-relaxed mb-12">
-            Estimación inteligente del riesgo climático en tiempo real, monitoreo satelital continuo de precipitaciones y seguimiento de la inversión pública preventiva en las 25 regiones del país.
+            Estimación inteligente del riesgo climático a partir de telemetría satelital y meteorológica, registros históricos de emergencias y el seguimiento de la inversión pública preventiva en las 25 regiones del país.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
@@ -272,7 +272,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
           <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
 
             {[
-              { path: 'monitoreo-diario', icon: 'satellite_alt', color: 'sky', title: 'Monitoreo Diario y Mapa', desc: 'Supervisión cartográfica en tiempo real con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.' },
+              { path: 'monitoreo-diario', icon: 'satellite_alt', color: 'sky', title: 'Monitoreo Diario y Mapa', desc: 'Supervisión cartográfica con capas de lluvia acumulada, actividad térmica satelital e indicadores departamentales.' },
               { path: 'riesgo-predictivo', icon: 'psychology', color: 'indigo', title: 'Simulador de Escenarios', desc: 'Ajusta variables de lluvia y clima para simular el riesgo futuro de cada departamento y generar diagnósticos ejecutivos.' },
               { path: 'presupuesto-mef', icon: 'analytics', color: 'emerald', title: 'Presupuesto de Prevención', desc: 'Transparencia y seguimiento del dinero asignado y ejecutado por las autoridades regionales para obras de defensa y mitigación.' },
               { path: 'historico-tendencias', icon: 'timeline', color: 'amber', title: 'Histórico y Tendencias', desc: 'Evolución multianual de las emergencias y su estacionalidad para anticipar los meses de mayor riesgo en cada región.' },
@@ -361,7 +361,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                   Portal público nacional
                 </span>
                 <h2 className="font-display-lg text-3xl md:text-[40px] leading-tight font-bold">
-                  Acceda a la Información Nacional en Tiempo Real
+                  Acceda a la Información Nacional del Riesgo de Desastres
                 </h2>
                 <p className="font-body-md text-sky-200 text-base md:text-lg font-medium">
                   Portal libre para la consulta pública de ciudadanos, estudiantes, autoridades e investigadores de todo el Perú.
@@ -371,7 +371,7 @@ export default function HomeView({ setActivePath }: HomeViewProps) {
                 <div className="flex flex-wrap gap-3 pt-2">
                   {[
                     { icon: 'map', label: '25 regiones cubiertas' },
-                    { icon: 'update', label: 'Actualización diaria' },
+                    { icon: 'satellite_alt', label: 'Telemetría satelital' },
                     { icon: 'lock_open', label: 'Acceso libre y gratuito' }
                   ].map((chip) => (
                     <span key={chip.label} className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-100/90 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">

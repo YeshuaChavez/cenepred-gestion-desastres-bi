@@ -114,7 +114,7 @@ export default function AIChatbotModal() {
       } else {
         // Institutional fallback rule-based response
         const lower = textToSend.toLowerCase();
-        let fallback = 'Disculpa, no pude procesar la consulta en tiempo real. Por favor prueba seleccionando una de las sugerencias rápidas.';
+        let fallback = 'Disculpa, no pude procesar la consulta en este momento. Por favor prueba seleccionando una de las sugerencias rápidas.';
 
         if (lower.includes('riesgo') || lower.includes('alto')) {
           const highRisk = Object.values(PERU_DEPARTAMENTOS).filter(d => d.prob >= 50).map(d => `${d.name} (${d.prob}%)`).join(', ');
