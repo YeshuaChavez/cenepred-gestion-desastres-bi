@@ -239,8 +239,8 @@ def process_gold_data():
 
         tabla_mef.append({
             "depto": d,
-            "pim": f"S/ {round(pim, 1)}M",
-            "ejec": f"S/ {round(dev, 1)}M",
+            "pim": round(pim, 1),
+            "ejec": round(dev, 1),
             "pct": round(pct, 1),
             "riesgo": riesgo_str,
             "estado": estado_str,
@@ -258,7 +258,7 @@ def process_gold_data():
         pliegos.append({
             "nombre": f"GOBIERNO REGIONAL DE {r.departamento}",
             # % con 1 decimal, igual que la tabla por departamento (evita el mismatch 77 vs 76.8).
-            "monto": f"S/ {round(r.monto_pim / 1e6, 1)}M ({pct}%)",
+            "monto": f"S/ {r.monto_pim / 1e6:,.1f}M ({pct}%)",
             "pct": pct,
             "color": color,
             "isAlert": pct < 40,

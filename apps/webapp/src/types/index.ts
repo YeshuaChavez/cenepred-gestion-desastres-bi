@@ -41,8 +41,8 @@ export interface NationalMeta {
 
 export interface MefDepartment {
   depto: string;
-  pim: string;
-  ejec: string;
+  pim: number;
+  ejec: number;
   pct: number;
   riesgo: string;
   estado: string;

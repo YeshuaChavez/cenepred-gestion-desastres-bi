@@ -91,11 +91,11 @@ export default function PresupuestoMEFView() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800">
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block mb-1">PIM (Presupuesto Asignado)</span>
-                <span className="text-2xl font-extrabold text-slate-900 dark:text-white">S/ {selectedRegionDetail.pim} Millones</span>
+                <span className="text-2xl font-extrabold text-slate-900 dark:text-white">S/ {roundNum(selectedRegionDetail.pim)} Millones</span>
               </div>
               <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 rounded-2xl border border-emerald-200 dark:border-emerald-800/50">
                 <span className="text-xs text-emerald-800 dark:text-emerald-300 font-semibold block mb-1">Inversión Ejecutada</span>
-                <span className="text-2xl font-extrabold text-emerald-900 dark:text-emerald-200">S/ {selectedRegionDetail.ejec} Millones</span>
+                <span className="text-2xl font-extrabold text-emerald-900 dark:text-emerald-200">S/ {roundNum(selectedRegionDetail.ejec)} Millones</span>
               </div>
               <div className="p-4 bg-amber-50 dark:bg-amber-950/60 rounded-2xl border border-amber-200 dark:border-amber-800/50">
                 <span className="text-xs text-amber-800 dark:text-amber-300 font-semibold block mb-1">Avance Financiero</span>
@@ -161,7 +161,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-sky-600 dark:text-sky-400">S/ {NATIONAL_META.totalPimMillones}M</span>
+            <span className="font-display-lg text-3xl font-extrabold text-sky-600 dark:text-sky-400">S/ {roundNum(NATIONAL_META.totalPimMillones)}M</span>
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Presupuesto Institucional Modificado (PIM)</span>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function PresupuestoMEFView() {
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="font-display-lg text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">S/ {NATIONAL_META.totalDevengadoMillones}M</span>
+            <span className="font-display-lg text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">S/ {roundNum(NATIONAL_META.totalDevengadoMillones)}M</span>
             <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{NATIONAL_META.pctEjecucionNacional}% de ejecución nacional</span>
           </div>
         </div>
@@ -313,8 +313,8 @@ export default function PresupuestoMEFView() {
                         <span className="material-symbols-outlined text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 text-sm">location_on</span>
                         {row.depto}
                       </td>
-                      <td className="py-3.5 px-4 font-semibold">S/ {row.pim}M</td>
-                      <td className="py-3.5 px-4 font-semibold text-emerald-600 dark:text-emerald-400">S/ {row.ejec}M</td>
+                      <td className="py-3.5 px-4 font-semibold">S/ {roundNum(row.pim)}M</td>
+                      <td className="py-3.5 px-4 font-semibold text-emerald-600 dark:text-emerald-400">S/ {roundNum(row.ejec)}M</td>
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold w-10">{row.pct}%</span>
@@ -414,5 +414,5 @@ function barColorClass(pct: number): string {
 }
 
 function roundNum(num: number): string {
-  return (Math.round(num * 10) / 10).toFixed(1);
+  return Number(num).toLocaleString('es-PE', { maximumFractionDigits: 1 });
 }

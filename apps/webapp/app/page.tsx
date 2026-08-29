@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../src/components/Header';
 import HomeView from '../src/components/views/HomeView';
 import MonitoreoView from '../src/components/views/MonitoreoView';
@@ -13,6 +13,11 @@ import { ActivePath } from '../src/types';
 
 export default function Page() {
   const [activePath, setActivePath] = useState<ActivePath>('home');
+
+  // Cerrar el asistente al cambiar de sección para que no quede tapando la vista siguiente.
+  useEffect(() => {
+    window.dispatchEvent(new Event('close-cenepred-assistant'));
+  }, [activePath]);
 
   const renderView = () => {
     switch (activePath) {

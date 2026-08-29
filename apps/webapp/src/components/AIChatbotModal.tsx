@@ -31,11 +31,17 @@ export default function AIChatbotModal() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, isListening]);
 
-  // Permite abrir el asistente desde cualquier parte de la app (p. ej. el enlace del Home).
+  // Permite abrir el asistente desde cualquier parte de la app (p. ej. el enlace del Home) y
+  // cerrarlo automáticamente al cambiar de sección para que no tape la vista siguiente.
   useEffect(() => {
     const open = () => setIsOpen(true);
+    const close = () => setIsOpen(false);
     window.addEventListener('open-cenepred-assistant', open);
-    return () => window.removeEventListener('open-cenepred-assistant', open);
+    window.addEventListener('close-cenepred-assistant', close);
+    return () => {
+      window.removeEventListener('open-cenepred-assistant', open);
+      window.removeEventListener('close-cenepred-assistant', close);
+    };
   }, []);
 
   useEffect(() => {
