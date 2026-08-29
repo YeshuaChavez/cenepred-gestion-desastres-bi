@@ -5,11 +5,72 @@ import { ChatMessage } from '../types';
 import { PERU_DEPARTAMENTOS, NATIONAL_META } from '../data/mockData';
 
 const QUICK_SUGGESTIONS = [
-  { label: 'Regiones en Riesgo', icon: 'bolt', prompt: 'Regiones en Riesgo' },
-  { label: 'Presupuesto MEF', icon: 'account_balance_wallet', prompt: 'Presupuesto MEF' },
-  { label: 'Lluvia Max 24h', icon: 'water_drop', prompt: 'Lluvia Max 24h' },
-  { label: 'Riesgo Predictivo', icon: 'analytics', prompt: 'Riesgo Predictivo' }
+  { label: 'Regiones en mayor riesgo', icon: 'bolt', prompt: '¿Qué regiones están en mayor riesgo?' },
+  { label: 'Presupuesto de prevención', icon: 'account_balance_wallet', prompt: '¿Cómo va el presupuesto de prevención?' },
+  { label: 'Lluvias por región', icon: 'water_drop', prompt: '¿Dónde ha llovido más?' },
+  { label: 'Focos de calor', icon: 'local_fire_department', prompt: '¿Qué regiones tienen más focos de calor?' }
 ];
+
+const stripAccents = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+// Respondedor local basado en los datos reales de cada región. Actúa como cerebro del asistente
+// cuando el servicio de inteligencia externo no está disponible, respondiendo según la intención.
+function localAnswer(prompt: string): string {
+  const q = stripAccents(prompt.trim());
+  const deptos = Object.values(PERU_DEPARTAMENTOS);
+  const fmt = (n: number) => n.toLocaleString('es-PE', { maximumFractionDigits: 1 });
+  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // 1) Región específica mencionada (con límites de palabra para no confundir nombres cortos)
+  const dep = deptos.find((d) => new RegExp('\\b' + esc(stripAccents(d.name)) + '\\b').test(q));
+  if (dep) {
+    return `${dep.name}: riesgo estimado ${dep.prob}% (${dep.tag}).\n`
+      + `- Lluvia acumulada (30 días): ${fmt(dep.precip30d ?? 0)} mm\n`
+      + `- Focos de calor (30 días): ${dep.focos30d ?? 0}\n`
+      + `- Ejecución del presupuesto de prevención: ${dep.pctEjecucion ?? 0}%`;
+  }
+  // 2) Saludo
+  if (/^(hola|buenas|buenos dias|buen dia|hey|saludos|que tal)\b/.test(q)) {
+    return 'Hola. Puedo darte el nivel de riesgo de una región, las lluvias, los focos de calor o el presupuesto de prevención. Escribe el nombre de un departamento o elige una de las sugerencias.';
+  }
+  // 3) Capacidades
+  if (/(que puedes|que haces|ayuda|opciones|para que sirves|como funcionas)/.test(q)) {
+    return 'Puedo consultar: el riesgo por región, las regiones en mayor riesgo, las lluvias acumuladas, los focos de calor, el registro histórico de emergencias y el presupuesto de prevención (PP0068). Escribe una región o un tema.';
+  }
+  // 4) Presupuesto
+  if (/(presupuesto|mef|pp0068|prevaed|prevenc|inversion|ejecucion|gasto|dinero|financ)/.test(q)) {
+    const worst = [...deptos].sort((a, b) => (a.pctEjecucion ?? 0) - (b.pctEjecucion ?? 0)).slice(0, 3);
+    return `Presupuesto de prevención (PP0068): S/ ${fmt(NATIONAL_META.totalPimMillones)}M asignados, ${NATIONAL_META.pctEjecucionNacional}% ejecutado a nivel nacional.\n`
+      + 'Regiones con menor avance de ejecución:\n' + worst.map((d) => `- ${d.name}: ${d.pctEjecucion ?? 0}%`).join('\n');
+  }
+  // 5) Lluvias
+  if (/(lluvia|precipit|llov|inundac)/.test(q)) {
+    const top = [...deptos].filter((d) => (d.precip30d ?? 0) > 0).sort((a, b) => (b.precip30d ?? 0) - (a.precip30d ?? 0)).slice(0, 4);
+    if (!top.length) return 'No hay precipitación acumulada relevante en la última ventana disponible.';
+    return 'Mayor lluvia acumulada (últimos 30 días):\n' + top.map((d) => `- ${d.name}: ${fmt(d.precip30d ?? 0)} mm`).join('\n');
+  }
+  // 6) Focos de calor
+  if (/(foco|calor|incendio|fuego|quema|termic)/.test(q)) {
+    const top = [...deptos].filter((d) => (d.focos30d ?? 0) > 0).sort((a, b) => (b.focos30d ?? 0) - (a.focos30d ?? 0)).slice(0, 4);
+    if (!top.length) return 'No se registran focos de calor activos en la última ventana disponible.';
+    return 'Regiones con más focos de calor (últimos 30 días):\n' + top.map((d) => `- ${d.name}: ${d.focos30d} focos`).join('\n');
+  }
+  // 7) Modelo
+  if (/(model|predic|f1|auc|algoritmo|machine|xgboost|recall)/.test(q)) {
+    return 'El modelo estima la probabilidad de una emergencia hidrometeorológica severa a 7 días por región. Desempeño sobre el periodo de prueba: F1-score 0.751, AUC-ROC 0.860 y recall 0.845.';
+  }
+  // 8) Emergencias / histórico
+  if (/(emergencia|afectad|damnific|historic|sinpad|desastre|evento)/.test(q)) {
+    return `Registro histórico oficial (SINPAD, 2012-2023): ${NATIONAL_META.totalEmergencias.toLocaleString('es-PE')} emergencias y ${NATIONAL_META.totalAfectados.toLocaleString('es-PE')} personas afectadas en el Perú.`;
+  }
+  // 9) Riesgo (genérico)
+  if (/(riesgo|peligro|criti|alerta|vulnerab|mayor)/.test(q)) {
+    const top = [...deptos].sort((a, b) => b.prob - a.prob).slice(0, 5);
+    return 'Regiones con mayor riesgo estimado:\n' + top.map((d) => `- ${d.name}: ${d.prob}% (${d.tag})`).join('\n');
+  }
+  // 10) Por defecto
+  return 'Puedo ayudarte con el riesgo por región, las regiones en mayor riesgo, las lluvias, los focos de calor, las emergencias históricas o el presupuesto de prevención. Escribe el nombre de un departamento o una de esas opciones.';
+}
 
 export default function AIChatbotModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -108,27 +169,17 @@ export default function AIChatbotModal() {
         body: JSON.stringify({ prompt: textToSend })
       }).catch(() => null);
 
+      let reply: string | null = null;
       if (res && res.ok) {
-        const data = await res.json();
-        setMessages(prev => [...prev, { sender: 'bot', text: data.reply }]);
-      } else {
-        // Institutional fallback rule-based response
-        const lower = textToSend.toLowerCase();
-        let fallback = 'Disculpa, no pude procesar la consulta en este momento. Por favor prueba seleccionando una de las sugerencias rápidas.';
-
-        if (lower.includes('riesgo') || lower.includes('alto')) {
-          const highRisk = Object.values(PERU_DEPARTAMENTOS).filter(d => d.prob >= 50).map(d => `${d.name} (${d.prob}%)`).join(', ');
-          fallback = `Actualmente las regiones con mayor atención o riesgo por encima del 50% son: ${highRisk}.`;
-        } else if (lower.includes('presupuesto') || lower.includes('mef')) {
-          fallback = `El presupuesto nacional PIM es de S/ ${NATIONAL_META.totalPimMillones}M y la ejecución promedio alcanza el ${NATIONAL_META.pctEjecucionNacional}%.`;
-        } else if (lower.includes('lluvia') || lower.includes('precipitacion')) {
-          fallback = `Las mayores precipitaciones registradas en 24h corresponden a Loreto, San Martín y Piura según las estaciones meteorológicas.`;
-        }
-
-        setMessages(prev => [...prev, { sender: 'bot', text: fallback }]);
+        const data = await res.json().catch(() => null);
+        // Solo se usa la respuesta del servicio si es una respuesta real de inteligencia;
+        // si vino marcada como fallback (servicio no disponible), se responde localmente.
+        if (data && data.reply && !data.fallback) reply = data.reply;
       }
+      if (!reply) reply = localAnswer(textToSend);
+      setMessages(prev => [...prev, { sender: 'bot', text: reply as string }]);
     } catch {
-      setMessages(prev => [...prev, { sender: 'bot', text: 'Error de conexión con el servicio. Verifica tu conexión a internet.' }]);
+      setMessages(prev => [...prev, { sender: 'bot', text: localAnswer(textToSend) }]);
     } finally {
       setIsTyping(false);
     }

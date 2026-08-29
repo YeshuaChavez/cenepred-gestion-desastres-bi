@@ -59,9 +59,12 @@ REGLAS DE ESTILO INSTITUCIONAL:
       }
     }
 
+    // Sin servicio de inteligencia disponible: se marca fallback para que el cliente responda
+    // con su lógica local basada en los datos reales de cada región.
     return NextResponse.json({
       reply: `- Emergencias SINPAD: 84,369 eventos registrados en el Perú.\n- Presupuesto MEF PP0068: S/ 31,016M PIM (71.4% ejecutado).\n- Modelo predictivo de riesgo: F1-score 0.751, AUC-ROC 0.860.`,
-      provider: 'CENEPRED'
+      provider: 'CENEPRED',
+      fallback: true
     });
 
   } catch (err) {
