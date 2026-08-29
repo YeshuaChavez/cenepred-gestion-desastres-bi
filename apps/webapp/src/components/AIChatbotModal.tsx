@@ -55,6 +55,19 @@ function localAnswer(prompt: string): string {
     if (!top.length) return 'No se registran focos de calor activos en la última ventana disponible.';
     return 'Regiones con más focos de calor (últimos 30 días):\n' + top.map((d) => `- ${d.name}: ${d.focos30d} focos`).join('\n');
   }
+  // 6b) Sismos (contexto)
+  if (/(sismo|temblor|terremoto|sismic|telurico)/.test(q)) {
+    const top = [...deptos].filter((d) => (d.sismos7d ?? 0) > 0).sort((a, b) => (b.sismos7d ?? 0) - (a.sismos7d ?? 0)).slice(0, 4);
+    const base = 'La actividad sísmica se usa como variable de contexto; el sistema no predice sismos.';
+    if (!top.length) return base + ' No se registran sismos sentidos en la última semana.';
+    return base + '\nRegiones con más sismos (últimos 7 días):\n' + top.map((d) => `- ${d.name}: ${d.sismos7d ?? 0}`).join('\n');
+  }
+  // 6c) Temperatura
+  if (/(temperatura|termic|grados|caluros)/.test(q)) {
+    const top = [...deptos].filter((d) => d.tempMax != null).sort((a, b) => (b.tempMax ?? 0) - (a.tempMax ?? 0)).slice(0, 4);
+    if (!top.length) return 'No hay datos de temperatura disponibles en la última ventana.';
+    return 'Regiones con mayor temperatura máxima registrada:\n' + top.map((d) => `- ${d.name}: ${d.tempMax}°C`).join('\n');
+  }
   // 7) Modelo
   if (/(model|predic|f1|auc|algoritmo|machine|xgboost|recall)/.test(q)) {
     return 'El modelo estima la probabilidad de una emergencia hidrometeorológica severa a 7 días por región. Desempeño sobre el periodo de prueba: F1-score 0.751, AUC-ROC 0.860 y recall 0.845.';
