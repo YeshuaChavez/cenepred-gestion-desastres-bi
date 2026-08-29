@@ -1,6 +1,6 @@
 # CENEPRED · Sistema de Alerta Temprana de Riesgo Dinámico
 
-El sistema toma emergencias oficiales (INDECI/SINPAD), clima, sismos, focos de calor, el estado de El Niño y la ejecución presupuestal del Estado; los procesa en un Lakehouse en Azure; entrena un modelo que estima el riesgo por región; y lo publica en dashboards de Power BI y en una aplicación web pública. Todo se refresca solo cada mañana.
+El sistema toma emergencias oficiales (INDECI/SINPAD), clima, sismos, focos de calor, el estado de El Niño y la ejecución presupuestal del Estado; los procesa en un Lakehouse en Azure; entrena un modelo que estima el riesgo por región; y lo publica en dashboards de Power BI y en una aplicación web pública. El pipeline en la nube está diseñado para refrescar los datos de forma automática cada mañana.
 
 ---
 
@@ -48,7 +48,7 @@ Un foco de calor detectado por el satélite VIIRS llega a **Bronze** como una fi
 
 ### Orquestación y automatización diaria
 
-La parte que hace que todo esto sea sostenible es que **se ejecuta solo**. No hay pasos manuales entre que amanece y que los tableros muestran datos nuevos:
+La plataforma está diseñada para **ejecutarse sola**: no hay pasos manuales entre que amanece y que los tableros muestran datos nuevos. El ciclo diario, validado de extremo a extremo sobre Azure, es:
 
 | Hora (UTC) | Qué ocurre |
 |------------|------------|
@@ -57,7 +57,9 @@ La parte que hace que todo esto sea sostenible es que **se ejecuta solo**. No ha
 | 07:45 | Una **GitHub Action** descarga ese Gold, regenera el `realData.json` de la web y hace commit; **Vercel** redespliega la app sola. |
 | 08:00 | **Power BI Service** refresca su modelo semántico contra Unity Catalog. |
 
-Si algo falla, Azure Monitor (para ADF) y la notificación del job (para Databricks) avisan por correo. El resultado: cada mañana el mapa, los dashboards y las métricas amanecen con datos al día sin intervención humana.
+Si algo falla, Azure Monitor (para ADF) y la notificación del job (para Databricks) avisan por correo. Con la infraestructura activa, cada mañana el mapa, los dashboards y las métricas amanecen con datos al día sin intervención humana.
+
+> **Estado del entorno cloud:** el crédito de la suscripción de Azure (nivel gratuito) finalizó, por lo que el refresco diario automatizado está en pausa. La aplicación web sigue disponible sirviendo el último `realData.json` publicado, y toda la infraestructura queda documentada como código en `infra/` (Terraform, notebooks y definiciones de ADF) para poder reactivarla en cualquier suscripción.
 
 ---
 
