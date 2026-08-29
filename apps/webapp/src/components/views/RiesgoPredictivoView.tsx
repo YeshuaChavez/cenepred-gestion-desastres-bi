@@ -238,8 +238,9 @@ export default function RiesgoPredictivoView() {
         body: JSON.stringify({
           name: reportDeptoData.name, tag: reportDeptoData.tag, prob: reportDeptoData.prob,
           emergencias: reportDeptoData.emergencias, afectados: reportDeptoData.afectados,
-          damnificados: reportDeptoData.damnificados, precipitacionMm: reportDeptoData.precipitacionMm,
-          focosCalor: reportDeptoData.focosCalor, sismos7d: reportDeptoData.sismos7d,
+          damnificados: reportDeptoData.damnificados,
+          precip24h: reportDeptoData.precip24h, precip30d: reportDeptoData.precip30d,
+          focos30d: reportDeptoData.focos30d, sismos7d: reportDeptoData.sismos7d,
           shap: reportDeptoData.shap, pimM: reportDeptoData.pimM,
           devengadoM: reportDeptoData.devengadoM, pctEjecucion: reportDeptoData.pctEjecucion,
         }),

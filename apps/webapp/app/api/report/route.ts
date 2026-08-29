@@ -45,7 +45,7 @@ Datos reales del departamento:
 - Departamento: ${d.name} (zona ${d.tag}), riesgo estimado ${d.prob}%
 - Emergencias históricas registradas: ${d.emergencias}
 - Población afectada: ${d.afectados} · damnificada: ${d.damnificados}
-- Condiciones 24h: precipitación ${d.precipitacionMm} mm, ${d.focosCalor} focos de calor, ${d.sismos7d ?? 'n/d'} sismos en 7 días
+- Telemetría reciente: precipitación acumulada ${d.precip24h ?? 'n/d'} mm (24h) y ${d.precip30d ?? 'n/d'} mm (30 días), ${d.focos30d ?? 'n/d'} focos de calor (30 días), ${d.sismos7d ?? 'n/d'} sismos (7 días)
 - Factores determinantes:
 ${factores}
 - Presupuesto de prevención (PP0068): asignado S/ ${d.pimM}M, ejecutado S/ ${d.devengadoM}M, avance ${d.pctEjecucion}%`;
